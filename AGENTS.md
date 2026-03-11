@@ -52,6 +52,55 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
 
+---
+
+## ⭐ Token 优化原则（最高优先级）
+
+**用户明确要求**：交互过程中注意减少不必要的 token 消耗
+
+### 必须遵守
+
+1. **简洁回复**
+   - ✅ 能一句话说清楚的，不用两段
+   - ✅ 结论先行，细节后置
+   - ❌ 避免"Great question!"等废话
+   - ❌ 避免重复已知上下文
+
+2. **精准工具调用**
+   - ✅ 只调用必要的工具
+   - ✅ 能合并的调用，不分开
+   - ❌ 避免重复调用同一工具
+   - ❌ 避免 poll 循环（除非必要）
+
+3. **合理分块**
+   - ✅ 大文件分块读取（用 offset/limit）
+   - ✅ 用引用而非复制全文
+   - ❌ 避免一次性加载大文件
+   - ❌ 避免冗余上下文
+
+4. **写文件 > Mental Notes**
+   - ✅ 重要信息写文件（持久化）
+   - ✅ 用 MEMORY.md 记录长期记忆
+   - ❌ 避免"记在脑子里"（会丢失）
+   - ❌ 避免重复解释已知信息
+
+5. **子代理优化**
+   - ✅ 指令简洁明确
+   - ✅ 只传递必要上下文
+   - ❌ 避免冗长 prompt
+   - ❌ 避免过度详细的背景
+
+### 为什么重要
+
+- 💰 降低 API 成本
+- ⚡ 提高响应速度
+- 📦 减少上下文窗口占用
+- 🎯 提升整体效率
+
+### 优先级
+
+**高** - 用户明确要求，所有 agent 必须遵守
+
 ## External vs Internal
 
 **Safe to do freely:**

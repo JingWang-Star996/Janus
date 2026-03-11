@@ -23,11 +23,13 @@
 | 文件 | 说明 |
 |------|------|
 | 📘 [FOLDER-RULES.md](FOLDER-RULES.md) | **文件夹管理规范**（必读） |
-| 📖 [AGENTS.md](AGENTS.md) | 工作区指南 |
+| ⭐ [docs/TOKEN-OPTIMIZATION.md](docs/TOKEN-OPTIMIZATION.md) | **Token 优化规范**（最高优先级） |
+| 📖 [AGENTS.md](AGENTS.md) | 工作区指南（含 Token 优化原则） |
 | 💫 [SOUL.md](SOUL.md) | AI 人设 |
 | 🆔 [IDENTITY.md](IDENTITY.md) | 身份信息 |
 | 👤 [USER.md](USER.md) | 用户信息 |
 | 🛠️ [TOOLS.md](TOOLS.md) | 工具笔记 |
+| 🧠 [MEMORY.md](MEMORY.md) | 长期记忆 |
 
 ---
 

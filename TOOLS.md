@@ -19,6 +19,14 @@ Things like:
 - **Mobile-first for games**: Always test on mobile devices. Include touch controls, responsive canvas sizing, and prevent default touch behaviors (scrolling, zooming).
 - User jing reported breakout game didn't work on mobile (2026-03-10).
 
+### Token Optimization
+- **用户明确要求**（2026-03-11）：减少不必要的 token 消耗
+- 简洁回复 > 冗长解释
+- 引用链接 > 复制全文
+- 合并工具调用 > 分开多次
+- 写文件 > "记在脑子里"
+- 详见 `docs/TOKEN-OPTIMIZATION.md`
+
 ## Examples
 
 ```markdown
