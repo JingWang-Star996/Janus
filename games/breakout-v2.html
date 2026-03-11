@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>打砖块 V2 - Neon Breakout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0f0f2f 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
+        }
+
+        .game-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .game-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 200% center; }
+        }
+
+        .info-panel {
+            display: flex;
+            gap: 15px;
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            width: 100%;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .info-label {
+            font-size: 0.65em;
+            color: rgba(0, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .info-value.lives { color: #ff6b6b; text-shadow: 0 0 10px rgba(255, 107, 107, 0.8); }
+        .info-value.level { color: #ffd93d; text-shadow: 0 0 10px rgba(255, 217, 61, 0.8); }
+        .info-value.gold { color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
+        .info-value.bricks { color: #ff69b4; text-shadow: 0 0 10px rgba(255, 105, 180, 0.8); }
+
+        .canvas-wrapper {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), inset 0 0 30px rgba(0, 100, 255, 0.2);
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            width: 100%;
+            touch-action: none;
+        }
+
+        #gameCanvas {
+            display: block;
+            background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3a 100%);
+            width: 100%;
+            height: auto;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            min-width: 70px;
+            max-width: 100px;
+        }
+
+        .btn:active { transform: scale(0.96); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .btn-start {
+            background: linear-gradient(135deg, #00c9ff, #00ff88);
+            color: #0a0a1a;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-pause {
+            background: linear-gradient(135deg, #ffd93d, #ff9500);
+            color: #0a0a1a;
+            box-shadow: 0 0 15px rgba(255, 217, 61, 0.4);
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-shop {
+            background: linear-gradient(135deg, #ffd700, #ff8800);
+            color: #0a0a1a;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        .overlay.active { opacity: 1; pointer-events: auto; }
+
+        .overlay-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+
+        .overlay-subtitle {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .overlay-score {
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .author-info {
+            font-size: 0.75em;
+            color: rgba(0, 255, 255, 0.6);
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .difficulty-select {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .difficulty-btn {
+            padding: 8px 16px;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.5);
+            color: #00ffff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.2s;
+        }
+
+        .difficulty-btn.selected {
+            background: rgba(0, 255, 255, 0.3);
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .difficulty-btn.hard { border-color: #ffd700; color: #ffd700; }
+        .difficulty-btn.hard.selected { background: rgba(255, 215, 0, 0.3); }
+        .difficulty-btn.extreme { border-color: #ff6b6b; color: #ff6b6b; }
+        .difficulty-btn.extreme.selected { background: rgba(255, 107, 107, 0.3); }
+        .difficulty-btn.hell { border-color: #ff00ff; color: #ff00ff; }
+        .difficulty-btn.hell.selected { background: rgba(255, 0, 255, 0.3); }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .shop-item {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .shop-item:hover {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: #00ffff;
+        }
+
+        .shop-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .shop-item-name {
+            font-size: 0.8em;
+            color: #00ffff;
+            margin-bottom: 4px;
+        }
+
+        .shop-item-price {
+            font-size: 0.75em;
+            color: #ffd700;
+        }
+
+        .shop-item-desc {
+            font-size: 0.65em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .glow-effect {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .glow-1 { top: -75px; left: -75px; background: #00ffff; animation: pulse 4s ease-in-out infinite; }
+        .glow-2 { bottom: -75px; right: -75px; background: #ff00ff; animation: pulse 4s ease-in-out infinite 2s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+
+        .mobile-hint {
+            font-size: 0.7em;
+            color: rgba(0, 255, 255, 0.6);
+            text-align: center;
+            margin-top: 3px;
+        }
+
+        @media (max-width: 360px) {
+            .game-title { font-size: 1.1em; }
+            .info-label { font-size: 0.6em; }
+            .info-value { font-size: 0.95em; }
+            .btn { font-size: 0.75em; padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-effect glow-1"></div>
+    <div class="glow-effect glow-2"></div>
+
+    <div class="game-container">
+        <h1 class="game-title">🎮 NEON BREAKOUT V2</h1>
+
+        <div class="info-panel">
+            <div class="info-item">
+                <span class="info-label">得分</span>
+                <span class="info-value" id="score">0</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">生命</span>
+                <span class="info-value lives" id="lives">❤️❤️❤️</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">关卡</span>
+                <span class="info-value level" id="level">1</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">金币</span>
+                <span class="info-value gold" id="gold">0</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">砖块</span>
+                <span class="info-value bricks" id="bricks">0</span>
+            </div>
+        </div>
+
+        <div class="canvas-wrapper" id="canvasWrapper">
+            <canvas id="gameCanvas"></canvas>
+            
+            <!-- 开始界面 -->
+            <div class="overlay active" id="startOverlay">
+                <div class="overlay-title">👋 霓虹打砖块 V2</div>
+                <div class="overlay-subtitle">滑动控制挡板 | 双击暂停</div>
+                
+                <div style="margin: 10px 0;">
+                    <div class="overlay-subtitle" style="margin-bottom: 8px;">选择难度</div>
+                    <div class="difficulty-select">
+                        <button class="difficulty-btn hard" data-difficulty="hard">困难<br>0.5x</button>
+                        <button class="difficulty-btn extreme selected" data-difficulty="extreme">超难<br>1.0x</button>
+                        <button class="difficulty-btn hell" data-difficulty="hell">地狱<br>随机</button>
+                    </div>
+                </div>
+                
+                <button class="btn btn-start" onclick="startGame()" style="min-width: 120px;">▶️ 开始游戏</button>
+                
+                <div class="author-info">
+                    游戏人王鲸使用 OpenClaw<br>
+                    Lulu + Abao + 主 Agent 制作<br>
+                    Ver 2.0 | 2026-03-10
+                </div>
+            </div>
+
+            <!-- 暂停界面 -->
+            <div class="overlay" id="pauseOverlay">
+                <div class="overlay-title">⏸️ 已暂停</div>
+                <div class="overlay-score">当前得分：<span id="pauseScore">0</span></div>
+                <button class="btn btn-pause" onclick="togglePause()" style="min-width: 100px;">▶️ 继续</button>
+            </div>
+
+            <!-- 游戏结束界面 -->
+            <div class="overlay" id="gameOverOverlay">
+                <div class="overlay-title">💀 游戏结束</div>
+                <div class="overlay-score">最终得分：<span id="finalScore">0</span></div>
+                <div class="overlay-score">金币：<span id="finalGold">0</span></div>
+                <button class="btn btn-shop" onclick="reviveWithGold()" id="reviveBtn" style="min-width: 120px;">💰 复活 (50 金币)</button>
+                <button class="btn btn-restart" onclick="restartGame()" style="min-width: 120px;">🔄 重新开始</button>
+            </div>
+
+            <!-- 关卡完成界面 -->
+            <div class="overlay" id="levelCompleteOverlay">
+                <div class="overlay-title">🎉 关卡完成!</div>
+                <div class="overlay-score">获得金币：<span id="levelGold">0</span></div>
+                <button class="btn btn-shop" onclick="openShop()" style="min-width: 100px;">🛒 商店</button>
+                <button class="btn btn-start" onclick="nextLevel()" style="min-width: 100px;">▶️ 下一关</button>
+            </div>
+
+            <!-- 商店界面 -->
+            <div class="overlay" id="shopOverlay">
+                <div class="overlay-title">🛒 道具商店</div>
+                <div class="overlay-score">当前金币：<span id="shopGold">0</span></div>
+                <div class="shop-grid" id="shopGrid"></div>
+                <button class="btn btn-start" onclick="closeShop()" style="min-width: 100px; margin-top: 10px;">✅ 确认</button>
+            </div>
+
+            <!-- 通关界面 -->
+            <div class="overlay" id="winOverlay">
+                <div class="overlay-title">🏆 恭喜通关!</div>
+                <div class="overlay-score">最终得分：<span id="winScore">0</span></div>
+                <div class="overlay-score">金币：<span id="winGold">0</span></div>
+                <button class="btn btn-start" onclick="restartGame()" style="min-width: 120px;">🔄 再玩一次</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-start" id="startBtn">▶️ 开始</button>
+            <button class="btn btn-pause" id="pauseBtn" disabled>⏸️ 暂停</button>
+            <button class="btn btn-shop" id="shopBtn" disabled>🛒 商店</button>
+            <button class="btn btn-restart" id="restartBtn">🔄 重置</button>
+        </div>
+
+        <div class="mobile-hint">📱 滑动控制 | 双击暂停 | 难度影响球速和砖块</div>
+    </div>
+
+    <script>
+        // ==================== 游戏配置 ====================
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const canvasWrapper = document.getElementById('canvasWrapper');
+
+        let gameScale = 1;
+        let C = {};
+
+        // 难度配置
+        const DIFFICULTY = {
+            hard: { name: '困难', speedMult: 0.5, brickHealthMult: 0.8, invincibleRate: 0, dropRate: 0.15 },
+            extreme: { name: '超难', speedMult: 1.0, brickHealthMult: 1.0, invincibleRate: 0.05, dropRate: 0.2 },
+            hell: { name: '地狱', speedMult: 'random', brickHealthMult: 1.5, invincibleRate: 0.1, dropRate: 0.25 }
+        };
+
+        let currentDifficulty = 'extreme';
+        let hellSpeedMult = 1.0;
+
+        function resizeCanvas() {
+            const wrapperWidth = canvasWrapper.clientWidth;
+            canvas.width = wrapperWidth;
+            canvas.height = wrapperWidth * 1.33;
+            gameScale = canvas.width / 400;
+            C = getConstants();
+        }
+
+        function getConstants() {
+            return {
+                PADDLE_WIDTH: 100 * gameScale,
+                PADDLE_HEIGHT: 15 * gameScale,
+                PADDLE_Y: canvas.height - 50 * gameScale,
+                BALL_RADIUS: 8 * gameScale,
+                BRICK_ROWS: 6,
+                BRICK_COLS: 8,
+                BRICK_WIDTH: (canvas.width - 50 * gameScale) / 8,
+                BRICK_HEIGHT: 25 * gameScale,
+                BRICK_PADDING: 5 * gameScale,
+                BRICK_OFFSET_TOP: 50 * gameScale,
+                BRICK_OFFSET_LEFT: 25 * gameScale
+            };
+        }
+
+        // 砖块类型
+        const BRICK_TYPES = {
+            NORMAL: { color: '#00ffff', health: 1, score: 10, gold: 1 },
+            STRONG: { color: '#00ff00', health: 2, score: 20, gold: 2 },
+            HARD: { color: '#ffff00', health: 3, score: 30, gold: 3 },
+            DANGER: { color: '#ff0000', health: 1, score: 50, gold: 5, speedBoost: true },
+            POWER: { color: '#ff00ff', health: 1, score: 40, gold: 4, dropPowerUp: true },
+            LUCKY: { color: '#ffd700', health: 1, score: 100, gold: 10, random: true },
+            INVINCIBLE: { color: '#666666', health: 999, score: 0, gold: 0, invincible: true }
+        };
+
+        // 道具类型
+        const POWERUPS = {
+            WIDE: { color: '#00ff00', effect: 'wide', duration: 30000, price: 30 },
+            MULTIBALL: { color: '#00ffff', effect: 'multiball', price: 50 },
+            SLOW: { color: '#0000ff', effect: 'slow', duration: 20000, price: 25 },
+            FIRE: { color: '#ff6600', effect: 'fire', duration: 15000, price: 40 },
+            EXTRA_LIFE: { color: '#ff69b4', effect: 'extralife', price: 100 },
+            SHIELD: { color: '#00ffff', effect: 'shield', duration: 20000, price: 35 }
+        };
+
+        // 商店道具（关卡间购买）
+        const SHOP_ITEMS = [
+            { id: 'startWide', name: '📏 加长挡板', desc: '开局挡板宽度 +50%', price: 40, oneTime: true },
+            { id: 'startMultiball', name: '🔮 多球开局', desc: '开局 3 个球', price: 60, oneTime: true },
+            { id: 'extraLife', name: '❤️ 额外生命', desc: '生命 +1', price: 80, oneTime: false },
+            { id: 'brickDetector', name: '🎯 砖块探测', desc: '显示砖块血量', price: 25, oneTime: true }
+        ];
+
+        // ==================== 游戏状态 ====================
+        let gameState = {
+            score: 0,
+            lives: 3,
+            level: 1,
+            gold: 0,
+            isRunning: false,
+            isPaused: false,
+            isGameOver: false,
+            isWin: false,
+            isWaiting: false,
+            combo: 0,
+            lastHitTime: 0,
+            purchasedItems: [],
+            activeEffects: {},
+            hasShield: false
+        };
+
+        let paddle = { x: 0, width: 0 };
+        let balls = [];
+        let bricks = [];
+        let powerUps = [];
+        let particles = [];
+
+        // ==================== 触摸/鼠标控制 ====================
+        let isTouching = false;
+        let lastTapTime = 0;
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isTouching = true;
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const touchX = touch.clientX - rect.left;
+            
+            const now = Date.now();
+            if (now - lastTapTime < 300 && gameState.isRunning && !gameState.isPaused) {
+                togglePause();
+            }
+            lastTapTime = now;
+            
+            paddle.x = touchX - paddle.width / 2;
+            paddle.x = Math.max(0, Math.min(canvas.width - paddle.width, paddle.x));
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!isTouching) return;
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const touchX = touch.clientX - rect.left;
+            paddle.x = touchX - paddle.width / 2;
+            paddle.x = Math.max(0, Math.min(canvas.width - paddle.width, paddle.x));
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', (e) => { e.preventDefault(); isTouching = false; }, { passive: false });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!gameState.isRunning || gameState.isPaused) return;
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            paddle.x = mouseX - paddle.width / 2;
+            paddle.x = Math.max(0, Math.min(canvas.width - paddle.width, paddle.x));
+        });
+
+        let keys = { left: false, right: false };
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+            if (e.key === ' ' || e.key === 'p' || e.key === 'P') togglePause();
+        });
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+        });
+
+        // 难度选择
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                currentDifficulty = btn.dataset.difficulty;
+                if (currentDifficulty === 'hell') {
+                    hellSpeedMult = 0.5 + Math.random();
+                }
+            });
+        });
+
+        // ==================== 游戏初始化 ====================
+        function initGame() {
+            gameState.score = 0;
+            gameState.lives = 3;
+            gameState.level = 1;
+            gameState.gold = 0;
+            gameState.isGameOver = false;
+            gameState.isWin = false;
+            gameState.isWaiting = false;
+            gameState.purchasedItems = [];
+            gameState.activeEffects = {};
+            gameState.hasShield = false;
+            
+            if (currentDifficulty === 'hell') {
+                hellSpeedMult = 0.5 + Math.random() * 1;
+            }
+            
+            initLevel(1);
+        }
+
+        function getSpeedMultiplier() {
+            const diff = DIFFICULTY[currentDifficulty];
+            if (diff.speedMult === 'random') return hellSpeedMult;
+            return diff.speedMult;
+        }
+
+        function getBrickHealth(baseHealth) {
+            const diff = DIFFICULTY[currentDifficulty];
+            return Math.ceil(baseHealth * diff.brickHealthMult * (1 + gameState.level * 0.1));
+        }
+
+        function initLevel(level) {
+            C = getConstants();
+            
+            const speedBase = (4 + level * 0.5) * gameScale;
+            const speedMult = getSpeedMultiplier();
+            
+            balls = [{
+                x: canvas.width / 2,
+                y: C.PADDLE_Y - C.BALL_RADIUS - 1,
+                vx: 3 * gameScale * speedMult * (Math.random() > 0.5 ? 1 : -1),
+                vy: -speedBase * speedMult,
+                speed: speedBase * speedMult,
+                isFire: false
+            }];
+            
+            // 应用购买的道具
+            let paddleWidth = C.PADDLE_WIDTH;
+            if (gameState.purchasedItems.includes('startWide')) {
+                paddleWidth = C.PADDLE_WIDTH * 1.5;
+            }
+            paddle.width = paddleWidth;
+            paddle.x = canvas.width / 2 - paddle.width / 2;
+            
+            if (gameState.purchasedItems.includes('startMultiball')) {
+                balls.push({
+                    x: canvas.width / 2 - 20 * gameScale,
+                    y: C.PADDLE_Y - C.BALL_RADIUS - 1,
+                    vx: -2 * gameScale * speedMult,
+                    vy: -speedBase * speedMult * 0.8,
+                    speed: speedBase * speedMult,
+                    isFire: false
+                });
+                balls.push({
+                    x: canvas.width / 2 + 20 * gameScale,
+                    y: C.PADDLE_Y - C.BALL_RADIUS - 1,
+                    vx: 2 * gameScale * speedMult,
+                    vy: -speedBase * speedMult * 0.8,
+                    speed: speedBase * speedMult,
+                    isFire: false
+                });
+            }
+            
+            // 额外生命
+            const extraLives = gameState.purchasedItems.filter(i => i === 'extraLife').length;
+            gameState.lives = 3 + extraLives;
+            
+            powerUps = [];
+            particles = [];
+            
+            createBricks(level);
+            updateUI();
+            draw();
+        }
+
+        function createBricks(level) {
+            bricks = [];
+            const diff = DIFFICULTY[currentDifficulty];
+            
+            for (let row = 0; row < C.BRICK_ROWS; row++) {
+                bricks[row] = [];
+                for (let col = 0; col < C.BRICK_COLS; col++) {
+                    // 随机砖块类型
+                    let typeKey = 'NORMAL';
+                    const rand = Math.random();
+                    
+                    // 无敌砖块（难度越高概率越高，不计入通关条件）
+                    if (Math.random() < diff.invincibleRate) {
+                        typeKey = 'INVINCIBLE';
+                    } else if (level >= 5 && rand < 0.1) {
+                        typeKey = 'LUCKY';
+                    } else if (level >= 4 && rand < 0.15) {
+                        typeKey = 'POWER';
+                    } else if (level >= 3 && rand < 0.2) {
+                        typeKey = 'DANGER';
+                    } else if (level >= 2 && rand < 0.3) {
+                        typeKey = 'HARD';
+                    } else if (rand < 0.4) {
+                        typeKey = 'STRONG';
+                    }
+                    
+                    const type = BRICK_TYPES[typeKey];
+                    const health = getBrickHealth(type.health);
+                    
+                    bricks[row][col] = {
+                        x: C.BRICK_OFFSET_LEFT + col * (C.BRICK_WIDTH + C.BRICK_PADDING),
+                        y: C.BRICK_OFFSET_TOP + row * (C.BRICK_HEIGHT + C.BRICK_PADDING),
+                        width: C.BRICK_WIDTH,
+                        height: C.BRICK_HEIGHT,
+                        ...type,
+                        health: health,
+                        maxHealth: health,
+                        visible: !type.invincible,
+                        isInvincible: type.invincible || false
+                    };
+                }
+            }
+        }
+
+        // ==================== 游戏逻辑 ====================
+        function update() {
+            if (gameState.isPaused || gameState.isGameOver || gameState.isWin || gameState.isWaiting) return;
+
+            // 更新挡板
+            const speed = 8 * gameScale;
+            if (keys.left) paddle.x -= speed;
+            if (keys.right) paddle.x += speed;
+            paddle.x = Math.max(0, Math.min(canvas.width - paddle.width, paddle.x));
+
+            // 更新球
+            balls.forEach(ball => {
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+
+                // 墙壁碰撞
+                if (ball.x - C.BALL_RADIUS <= 0 || ball.x + C.BALL_RADIUS >= canvas.width) {
+                    ball.vx = -ball.vx;
+                    ball.x = Math.max(C.BALL_RADIUS, Math.min(canvas.width - C.BALL_RADIUS, ball.x));
+                }
+                if (ball.y - C.BALL_RADIUS <= 0) {
+                    ball.vy = -ball.vy;
+                    ball.y = C.BALL_RADIUS;
+                }
+
+                // 掉落
+                if (ball.y - C.BALL_RADIUS >= canvas.height) {
+                    if (!ball.isFire && !gameState.hasShield) {
+                        const idx = balls.indexOf(ball);
+                        if (idx > -1) balls.splice(idx, 1);
+                        if (balls.length === 0) loseLife();
+                    } else if (ball.isFire) {
+                        ball.y = C.PADDLE_Y - C.BALL_RADIUS;
+                        ball.vy = -Math.abs(ball.vy);
+                    }
+                    return;
+                }
+
+                // 挡板碰撞
+                if (ball.y + C.BALL_RADIUS >= C.PADDLE_Y &&
+                    ball.y - C.BALL_RADIUS <= C.PADDLE_Y + C.PADDLE_HEIGHT &&
+                    ball.x >= paddle.x && ball.x <= paddle.x + paddle.width &&
+                    ball.vy > 0) {
+                    const hitPos = (ball.x - paddle.x) / paddle.width;
+                    const angle = (hitPos - 0.5) * Math.PI * 0.6;
+                    ball.vx = ball.speed * Math.sin(angle);
+                    ball.vy = -ball.speed * Math.cos(angle);
+                    ball.y = C.PADDLE_Y - C.BALL_RADIUS;
+                }
+
+                // 砖块碰撞
+                if (!ball.isFire) checkBrickCollision(ball);
+            });
+
+            // 更新道具
+            for (let i = powerUps.length - 1; i >= 0; i--) {
+                const p = powerUps[i];
+                p.y += p.vy;
+                if (p.y + p.height >= C.PADDLE_Y && p.y <= C.PADDLE_Y + C.PADDLE_HEIGHT &&
+                    p.x + p.width/2 >= paddle.x && p.x - p.width/2 <= paddle.x + paddle.width) {
+                    applyPowerUp(p);
+                    powerUps.splice(i, 1);
+                } else if (p.y > canvas.height) {
+                    powerUps.splice(i, 1);
+                }
+            }
+
+            // 更新粒子
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx; p.y += p.vy; p.vy += 0.2 * gameScale; p.life -= 0.02;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+
+            // 更新效果计时器
+            const now = Date.now();
+            Object.keys(gameState.activeEffects).forEach(key => {
+                if (now > gameState.activeEffects[key]) {
+                    delete gameState.activeEffects[key];
+                    if (key === 'wide') paddle.width = C.PADDLE_WIDTH;
+                    if (key === 'slow') balls.forEach(b => { b.speed /= 0.7; b.vx /= 0.7; b.vy /= 0.7; });
+                    if (key === 'fire') balls.forEach(b => b.isFire = false);
+                    if (key === 'shield') gameState.hasShield = false;
+                }
+            });
+
+            // 检查关卡完成
+            checkLevelComplete();
+        }
+
+        function checkBrickCollision(ball) {
+            for (let row = 0; row < C.BRICK_ROWS; row++) {
+                for (let col = 0; col < C.BRICK_COLS; col++) {
+                    const brick = bricks[row][col];
+                    if (!brick.visible || brick.isInvincible) continue;
+
+                    if (ball.x + C.BALL_RADIUS > brick.x && ball.x - C.BALL_RADIUS < brick.x + brick.width &&
+                        ball.y + C.BALL_RADIUS > brick.y && ball.y - C.BALL_RADIUS < brick.y + brick.height) {
+                        
+                        brick.health--;
+                        ball.vy = -ball.vy;
+
+                        if (brick.health <= 0) destroyBrick(brick, row, col);
+                        else createParticles(brick.x + brick.width/2, brick.y + brick.height/2, brick.color, 3);
+                        return;
+                    }
+                }
+            }
+        }
+
+        function destroyBrick(brick, row, col) {
+            brick.visible = false;
+            
+            const now = Date.now();
+            gameState.combo = (now - gameState.lastHitTime < 3000) ? gameState.combo + 1 : 1;
+            gameState.lastHitTime = now;
+
+            let comboMult = 1;
+            if (gameState.combo >= 50) comboMult = 3;
+            else if (gameState.combo >= 20) comboMult = 2;
+            else if (gameState.combo >= 10) comboMult = 1.5;
+            else if (gameState.combo >= 5) comboMult = 1.2;
+
+            gameState.score += Math.floor(brick.score * comboMult * (1 + gameState.level * 0.1));
+            gameState.gold += brick.gold * comboMult;
+
+            const diff = DIFFICULTY[currentDifficulty];
+            if (brick.dropPowerUp || Math.random() < diff.dropRate) {
+                spawnPowerUp(brick.x + brick.width / 2, brick.y);
+            }
+            createParticles(brick.x + brick.width/2, brick.y + brick.height/2, brick.color, 8);
+
+            if (brick.speedBoost) {
+                balls.forEach(ball => { ball.speed *= 1.15; ball.vx *= 1.15; ball.vy *= 1.15; });
+            }
+            updateUI();
+        }
+
+        function spawnPowerUp(x, y) {
+            const types = Object.keys(POWERUPS);
+            const type = types[Math.floor(Math.random() * types.length)];
+            powerUps.push({
+                x, y,
+                width: 30 * gameScale, height: 15 * gameScale,
+                vy: 2 * gameScale,
+                ...POWERUPS[type]
+            });
+        }
+
+        function applyPowerUp(powerUp) {
+            gameState.score += 50;
+            
+            switch(powerUp.effect) {
+                case 'wide':
+                    paddle.width = Math.min(200 * gameScale, paddle.width + 30 * gameScale);
+                    gameState.activeEffects.wide = Date.now() + powerUp.duration;
+                    break;
+                case 'multiball':
+                    if (balls.length > 0 && balls.length < 5) {
+                        const o = balls[0];
+                        balls.push({ x: o.x, y: o.y, vx: -o.vx * 0.5, vy: o.vy, speed: o.speed, isFire: false });
+                        balls.push({ x: o.x, y: o.y, vx: o.vx * 0.5, vy: o.vy, speed: o.speed, isFire: false });
+                    }
+                    break;
+                case 'slow':
+                    balls.forEach(ball => { ball.speed *= 0.7; ball.vx *= 0.7; ball.vy *= 0.7; });
+                    gameState.activeEffects.slow = Date.now() + powerUp.duration;
+                    break;
+                case 'fire':
+                    balls.forEach(ball => ball.isFire = true);
+                    gameState.activeEffects.fire = Date.now() + powerUp.duration;
+                    break;
+                case 'extralife':
+                    gameState.lives++;
+                    break;
+                case 'shield':
+                    gameState.hasShield = true;
+                    gameState.activeEffects.shield = Date.now() + powerUp.duration;
+                    break;
+            }
+            updateUI();
+        }
+
+        function loseLife() {
+            gameState.lives--;
+            gameState.combo = 0;
+            updateUI();
+            
+            if (gameState.lives <= 0) {
+                gameOver();
+            } else {
+                const speedMult = getSpeedMultiplier();
+                const speedBase = (4 + gameState.level * 0.5) * gameScale;
+                balls = [{
+                    x: canvas.width / 2,
+                    y: C.PADDLE_Y - C.BALL_RADIUS - 1,
+                    vx: 3 * gameScale * speedMult * (Math.random() > 0.5 ? 1 : -1),
+                    vy: -speedBase * speedMult,
+                    speed: speedBase * speedMult,
+                    isFire: false
+                }];
+                paddle.x = canvas.width / 2 - paddle.width / 2;
+            }
+        }
+
+        function checkLevelComplete() {
+            const remaining = bricks.flat().filter(b => b.visible && !b.isInvincible).length;
+            document.getElementById('bricks').textContent = remaining;
+            
+            if (remaining === 0) {
+                gameState.isWaiting = true;
+                const levelGold = Math.floor(gameState.level * 20 * (1 + gameState.combo * 0.1));
+                gameState.gold += levelGold;
+                document.getElementById('levelGold').textContent = levelGold;
+                showOverlay('levelCompleteOverlay');
+                
+                // 移除一次性道具
+                gameState.purchasedItems = gameState.purchasedItems.filter(id => {
+                    const item = SHOP_ITEMS.find(i => i.id === id);
+                    return item && !item.oneTime;
+                });
+            }
+        }
+
+        function gameOver() {
+            gameState.isRunning = false;
+            gameState.isGameOver = true;
+            document.getElementById('finalScore').textContent = gameState.score;
+            document.getElementById('finalGold').textContent = gameState.gold;
+            document.getElementById('reviveBtn').disabled = gameState.gold < 50;
+            showOverlay('gameOverOverlay');
+            updateButtons();
+        }
+
+        function gameWin() {
+            gameState.isRunning = false;
+            gameState.isWin = true;
+            document.getElementById('winScore').textContent = gameState.score;
+            document.getElementById('winGold').textContent = gameState.gold;
+            showOverlay('winOverlay');
+            updateButtons();
+        }
+
+        // ==================== 渲染 ====================
+        function draw() {
+            ctx.fillStyle = '#0a0a1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 网格
+            ctx.strokeStyle = 'rgba(0, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 40 * gameScale) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 40 * gameScale) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            // 砖块
+            bricks.forEach(row => row.forEach(brick => {
+                if (brick.visible) {
+                    const gradient = ctx.createLinearGradient(brick.x, brick.y, brick.x, brick.y + brick.height);
+                    gradient.addColorStop(0, brick.color);
+                    gradient.addColorStop(1, adjustColor(brick.color, -40));
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(brick.x, brick.y, brick.width, brick.height);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.fillRect(brick.x, brick.y, brick.width, 3 * gameScale);
+                    
+                    // 显示血量（如果购买了探测器或血量>1）
+                    const showHealth = gameState.purchasedItems.includes('brickDetector') || brick.maxHealth > 1;
+                    if (showHealth && brick.maxHealth > 1 && !brick.isInvincible) {
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                        ctx.font = `${10 * gameScale}px Arial`;
+                        ctx.textAlign = 'center';
+                        ctx.fillText('❤'.repeat(Math.min(5, brick.health)), brick.x + brick.width/2, brick.y + brick.height/2 + 3 * gameScale);
+                    }
+                    if (brick.isInvincible) {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                        ctx.font = `bold ${12 * gameScale}px Arial`;
+                        ctx.textAlign = 'center';
+                        ctx.fillText('🔒', brick.x + brick.width/2, brick.y + brick.height/2 + 4 * gameScale);
+                    }
+                }
+            }));
+
+            // 挡板
+            const paddleGradient = ctx.createLinearGradient(paddle.x, C.PADDLE_Y, paddle.x, C.PADDLE_Y + C.PADDLE_HEIGHT);
+            paddleGradient.addColorStop(0, gameState.activeEffects.wide ? '#00ff88' : '#00c9ff');
+            paddleGradient.addColorStop(1, gameState.activeEffects.wide ? '#00ff44' : '#00ff88');
+            ctx.fillStyle = paddleGradient;
+            ctx.shadowColor = gameState.activeEffects.wide ? '#00ff88' : '#00ffff';
+            ctx.shadowBlur = 15;
+            ctx.fillRect(paddle.x, C.PADDLE_Y, paddle.width, C.PADDLE_HEIGHT);
+            ctx.shadowBlur = 0;
+
+            // 球
+            balls.forEach(ball => {
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, C.BALL_RADIUS, 0, Math.PI * 2);
+                const ballGradient = ctx.createRadialGradient(ball.x, ball.y, 0, ball.x, ball.y, C.BALL_RADIUS);
+                ballGradient.addColorStop(0, ball.isFire ? '#ffcc00' : '#ffffff');
+                ballGradient.addColorStop(1, ball.isFire ? '#ff4400' : '#00ffff');
+                ctx.fillStyle = ballGradient;
+                ctx.shadowColor = ball.isFire ? '#ff6600' : '#00ffff';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+
+            // 道具
+            powerUps.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.shadowColor = p.color;
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.roundRect(p.x - p.width/2, p.y, p.width, p.height, 5);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+
+            // 粒子
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3 * gameScale, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+
+            // 护盾效果
+            if (gameState.hasShield) {
+                ctx.strokeStyle = 'rgba(0, 255, 255, 0.5)';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(paddle.x + paddle.width/2, C.PADDLE_Y + C.PADDLE_HEIGHT/2, paddle.width/2 + 10 * gameScale, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // 连击
+            if (gameState.combo >= 5) {
+                ctx.fillStyle = `rgba(255, 215, 0, ${Math.min(1, gameState.combo / 20)})`;
+                ctx.font = `bold ${20 * gameScale}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.fillText(`${gameState.combo} COMBO!`, canvas.width / 2, canvas.height * 0.3);
+            }
+        }
+
+        function adjustColor(color, amount) {
+            const hex = color.replace('#', '');
+            const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
+            const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
+            const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
+            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        }
+
+        // ==================== 游戏循环 ====================
+        function gameLoop() {
+            if (gameState.isRunning && !gameState.isPaused) {
+                update();
+                draw();
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        // ==================== UI 函数 ====================
+        function updateUI() {
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('lives').textContent = '❤️'.repeat(Math.max(0, gameState.lives));
+            document.getElementById('level').textContent = gameState.level;
+            document.getElementById('gold').textContent = gameState.gold;
+        }
+
+        function updateButtons() {
+            document.getElementById('startBtn').disabled = gameState.isRunning;
+            document.getElementById('pauseBtn').disabled = !gameState.isRunning || gameState.isGameOver || gameState.isWin;
+            document.getElementById('shopBtn').disabled = !gameState.isWaiting;
+        }
+
+        function showOverlay(id) {
+            document.querySelectorAll('.overlay').forEach(o => {
+                if (o.id !== id) o.classList.remove('active');
+            });
+            document.getElementById(id).classList.add('active');
+        }
+
+        function hideOverlay(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function togglePause() {
+            if (!gameState.isRunning || gameState.isGameOver || gameState.isWin || gameState.isWaiting) return;
+            gameState.isPaused = !gameState.isPaused;
+            document.getElementById('pauseBtn').textContent = gameState.isPaused ? '▶️ 继续' : '⏸️ 暂停';
+            document.getElementById('pauseScore').textContent = gameState.score;
+            if (gameState.isPaused) showOverlay('pauseOverlay');
+            else hideOverlay('pauseOverlay');
+        }
+
+        function startGame() {
+            initGame();
+            gameState.isRunning = true;
+            gameState.isPaused = false;
+            gameState.isWaiting = false;
+            hideOverlay('startOverlay');
+            updateButtons();
+            updateUI();
+            gameLoop();
+        }
+
+        function restartGame() {
+            initGame();
+            gameState.isRunning = true;
+            gameState.isPaused = false;
+            gameState.isWaiting = false;
+            hideOverlay('gameOverOverlay');
+            hideOverlay('winOverlay');
+            hideOverlay('pauseOverlay');
+            updateButtons();
+            updateUI();
+            gameLoop();
+        }
+
+        function nextLevel() {
+            gameState.level++;
+            gameState.isWaiting = false;
+            gameState.isPaused = false;
+            hideOverlay('levelCompleteOverlay');
+            initLevel(gameState.level);
+            updateButtons();
+            // 等待玩家点击开始
+            showOverlay('pauseOverlay');
+            document.querySelector('#pauseOverlay .overlay-title').textContent = '👆 点击继续';
+            document.querySelector('#pauseOverlay .overlay-score').textContent = '准备好再开始';
+        }
+
+        // ==================== 商店系统 ====================
+        function openShop() {
+            document.getElementById('shopGold').textContent = gameState.gold;
+            const grid = document.getElementById('shopGrid');
+            grid.innerHTML = '';
+            
+            SHOP_ITEMS.forEach(item => {
+                const alreadyBought = gameState.purchasedItems.includes(item.id) && item.oneTime;
+                const canAfford = gameState.gold >= item.price;
+                
+                const div = document.createElement('div');
+                div.className = 'shop-item' + (alreadyBought || !canAfford ? ' disabled' : '');
+                div.innerHTML = `
+                    <div class="shop-item-name">${item.name}</div>
+                    <div class="shop-item-desc">${item.desc}</div>
+                    <div class="shop-item-price">💰 ${item.price}</div>
+                `;
+                
+                if (!alreadyBought) {
+                    div.onclick = () => buyItem(item);
+                }
+                grid.appendChild(div);
+            });
+            
+            showOverlay('shopOverlay');
+        }
+
+        function buyItem(item) {
+            if (gameState.gold >= item.price) {
+                gameState.gold -= item.price;
+                gameState.purchasedItems.push(item.id);
+                document.getElementById('shopGold').textContent = gameState.gold;
+                openShop(); // 刷新显示
+            }
+        }
+
+        function closeShop() {
+            hideOverlay('shopOverlay');
+        }
+
+        function reviveWithGold() {
+            if (gameState.gold >= 50) {
+                gameState.gold -= 50;
+                gameState.lives = 1;
+                gameState.isGameOver = false;
+                gameState.isRunning = true;
+                hideOverlay('gameOverOverlay');
+                
+                const speedMult = getSpeedMultiplier();
+                const speedBase = (4 + gameState.level * 0.5) * gameScale;
+                balls = [{
+                    x: canvas.width / 2,
+                    y: C.PADDLE_Y - C.BALL_RADIUS - 1,
+                    vx: 3 * gameScale * speedMult * (Math.random() > 0.5 ? 1 : -1),
+                    vy: -speedBase * speedMult,
+                    speed: speedBase * speedMult,
+                    isFire: false
+                }];
+                paddle.x = canvas.width / 2 - paddle.width / 2;
+                updateUI();
+                updateButtons();
+                gameLoop();
+            }
+        }
+
+        // ==================== 按钮事件 ====================
+        document.getElementById('startBtn').addEventListener('click', () => {
+            if (gameState.isWaiting) {
+                gameState.isWaiting = false;
+                gameState.isPaused = false;
+                hideOverlay('pauseOverlay');
+                document.querySelector('#pauseOverlay .overlay-title').textContent = '⏸️ 已暂停';
+                gameLoop();
+            } else if (!gameState.isRunning) {
+                startGame();
+            }
+        });
+        document.getElementById('pauseBtn').addEventListener('click', togglePause);
+        document.getElementById('shopBtn').addEventListener('click', openShop);
+        document.getElementById('restartBtn').addEventListener('click', restartGame);
+
+        // ==================== 初始化 ====================
+        window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+        resizeCanvas();
+        updateUI();
+        draw();
+    </script>
+</body>
+</html>

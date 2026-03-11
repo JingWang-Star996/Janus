@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打砖块游戏 - Neon Breakout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0f0f2f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 动态背景网格 */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
+        }
+
+        /* 主容器 */
+        .game-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 30px;
+            background: rgba(10, 10, 30, 0.8);
+            border-radius: 20px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 
+                0 0 40px rgba(0, 255, 255, 0.2),
+                inset 0 0 60px rgba(0, 100, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* 游戏标题 */
+        .game-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            letter-spacing: 3px;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 200% center; }
+        }
+
+        /* 信息面板 */
+        .info-panel {
+            display: flex;
+            gap: 40px;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .info-label {
+            font-size: 0.85em;
+            color: rgba(0, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .info-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .info-value.lives {
+            color: #ff6b6b;
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
+        }
+
+        .info-value.level {
+            color: #ffd93d;
+            text-shadow: 0 0 15px rgba(255, 217, 61, 0.8);
+        }
+
+        /* 游戏画布容器 */
+        .canvas-wrapper {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 255, 0.3),
+                inset 0 0 50px rgba(0, 100, 255, 0.2);
+            border: 2px solid rgba(0, 255, 255, 0.4);
+        }
+
+        #gameCanvas {
+            display: block;
+            background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3a 100%);
+        }
+
+        /* 控制按钮 */
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #00c9ff, #00ff88);
+            color: #0a0a1a;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-start:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-pause {
+            background: linear-gradient(135deg, #ffd93d, #ff9500);
+            color: #0a0a1a;
+            box-shadow: 0 0 20px rgba(255, 217, 61, 0.4);
+        }
+
+        .btn-pause:hover {
+            box-shadow: 0 0 30px rgba(255, 217, 61, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-restart:hover {
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 游戏结束/暂停覆盖层 */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border-radius: 15px;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .overlay-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+        }
+
+        .overlay-score {
+            font-size: 1.5em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 装饰性光效 */
+        .glow-effect {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .glow-1 {
+            top: -150px;
+            left: -150px;
+            background: #00ffff;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .glow-2 {
+            bottom: -150px;
+            right: -150px;
+            background: #ff00ff;
+            animation: pulse 4s ease-in-out infinite 2s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .game-container {
+                padding: 20px;
+                gap: 15px;
+            }
+
+            .game-title {
+                font-size: 2em;
+            }
+
+            .info-panel {
+                gap: 20px;
+                padding: 10px 20px;
+            }
+
+            .info-value {
+                font-size: 1.5em;
+                min-width: 60px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .info-panel {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .controls {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 装饰性光效 -->
+    <div class="glow-effect glow-1"></div>
+    <div class="glow-effect glow-2"></div>
+
+    <!-- 主游戏容器 -->
+    <div class="game-container">
+        <!-- 游戏标题 -->
+        <h1 class="game-title">🎮 NEON BREAKOUT</h1>
+
+        <!-- 信息面板 -->
+        <div class="info-panel">
+            <div class="info-item">
+                <span class="info-label">得分</span>
+                <span class="info-value" id="score">0</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">生命</span>
+                <span class="info-value lives" id="lives">❤️❤️❤️</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">关卡</span>
+                <span class="info-value level" id="level">1</span>
+            </div>
+        </div>
+
+        <!-- 游戏画布 -->
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            
+            <!-- 游戏状态覆盖层 -->
+            <div class="overlay" id="pauseOverlay">
+                <div class="overlay-title">⏸️ 已暂停</div>
+                <div class="overlay-score">当前得分：<span id="pauseScore">0</span></div>
+            </div>
+
+            <div class="overlay" id="gameOverOverlay">
+                <div class="overlay-title">💀 游戏结束</div>
+                <div class="overlay-score">最终得分：<span id="finalScore">0</span></div>
+            </div>
+
+            <div class="overlay" id="levelCompleteOverlay">
+                <div class="overlay-title">🎉 关卡完成!</div>
+                <div class="overlay-score">进入下一关...</div>
+            </div>
+        </div>
+
+        <!-- 控制按钮 -->
+        <div class="controls">
+            <button class="btn btn-start" id="startBtn">▶️ 开始游戏</button>
+            <button class="btn btn-pause" id="pauseBtn" disabled>⏸️ 暂停</button>
+            <button class="btn btn-restart" id="restartBtn">🔄 重新开始</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态管理
+        const gameState = {
+            score: 0,
+            lives: 3,
+            level: 1,
+            isRunning: false,
+            isPaused: false
+        };
+
+        // DOM 元素
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const livesEl = document.getElementById('lives');
+        const levelEl = document.getElementById('level');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const pauseOverlay = document.getElementById('pauseOverlay');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const levelCompleteOverlay = document.getElementById('levelCompleteOverlay');
+
+        // 更新 UI 显示
+        function updateUI() {
+            scoreEl.textContent = gameState.score;
+            livesEl.textContent = '❤️'.repeat(gameState.lives);
+            levelEl.textContent = gameState.level;
+        }
+
+        // 按钮事件监听
+        startBtn.addEventListener('click', () => {
+            if (!gameState.isRunning) {
+                gameState.isRunning = true;
+                gameState.isPaused = false;
+                startBtn.disabled = true;
+                pauseBtn.disabled = false;
+                pauseOverlay.classList.remove('active');
+                gameOverOverlay.classList.remove('active');
+                initGame();
+                gameLoop();
+            }
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            if (gameState.isRunning) {
+                gameState.isPaused = !gameState.isPaused;
+                pauseBtn.textContent = gameState.isPaused ? '▶️ 继续' : '⏸️ 暂停';
+                pauseOverlay.classList.toggle('active', gameState.isPaused);
+                document.getElementById('pauseScore').textContent = gameState.score;
+            }
+        });
+
+        restartBtn.addEventListener('click', () => {
+            gameState.score = 0;
+            gameState.lives = 3;
+            gameState.level = 1;
+            gameState.isRunning = false;
+            gameState.isPaused = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            pauseBtn.textContent = '⏸️ 暂停';
+            pauseOverlay.classList.remove('active');
+            gameOverOverlay.classList.remove('active');
+            levelCompleteOverlay.classList.remove('active');
+            updateUI();
+            clearCanvas();
+        });
+
+        // 清空画布
+        function clearCanvas() {
+            ctx.fillStyle = '#0a0a1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 初始化游戏（示例）
+        function initGame() {
+            clearCanvas();
+            updateUI();
+            // 这里可以添加游戏初始化逻辑
+            // 如：创建球、挡板、砖块等
+        }
+
+        // 游戏主循环
+        function gameLoop() {
+            if (!gameState.isRunning) return;
+            
+            if (!gameState.isPaused) {
+                // 游戏更新逻辑
+                // update();
+                // render();
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+
+        // 初始渲染
+        clearCanvas();
+        updateUI();
+
+        // 绘制示例网格（装饰）
+        function drawDecorativeGrid() {
+            ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            
+            for (let x = 0; x < canvas.width; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        drawDecorativeGrid();
+    </script>
+</body>
+</html>
