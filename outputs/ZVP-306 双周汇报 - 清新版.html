@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZVP 项目组 306 版本双周汇报</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+        .slides-container { width: 100%; height: 100%; position: relative; }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            padding: 40px 70px;
+        }
+        .slide.active { display: flex; opacity: 1; }
+        .slide-content {
+            background: white;
+            border-radius: 20px;
+            padding: 45px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            flex: 1;
+            overflow-y: auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #10b981;
+        }
+        .header h1 {
+            font-size: 34px;
+            color: #065f46;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header .subtitle { font-size: 16px; color: #6b7280; }
+        .header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            margin-top: 18px;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #059669;
+            font-weight: 600;
+            background: #f0fdf4;
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+        .section { margin-bottom: 28px; }
+        .section h2 {
+            font-size: 22px;
+            color: #065f46;
+            margin-bottom: 18px;
+            padding-left: 15px;
+            border-left: 4px solid #10b981;
+            font-weight: 600;
+        }
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+        .module-card {
+            background: #f9fafb;
+            border-radius: 14px;
+            padding: 22px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+        .module-card:hover {
+            border-color: #10b981;
+            background: #f0fdf4;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(16,185,129,0.15);
+        }
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .module-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #065f46;
+        }
+        .module-status {
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-done { background: #10b981; color: white; }
+        .status-progress { background: #f59e0b; color: white; }
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .progress-label {
+            width: 110px;
+            font-size: 13px;
+            color: #374151;
+            font-weight: 500;
+        }
+        .progress-track {
+            flex: 1;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            border-radius: 8px;
+            transition: width 0.6s ease;
+        }
+        .progress-percent {
+            width: 45px;
+            text-align: right;
+            font-size: 13px;
+            font-weight: 600;
+            color: #065f46;
+        }
+        .feature-list {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+        .feature-item::before {
+            content: "✓";
+            color: #10b981;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .image-placeholder {
+            width: 100%;
+            height: 260px;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            border: 2px dashed #10b981;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 14px;
+            margin: 22px 0;
+        }
+        .image-placeholder::after { content: "📸 截图后在此处贴图"; }
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin: 28px 0;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+            padding: 22px;
+            border-radius: 14px;
+            text-align: center;
+        }
+        .summary-number {
+            font-size: 38px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .summary-label {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+            padding: 22px;
+            border-radius: 14px;
+            margin: 22px 0;
+        }
+        .highlight-box h3 { color: white; margin-bottom: 10px; font-size: 18px; }
+        .highlight-box p { font-size: 14px; line-height: 1.7; }
+        .nav-dots {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(16,185,129,0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .dot.active { background: #10b981; transform: scale(1.3); }
+        .nav-buttons {
+            position: fixed;
+            bottom: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 18px;
+            z-index: 1000;
+        }
+        .nav-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #10b981;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #10b981;
+        }
+        .nav-btn:hover { transform: scale(1.12); background: #10b981; color: white; }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(16,185,129,0.2);
+            z-index: 1000;
+        }
+        .progress-fill-top {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            transition: width 0.4s ease;
+        }
+        .slide-number {
+            position: fixed;
+            top: 22px;
+            right: 35px;
+            color: #065f46;
+            font-size: 14px;
+            z-index: 1000;
+            background: #f0fdf4;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            border: 2px solid #10b981;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-indicator"><div class="progress-fill-top" id="progressTop" style="width: 16.7%"></div></div>
+    <div class="slide-number" id="slideNumber">1 / 6</div>
+
+    <div class="slides-container">
+        <!-- Slide 1: 封面 -->
+        <div class="slide active" data-slide="1">
+            <div class="slide-content" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div style="font-size: 100px; margin-bottom: 25px;">🎮</div>
+                <h1 style="font-size: 42px; color: #065f46; margin-bottom: 18px; font-weight: 700;">ZVP 项目组 306 版本双周汇报</h1>
+                <p style="font-size: 20px; color: #6b7280; margin-bottom: 45px;">2026 年 3 月 2 日 - 3 月 13 日</p>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; width: 100%; max-width: 750px;">
+                    <div style="text-align: center; padding: 22px; background: #f0fdf4; border-radius: 14px; border: 2px solid #10b981;">
+                        <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">汇报对象</div>
+                        <div style="font-size: 26px; font-weight: 700; color: #065f46;">勇哥</div>
+                    </div>
+                    <div style="text-align: center; padding: 22px; background: #f0fdf4; border-radius: 14px; border: 2px solid #10b981;">
+                        <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">汇报人</div>
+                        <div style="font-size: 26px; font-weight: 700; color: #065f46;">ZVP 制作人</div>
+                    </div>
+                    <div style="text-align: center; padding: 22px; background: #f0fdf4; border-radius: 14px; border: 2px solid #10b981;">
+                        <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">版本号</div>
+                        <div style="font-size: 26px; font-weight: 700; color: #065f46;">306</div>
+                    </div>
+                </div>
+                <div class="image-placeholder" style="margin-top: 45px; height: 200px;"></div>
+                <p style="color: #9ca3af; font-size: 14px; margin-top: 22px;">← 左右滑动翻页 →</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: 整体进度 -->
+        <div class="slide" data-slide="2">
+            <div class="slide-content">
+                <div class="header">
+                    <h1>📊 整体进度概览</h1>
+                    <p class="subtitle">306 版本双周核心成果</p>
+                    <div class="meta">
+                        <div class="meta-item">📅 3/2-3/13</div>
+                        <div class="meta-item">🎯 版本打包完成</div>
+                        <div class="meta-item">🐛 BUG 修复中</div>
+                        <div class="meta-item">📅 周五提审</div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎉 本周核心成果</h3>
+                    <p><strong>完成了版本打包，正在进行 BUG 修复，争取本周五提审！</strong></p>
+                </div>
+
+                <div class="summary-cards">
+                    <div class="summary-card"><span class="summary-number">6</span><span class="summary-label">功能模块</span></div>
+                    <div class="summary-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);"><span class="summary-number">3</span><span class="summary-label">已完成</span></div>
+                    <div class="summary-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"><span class="summary-number">3</span><span class="summary-label">进行中</span></div>
+                    <div class="summary-card" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);"><span class="summary-number">92%</span><span class="summary-label">整体进度</span></div>
+                </div>
+
+                <div class="section">
+                    <h2>📈 模块进度总览</h2>
+                    <div class="module-grid">
+                        <div class="module-card"><div class="module-header"><span class="module-title">⚔️ 战斗系统</span><span class="module-status status-progress">85%</span></div><div class="progress-track"><div class="progress-fill" style="width: 85%"></div></div></div>
+                        <div class="module-card"><div class="module-header"><span class="module-title">🐾 宠物系统</span><span class="module-status status-done">100%</span></div><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div></div>
+                        <div class="module-card"><div class="module-header"><span class="module-title">🎰 抽奖系统</span><span class="module-status status-done">100%</span></div><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div></div>
+                        <div class="module-card"><div class="module-header"><span class="module-title">📖 主线剧情</span><span class="module-status status-progress">90%</span></div><div class="progress-track"><div class="progress-fill" style="width: 90%"></div></div></div>
+                        <div class="module-card"><div class="module-header"><span class="module-title">🎨 美术资源</span><span class="module-status status-progress">80%</span></div><div class="progress-track"><div class="progress-fill" style="width: 80%"></div></div></div>
+                        <div class="module-card"><div class="module-header"><span class="module-title">🗺️ 场景地图</span><span class="module-status status-done">100%</span></div><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div></div>
+                    </div>
+                </div>
+
+                <div class="image-placeholder"></div>
+            </div>
+        </div>
+
+        <!-- Slide 3: 核心模块（上） -->
+        <div class="slide" data-slide="3">
+            <div class="slide-content">
+                <div class="header">
+                    <h1>⚔️🐾 核心模块进度（上）</h1>
+                    <p class="subtitle">战斗系统与宠物系统</p>
+                </div>
+
+                <div class="module-card" style="margin-bottom: 22px;">
+                    <div class="module-header">
+                        <span class="module-title" style="font-size: 20px;">⚔️ 战斗系统</span>
+                        <span class="module-status status-progress" style="font-size: 13px; padding: 5px 16px;">85% 进行中</span>
+                    </div>
+                    <div class="progress-item"><span class="progress-label">对地型技能</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">预警圈系统</span><div class="progress-track"><div class="progress-fill" style="width: 80%"></div></div><span class="progress-percent">80%</span></div>
+                    <div class="progress-item"><span class="progress-label">BUG 修复</span><div class="progress-track"><div class="progress-fill" style="width: 75%"></div></div><span class="progress-percent">75%</span></div>
+                    <div class="feature-list">
+                        <div class="feature-item">新增对地型技能和抛物线弹道，Boss 对地技能铺开实现</div>
+                        <div class="feature-item">矩形预警圈和相关逻辑，技能预警圈实现中</div>
+                        <div class="feature-item">修复血条残留、切地图、战争迷雾等 BUG</div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <span class="module-title" style="font-size: 20px;">🐾 宠物系统</span>
+                        <span class="module-status status-done" style="font-size: 13px; padding: 5px 16px;">100% 完成</span>
+                    </div>
+                    <div class="progress-item"><span class="progress-label">宠物升级</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">第四批宠物</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">进化优化</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="feature-list">
+                        <div class="feature-item">宠物升级功能优化完成，宠物槽位点击升级</div>
+                        <div class="feature-item">第四批 19 只宠物立绘 + 头像 100% 完成</div>
+                        <div class="feature-item">155 个宠物遗物道具全部完成</div>
+                    </div>
+                </div>
+
+                <div class="image-placeholder"></div>
+            </div>
+        </div>
+
+        <!-- Slide 4: 核心模块（下） -->
+        <div class="slide" data-slide="4">
+            <div class="slide-content">
+                <div class="header">
+                    <h1>🎰📖 核心模块进度（下）</h1>
+                    <p class="subtitle">抽奖系统与主线剧情</p>
+                </div>
+
+                <div class="module-card" style="margin-bottom: 22px;">
+                    <div class="module-header">
+                        <span class="module-title" style="font-size: 20px;">🎰 抽奖系统</span>
+                        <span class="module-status status-done" style="font-size: 13px; padding: 5px 16px;">100% 完成</span>
+                    </div>
+                    <div class="progress-item"><span class="progress-label">奖池等级</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">视频接入</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">系统简化</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="feature-list">
+                        <div class="feature-item">奖池等级与抽奖次数挂钩，同步展示各等级预览</div>
+                        <div class="feature-item">抽卡视频接入播放，宠物&枪械抽奖视频完成</div>
+                        <div class="feature-item">去掉普通抽卡页签，简化抽奖流程</div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <span class="module-title" style="font-size: 20px;">📖 主线剧情</span>
+                        <span class="module-status status-progress" style="font-size: 13px; padding: 5px 16px;">90% 进行中</span>
+                    </div>
+                    <div class="progress-item"><span class="progress-label">30 日签到</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">BOSS 难度</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">自动战斗</span><div class="progress-track"><div class="progress-fill" style="width: 80%"></div></div><span class="progress-percent">80%</span></div>
+                    <div class="feature-list">
+                        <div class="feature-item">30 日签到奖励设计与配置 100% 完成</div>
+                        <div class="feature-item">主线 BOSS 难度调整完成</div>
+                        <div class="feature-item">离线自动战斗功能关闭进行中</div>
+                    </div>
+                </div>
+
+                <div class="image-placeholder"></div>
+            </div>
+        </div>
+
+        <!-- Slide 5: 美术与场景 -->
+        <div class="slide" data-slide="5">
+            <div class="slide-content">
+                <div class="header">
+                    <h1>🎨🗺️ 美术与场景进度</h1>
+                    <p class="subtitle">美术资源与场景地图</p>
+                </div>
+
+                <div class="module-card" style="margin-bottom: 22px;">
+                    <div class="module-header">
+                        <span class="module-title" style="font-size: 20px;">🎨 美术资源</span>
+                        <span class="module-status status-progress" style="font-size: 13px; padding: 5px 16px;">80% 进行中</span>
+                    </div>
+                    <div class="progress-item"><span class="progress-label">UI 设计</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">宠物立绘</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">角色动作</span><div class="progress-track"><div class="progress-fill" style="width: 60%"></div></div><span class="progress-percent">60%</span></div>
+                    <div class="feature-list">
+                        <div class="feature-item">第 4 批 19 只宠物立绘 + 头像 100% 完成</div>
+                        <div class="feature-item">迷雾新版本主界面设计 100% 完成</div>
+                        <div class="feature-item">01 男角色步枪动作：跑步 3 方向完成，后退 3 方向进行中</div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <span class="module-title" style="font-size: 20px;">🗺️ 场景地图</span>
+                        <span class="module-status status-done" style="font-size: 13px; padding: 5px 16px;">100% 完成</span>
+                    </div>
+                    <div class="progress-item"><span class="progress-label">森林地图</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">视角调整</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="progress-item"><span class="progress-label">工具制作</span><div class="progress-track"><div class="progress-fill" style="width: 100%"></div></div><span class="progress-percent">100%</span></div>
+                    <div class="feature-list">
+                        <div class="feature-item">森林大地图遮挡调整 100% 完成</div>
+                        <div class="feature-item">森林地图切分制作 100% 完成</div>
+                        <div class="feature-item">游戏视角调整 100% 完成</div>
+                    </div>
+                </div>
+
+                <div class="image-placeholder"></div>
+            </div>
+        </div>
+
+        <!-- Slide 6: 下周计划 -->
+        <div class="slide" data-slide="6">
+            <div class="slide-content">
+                <div class="header">
+                    <h1>📅 下周计划与风险</h1>
+                    <p class="subtitle">提审准备与后续规划</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 核心目标：本周五提审</h3>
+                    <p>版本打包已完成，正在进行最终 BUG 修复，全力确保周五顺利提审！</p>
+                </div>
+
+                <div class="module-grid">
+                    <div class="module-card">
+                        <div class="module-header"><span class="module-title">✅ 下周计划</span></div>
+                        <div class="feature-list">
+                            <div class="feature-item">完成所有 P0/P1 BUG 修复</div>
+                            <div class="feature-item">周五提交版本审核</div>
+                            <div class="feature-item">准备上线后数据监控方案</div>
+                            <div class="feature-item">美术资源收尾工作</div>
+                        </div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-header"><span class="module-title">⚠️ 风险预警</span></div>
+                        <div class="feature-list">
+                            <div class="feature-item" style="color: #f59e0b;">🟡 提审时间：如周五无法完成，需调整时间</div>
+                            <div class="feature-item" style="color: #f59e0b;">🟡 美术资源：男角色动作仍在进行中</div>
+                            <div class="feature-item" style="color: #10b981;">🟢 版本打包：已完成，状态良好</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-placeholder"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()">←</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">→</button>
+    </div>
+
+    <script>
+        let currentSlide = 1, totalSlides = 6;
+        function showSlide(slide) {
+            if (slide < 1) slide = 1; if (slide > totalSlides) slide = totalSlides;
+            document.querySelectorAll('.slide').forEach(s => { s.classList.remove('active'); if (parseInt(s.dataset.slide) === slide) s.classList.add('active'); });
+            document.querySelectorAll('.dot').forEach((dot, i) => { dot.classList.toggle('active', i + 1 === slide); });
+            document.getElementById('prevBtn').disabled = slide === 1; document.getElementById('nextBtn').disabled = slide === totalSlides;
+            document.getElementById('progressTop').style.width = (slide / totalSlides * 100) + '%';
+            document.getElementById('slideNumber').textContent = slide + ' / ' + totalSlides;
+            currentSlide = slide;
+        }
+        function nextSlide() { showSlide(currentSlide + 1); } function prevSlide() { showSlide(currentSlide - 1); }
+        function initPagination() { const c = document.getElementById('pagination'); for (let i = 1; i <= totalSlides; i++) { const d = document.createElement('div'); d.className = 'dot' + (i === 1 ? ' active' : ''); d.onclick = () => showSlide(i); c.appendChild(d); } }
+        let tSX = 0, tEX = 0;
+        document.addEventListener('touchstart', e => { tSX = e.changedTouches[0].screenX; }, { passive: true });
+        document.addEventListener('touchend', e => { tEX = e.changedTouches[0].screenX; if (Math.abs(tSX - tEX) > 50) { tSX - tEX > 0 ? nextSlide() : prevSlide(); } }, { passive: true });
+        document.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') nextSlide(); else if (e.key === 'ArrowLeft') prevSlide(); });
+        initPagination(); showSlide(1);
+    </script>
+</body>
+</html>

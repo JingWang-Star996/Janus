@@ -1,0 +1,43 @@
+Dream 系统定时任务配置完成！
+[Dream] 开始记忆整合...
+[Dream] 工作目录: /home/z3129119/.openclaw/workspace
+[Dream] 获取锁成功（PID: 50139)
+[Dream] Phase 1: Orient
+[Dream] Phase 2: Gather
+[Dream] 读取计划: 2026-03-31.json
+[Dream] 读取计划: 2026-04-01.json
+[Dream] 读取完成情况: 2026-04-01.json
+[Dream] 读取今日记忆: 2026-04-01.md
+[Dream] 收集到 4 个信号
+[Dream] Phase 3: Consolidate
+[Dream.AI] 开始 AI 分析...
+[Dream.AI] 模型: qwen3.5-plus
+[Dream.AI] 信号数量: 4
+[Dream.AI] API 调用成功
+[Dream.AI] 分析完成
+[Dream.AI] 生成新记忆: 3 条
+[Dream.AI] 更新记忆: 0 条
+[Dream.AI] 应用更新...
+[Dream.AI] 添加了 3 个新章节
+[Dream.Prune] 已备份: /home/z3129119/.openclaw/workspace/MEMORY.md.backup-1775077386192
+[Dream.Prune] 安全写入成功: /home/z3129119/.openclaw/workspace/MEMORY.md
+[Dream] MEMORY.md 已更新
+[Dream] Phase 4: Prune
+[Dream.Prune] 开始分析...
+[Dream.Prune] MEMORY.md 大小: 26.33 KB
+[Dream.Prune] MEMORY.md 行数: 846
+[Dream.Prune] 文件超过限制，开始修剪...
+[Dream.Prune] 识别到 39 个章节
+[Dream.Prune.AI] API 调用失败: Request failed with status code 403
+[Dream.Prune.AI] 使用规则修剪
+[Dream.Prune.Rule] 生成 0 条规则修剪建议
+[Dream.Prune] AI 生成 0 条修剪建议
+[Dream.Prune] 修剪后大小: 13.44 KB
+[Dream.Prune] 修剪后行数: 846
+[Dream.Prune] 已备份: /home/z3129119/.openclaw/workspace/MEMORY.md.backup-1775077386779
+[Dream.Prune] 安全写入成功: /home/z3129119/.openclaw/workspace/MEMORY.md
+[Dream] 修剪完成
+[Dream] 修剪前: { sizeKB: '26.33', lineCount: 846 }
+[Dream] 修剪后: { sizeKB: '13.44', lineCount: 846 }
+[Dream] 记忆整合完成
+[Dream] 释放锁

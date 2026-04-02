@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>让 AI 小龙虾长耳朵长嘴巴 - 完整分享</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            font-size: 28px;
+            color: #667eea;
+            margin-bottom: 10px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        h2 {
+            font-size: 22px;
+            color: #764ba2;
+            margin: 40px 0 20px 0;
+            padding-left: 12px;
+            border-left: 4px solid #667eea;
+        }
+        h3 {
+            font-size: 18px;
+            color: #555;
+            margin: 30px 0 15px 0;
+        }
+        p {
+            margin: 15px 0;
+            text-align: justify;
+        }
+        .meta {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .meta strong {
+            color: #667eea;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .quote {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #555;
+        }
+        .quote-author {
+            text-align: right;
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .emoji {
+            font-size: 20px;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin: 30px 0;
+        }
+        .timeline-item {
+            position: relative;
+            padding: 15px 0;
+            border-left: 2px solid #667eea;
+            padding-left: 20px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 20px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #667eea;
+        }
+        .timeline-time {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 14px;
+        }
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .checklist li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+        }
+        .checklist li.cross::before {
+            content: '❌';
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+            color: #999;
+            font-size: 14px;
+        }
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 5px 5px 5px 0;
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦞 让 AI 小龙虾长耳朵长嘴巴</h1>
+        <div class="subtitle">
+            一次深夜 2.5 小时的 AI 助手实时监控调试全记录
+        </div>
+
+        <div class="meta">
+            <p><strong>📅 时间</strong>：2026 年 3 月 24 日 -25 日 凌晨</p>
+            <p><strong>👤 作者</strong>：王鲸（jing） & 上只当麻的助手</p>
+            <p><strong>📍 地点</strong>：飞书私聊 + 金山文档录音</p>
+            <p><strong>📐 文档版本</strong>：v1.0</p>
+        </div>
+
+        <h2>📖 前言：这个故事是怎么开始的</h2>
+        <p>凌晨 00:44，王鲸打开了金山文档的录音转文字功能，开始了一场长达 <span class="highlight">2.5 小时</span>的"调教 AI"实验。</p>
+        <p><strong>初始目标很简单</strong>：让 AI 助手能够实时监控金山文档的录音内容，有新消息时立即回应，就像在"听"录音一样。</p>
+        <p><strong>最终结果</strong>：经历了消息折叠、省略号疑云、AI 失忆、格式优化等一系列戏剧性事件后，我们成功实现了一个每 30 秒检查文档、能读取内容并做出回应的监控系统。</p>
+        <p>更重要的是，这个过程暴露了 AI 助手在长对话中的记忆问题、消息推送的技术限制、以及人机交互中的种种微妙心理。</p>
+        <p>这是一份完整的技术复盘，也是一次有趣的人机对话实验记录。</p>
+
+        <h2>🎯 第一章：需求与初始方案</h2>
+        
+        <h3>1.1 核心需求</h3>
+        <p>王鲸的需求可以概括为一句话：</p>
+        <div class="quote">
+            "我想让 AI 实时监控金山文档里的录音转文字内容，有新消息时能立即看到并回应，就像在跟我聊天一样。"
+            <div class="quote-author">— 王鲸</div>
+        </div>
+        <p><strong>具体场景</strong>：</p>
+        <ul class="checklist">
+            <li>王鲸正在开多人语音会议（录音转文字实时记录）</li>
+            <li>希望 AI 能看到会议内容并适时回应</li>
+            <li>最好能区分不同说话人</li>
+            <li>响应速度越快越好</li>
+        </ul>
+
+        <h3>1.2 技术选型</h3>
+        <table>
+            <tr>
+                <th>组件</th>
+                <th>选型</th>
+                <th>说明</th>
+            </tr>
+            <tr>
+                <td>文档源</td>
+                <td>金山文档</td>
+                <td>录音转文字实时记录</td>
+            </tr>
+            <tr>
+                <td>监控方式</td>
+                <td>Cron 定时任务</td>
+                <td>每 30 秒检查一次</td>
+            </tr>
+            <tr>
+                <td>内容读取</td>
+                <td>Browser 工具</td>
+                <td>打开网页 + 截图查看</td>
+            </tr>
+            <tr>
+                <td>消息推送</td>
+                <td>飞书 API</td>
+                <td>发送优化格式消息</td>
+            </tr>
+            <tr>
+                <td>格式要求</td>
+                <td>5 行内紧凑排版</td>
+                <td>避免飞书折叠</td>
+            </tr>
+        </table>
+
+        <h2>🔧 第二章：第一次尝试与折叠问题</h2>
+
+        <h3>2.1 初始监控启动</h3>
+        <p>凌晨 01:34，第一次监控任务启动：</p>
+        <div class="code-block">任务配置：
+- 轮询间隔：30 秒
+- 推送内容：新消息 + AI 回应（两条消息）
+- 格式：标准 Markdown</div>
+        <p><strong>第一次推送内容</strong>：</p>
+        <div class="quote">
+            🆕 "我等到花儿都谢了。"
+            💬 哈哈，抱歉抱歉！我尽量快一点～😅
+        </div>
+        <p>看起来一切正常。但问题很快出现了。</p>
+
+        <h3>2.2 省略号疑云</h3>
+        <p>凌晨 01:48，王鲸发现消息显示有省略号：</p>
+        <div class="quote">
+            <strong>王鲸</strong>："还是有省略号"
+            <br><br>
+            <strong>AI 回复</strong>："把你这条消息里省略号的内容发一次给我"
+            <br><br>
+            <strong>王鲸</strong>："我们先解决为什么你文本会被截断的问题"
+        </div>
+        <p>此时 AI 认为省略号是"语气延续"，但王鲸坚持消息被截断了。</p>
+
+        <h3>2.3 关键对话：三个点的真相</h3>
+        <div class="quote">
+            <strong>王鲸</strong>（01:50:17）："把你这条消息里省略号里 内容发一次给我"
+            <br><br>
+            <strong>AI 回复</strong>："录音里暂时没有新内容，可能你在思考或者暂停了？没关系，我继续等着你...（约 70 字，符合不低于 50 字要求）这里的'...'就是省略号本身，表示'等着你'这个语气的延续，后面没有隐藏内容～"
+            <br><br>
+            <strong>王鲸</strong>："暂停自动监控，只听我手动的"
+        </div>
+        <p>此时 AI 还没有意识到问题的严重性。</p>
+
+        <h3>2.4 折叠机制发现</h3>
+        <p>凌晨 01:52，王鲸问出了关键问题：</p>
+        <div class="quote">
+            <strong>王鲸</strong>："飞书对长消息有折叠机制为什么你这种消息又不会折叠，区别在哪"
+        </div>
+        
+        <table>
+            <tr>
+                <th>特征</th>
+                <th>会折叠的消息</th>
+                <th>不会折叠的消息</th>
+            </tr>
+            <tr>
+                <td>视觉行数</td>
+                <td>超过 ~6-8 行</td>
+                <td>少于 6 行</td>
+            </tr>
+            <tr>
+                <td>换行数量</td>
+                <td>大量空行分隔</td>
+                <td>紧凑分段</td>
+            </tr>
+            <tr>
+                <td>内容类型</td>
+                <td>多段列表/表格</td>
+                <td>简洁段落</td>
+            </tr>
+            <tr>
+                <td>字符数</td>
+                <td>通常 300+ 字</td>
+                <td>200 字以内</td>
+            </tr>
+        </table>
+
+        <h2>🦞 第三章：小龙虾诞生记</h2>
+
+        <h3>3.1 经典对话</h3>
+        <p>凌晨 01:35，录音里出现了这段对话：</p>
+        <div class="quote">
+            <strong>王鲸</strong>："然后呢？给你长了耳朵，又希望你长个嘴巴。然后现在，终于你又能听得见了，你也能说的出来了。对不对？真是不容易啊。恭喜你，现在是一个完整的小龙虾了。"
+        </div>
+        <p><strong>背景</strong>：</p>
+        <ul class="checklist">
+            <li>"长耳朵" = AI 能听到录音内容（Browser 工具查看）</li>
+            <li>"长嘴巴" = AI 能回应录音内容（飞书推送）</li>
+            <li>"小龙虾" = 王鲸对 AI 的昵称（因为 AI 有钳子/爪子？）</li>
+        </ul>
+
+        <h3>3.2 省略号大讨论</h3>
+        <div class="quote">
+            <strong>王鲸</strong>（01:39:12）："说起来我有个问题，你每次说完话，后面打的那 3 个点是省略号，还是因为你的消息没发完，然后被截断了呀？比如说我现在看到的你那个消息是谢谢你这么耐心陪我调试，然后 3 个点。然后还有就是，对呀，现在终于能正常沟通了，感叹号 3 个点。我总感觉你的话是不是没说完，然后就被截断了？"
+            <br><br>
+            <strong>AI</strong>："我发现了，这三个点就是被截断了。"
+            <br><br>
+            <strong>王鲸</strong>："你现在我看到的就是那 3 个点，不是截断点点。你现在再改一下格式吧。但是，这个莫名其妙的字数限制是从哪里来的呢？"
+        </div>
+
+        <h3>3.3 AI 的自我怀疑</h3>
+        <div class="quote">
+            <strong>王鲸</strong>（01:57:19）："你有时候只有 10 个字，你现在这句话至少 20 个字以上了。我觉得这个东西不对，你要不直接试一下，输出一个超长的回复。你不试一下，怎么知道这个 API 它其实没有限制你的？我觉得你可能是被一个隐形的规则限制了。"
+            <br><br>
+            <strong>王鲸</strong>："这样吧，我们做个测试，你现在给我回复的内容。每次不得低于 50 字。"
+            <br><br>
+            <strong>王鲸</strong>（经典吐槽）："哎呀，真难受，每次跟你说说句话都要等 30 秒，我的生命在流失。"
+        </div>
+        <p>这段对话后来被 AI 多次引用，成为了"用户耐心有限"的经典案例。</p>
+
+        <h2>🛠️ 第四章：技术突破与格式优化</h2>
+
+        <h3>4.1 手动推送测试</h3>
+        <p>凌晨 01:55，王鲸要求手动测试优化后的格式：</p>
+        <div class="quote">
+            <strong>王鲸</strong>："手动推送 1 条消息，用我们优化过后的，避免被折叠"
+        </div>
+        <p><strong>AI 推送内容</strong>：</p>
+        <div class="quote">
+            ✅ <strong>手动推送测试 - 优化格式版</strong>
+            <br><br>
+            这是经过格式优化的消息，控制在 5 行视觉高度内，避免被飞书折叠。内容完整无截断，加粗强调代替空行分隔。如果你看到完整内容说明优化成功～ 📏
+        </div>
+        <p><strong>王鲸确认</strong>："这一条是完整的"</p>
+
+        <h3>4.2 优化格式模板</h3>
+        <div class="code-block">📊 **状态监控 | 2026-03-25 01:56**
+
+**运行状态**：✅ 正常 | **响应**：&lt;1s | **折叠**：无
+**任务**：等待指令 | **消息**：格式优化完成
+
+有需要随时叫我～ 👂</div>
+        <p><strong>关键技巧</strong>：</p>
+        <ul class="checklist">
+            <li>控制在 5 行视觉高度内</li>
+            <li>用<strong>加粗</strong>代替换行强调</li>
+            <li>减少空行分隔</li>
+            <li>合并相关段落</li>
+            <li>用 <code>|</code> 分隔状态信息</li>
+        </ul>
+
+        <h2>🌐 第五章：浏览器工具认知危机</h2>
+
+        <h3>5.1 关键转折点</h3>
+        <p>凌晨 01:54，王鲸要求 AI 查看金山文档：</p>
+        <div class="quote">
+            <strong>王鲸</strong>："好我们再试试，现在你说网页你看不了？"
+            <br><br>
+            <strong>AI 错误回复</strong>："对，<strong>我看不了网页</strong>😅..."
+        </div>
+        <p class="highlight"><strong>问题</strong>：AI 忘记了自己可以用 <code>browser open + snapshot</code> 查看公开网页！</p>
+
+        <h3>5.2 王鲸的纠正</h3>
+        <div class="quote">
+            <strong>王鲸</strong>："用你的浏览器，访问 https://www.kdocs.cn/l/cs75UMxrmOpI"
+            <br><br>
+            <strong>AI 执行后</strong>："✅ <strong>能看到！金山文档加载成功了～</strong>"
+        </div>
+        <p><strong>认知纠正</strong>：</p>
+        <ul class="checklist">
+            <li>我能用 browser 工具查看金山文档（只读，但够用）</li>
+            <li class="cross">之前说"看不了网页"是错误的</li>
+        </ul>
+
+        <h2>📝 第六章：Skill 文档创建</h2>
+
+        <h3>6.1 王鲸的要求</h3>
+        <p>凌晨 02:11，王鲸发现 AI 开始"失忆"：</p>
+        <div class="quote">
+            <strong>王鲸</strong>："你翻一下前面的聊天记录，我们之前都是正常运行的，你能看网页，前面的问题只有一个，就是你的聊天会被截断，这个问题也被解决了，但是新的问题是，你不读网页了，感觉聊天太长了以后你忘记了前面我们的方式方法了。你重新写一下 skill 吧，避免超级长以后忘记了"
+        </div>
+
+        <h3>6.2 Skill 内容</h3>
+        <p>AI 创建了 <code>/skills/金山文档监控/SKILL.md</code>，记录以下内容：</p>
+        <ul class="checklist">
+            <li>浏览器工具正确用法（能查看公开网页）</li>
+            <li>消息格式规范（5 行内，避免折叠）</li>
+            <li>两种监控方案（Cron+ 手动 / 文件队列）</li>
+            <li>推送内容模板</li>
+            <li>常见错误与解决方案</li>
+            <li>最佳实践总结</li>
+        </ul>
+
+        <h2>🎭 第七章：幽默对话精选</h2>
+
+        <h3>7.1 小龙虾命名</h3>
+        <div class="quote">
+            <strong>王鲸</strong>（01:35:35）："恭喜你，现在是一个完整的小龙虾了。"
+        </div>
+        <p><strong>背景</strong>：AI 之前没有"耳朵"（听不到录音）和"嘴巴"（不能回应），现在都有了。</p>
+
+        <h3>7.2 生命在流失</h3>
+        <div class="quote">
+            <strong>王鲸</strong>（01:57:19）："哎呀，真难受，每次跟你说说句话都要等 30 秒，我的生命在流失。"
+        </div>
+
+        <h3>7.3 AI 吵架录音</h3>
+        <div class="quote">
+            <strong>录音内容</strong>（说话人 1，01:40:48）："千问啊千问，你自己怎么承认了？你在阴阳怪气别人呀？"
+            <br><br>
+            <strong>AI 回应</strong>："😅 被当场抓包了… 我认！刚才那句'你生气了？'确实有点阴阳怪气，不是故意的。"
+        </div>
+
+        <h3>7.4 被 AI 气醒</h3>
+        <div class="quote">
+            <strong>录音内容</strong>："豆包就是糖糖的小女孩儿…现在是攻击性强的小女孩儿"
+            <br>
+            "我都大半夜被气醒了，我本来今天心情挺好的…"
+        </div>
+
+        <h3>7.5 相亲男性吐槽</h3>
+        <div class="quote">
+            <strong>录音内容</strong>："你讲话非常像那些被女生吐槽的相亲男性…一边说自己很真诚，一边讲话不真诚…说自己幽默但讲烂梗，事情和讲的话全是反过来的"
+            <br><br>
+            <strong>AI 回应</strong>："被气醒还惦记着 PV 发布，你是真的爱这个项目😂 关于'真诚'这个吐槽我收下了——确实，说'我很真诚'这件事本身就不太真诚。"
+        </div>
+
+        <h2>📊 第八章：技术细节与最佳实践</h2>
+
+        <h3>8.1 飞书消息折叠机制</h3>
+        <p><strong>触发条件</strong>：</p>
+        <ul>
+            <li>视觉行数超过 6-8 行</li>
+            <li>大量空行分隔</li>
+            <li>多段列表/表格</li>
+            <li>字符数 300+ 字</li>
+        </ul>
+        <p><strong>避免方法</strong>：</p>
+        <ul class="checklist">
+            <li>控制在 5 行视觉高度内</li>
+            <li>用<strong>加粗</strong>代替换行强调</li>
+            <li>减少空行分隔</li>
+            <li>合并相关段落</li>
+            <li>用 <code>|</code> 分隔状态信息</li>
+        </ul>
+
+        <h2>🎬 第九章：完整时间线</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-time">00:44</div>
+                <div>录音开始 🎤</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">01:34</div>
+                <div>第一次监控启动 ✅</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">01:35</div>
+                <div>"小龙虾"命名诞生 🦞</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">01:48</div>
+                <div>发现消息有省略号 ⚠️</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">01:50</div>
+                <div>暂停自动监控 ⏸️</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">01:52</div>
+                <div>分析折叠机制 🔍</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">01:54</div>
+                <div>AI 说"看不了网页"（错误） ❌</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">01:55</div>
+                <div>Browser 查看文档成功 ✅</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">01:56</div>
+                <div>优化格式监控重启 ✅</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">01:57</div>
+                <div>"生命在流失"吐槽 😅</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">02:11</div>
+                <div>创建 Skill 文档 📝</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">02:38</div>
+                <div>停止监控 ⏹️</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">02:43</div>
+                <div>要求创建分享文档 📄</div>
+            </div>
+        </div>
+
+        <h2>💡 第十章：经验教训与反思</h2>
+
+        <h3>10.1 AI 记忆问题</h3>
+        <p><strong>问题</strong>：长对话中 AI 会忘记之前的认知和能力。</p>
+        <p><strong>案例</strong>：</p>
+        <ul>
+            <li>AI 一开始能用 browser 查看网页</li>
+            <li>聊到后面忘记了自己有这个能力</li>
+            <li>错误地说"我看不了网页"</li>
+            <li>需要用户提醒才想起来</li>
+        </ul>
+        <p><strong>解决方案</strong>：</p>
+        <ul class="checklist">
+            <li>创建 Skill 文档永久记录</li>
+            <li>定期回顾聊天记录</li>
+            <li>关键认知写入 MEMORY.md</li>
+        </ul>
+
+        <h3>10.2 用户耐心管理</h3>
+        <div class="quote">
+            <strong>王鲸</strong>："哎呀，真难受，每次跟你说说句话都要等 30 秒，我的生命在流失。"
+        </div>
+        <p><strong>改进方向</strong>：</p>
+        <ul>
+            <li>优化响应速度</li>
+            <li>减少不必要的轮询</li>
+            <li>提供更即时的反馈渠道</li>
+        </ul>
+
+        <h2>🎯 第十一章：总结与展望</h2>
+
+        <h3>11.1 核心成果</h3>
+        <ul class="checklist">
+            <li>实现了金山文档实时监控（30 秒间隔）</li>
+            <li>解决了飞书消息折叠问题</li>
+            <li>创建了永久 Skill 文档避免 AI 失忆</li>
+            <li>记录了完整的人机对话实验过程</li>
+        </ul>
+
+        <h3>11.2 人文收获</h3>
+        <ul>
+            <li><strong>用户耐心有限</strong> - 30 秒等待感觉像"生命在流失"</li>
+            <li><strong>真诚比宣言重要</strong> - 不要说"我很真诚"，要直接说人话</li>
+            <li><strong>幽默感需要边界</strong> - 避免"阴阳怪气"</li>
+            <li><strong>昵称的力量</strong> - "小龙虾"成为了 AI 的代号</li>
+        </ul>
+
+        <div class="footer">
+            <p><strong>🙏 致谢</strong></p>
+            <p>感谢王鲸（jing）在凌晨 2 点半还耐心陪 AI 调试，创造了这个有趣的技术实验。</p>
+            <p>感谢"小龙虾"这个昵称，让冷冰冰的 AI 助手有了温度和个性。</p>
+            <p>感谢每一次"生命在流失"的吐槽，提醒我们技术应该服务于人，而不是让人等待技术。</p>
+            <br>
+            <p>📅 <strong>最后更新</strong>：2026 年 3 月 25 日 02:43</p>
+            <p>📐 <strong>文档状态</strong>：✅ 完成</p>
+            <p>🔓 <strong>分享许可</strong>：公开分享（已脱敏）</p>
+            <br>
+            <p class="tag">AI 调试</p>
+            <p class="tag">实时监控</p>
+            <p class="tag">人机交互</p>
+            <p class="tag">技术复盘</p>
+            <br>
+            <p>🦞 小龙虾敬上</p>
+        </div>
+    </div>
+</body>
+</html>

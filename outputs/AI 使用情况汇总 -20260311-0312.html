@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团队 AI 使用情况汇总 - 2026/3/11-3/12</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+        .date {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .card .number {
+            font-size: 36px;
+            font-weight: bold;
+            display: block;
+        }
+        .card .label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        tr:hover {
+            background: #e9ecef;
+        }
+        .role-program {
+            background: linear-gradient(135deg, #70AD47 0%, #5a8a37 100%);
+            color: white;
+            font-weight: bold;
+        }
+        .role-planning {
+            background: linear-gradient(135deg, #FFC000 0%, #e6ac00 100%);
+            color: white;
+            font-weight: bold;
+        }
+        .role-art {
+            background: linear-gradient(135deg, #C5504B 0%, #9e403c 100%);
+            color: white;
+            font-weight: bold;
+        }
+        .scene-list, .tool-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .scene-list li, .tool-list li {
+            padding: 3px 0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .scene-list li:before {
+            content: "• ";
+            color: #667eea;
+        }
+        .tool-list li:before {
+            content: "🛠 ";
+        }
+        .effect-good {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .effect-great {
+            color: #667eea;
+            font-weight: bold;
+        }
+        .remark {
+            color: #666;
+            font-style: italic;
+            font-size: 13px;
+        }
+        @media print {
+            body { padding: 0; background: white; }
+            .container { box-shadow: none; }
+        }
+        @media (max-width: 768px) {
+            table { font-size: 12px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 团队 AI 使用情况汇总</h1>
+        <p class="date">📅 统计时间：2026/3/11 - 2026/3/12</p>
+
+        <div class="summary-cards">
+            <div class="card">
+                <span class="number">11</span>
+                <span class="label">参与人数</span>
+            </div>
+            <div class="card">
+                <span class="number">4</span>
+                <span class="label">程序</span>
+            </div>
+            <div class="card">
+                <span class="number">4</span>
+                <span class="label">策划</span>
+            </div>
+            <div class="card">
+                <span class="number">3</span>
+                <span class="label">美术</span>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 10%;">姓名</th>
+                    <th style="width: 8%;">岗位</th>
+                    <th style="width: 12%;">填写时间</th>
+                    <th style="width: 25%;">使用场景</th>
+                    <th style="width: 25%;">使用工具</th>
+                    <th style="width: 10%;">使用效果</th>
+                    <th style="width: 10%;">备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 程序组 -->
+                <tr>
+                    <td><strong>齐翔</strong></td>
+                    <td class="role-program">💻 程序</td>
+                    <td>03-11 19:50</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>代码生成</li>
+                            <li>代码审查与优化</li>
+                            <li>方案/架构设计</li>
+                            <li>技术方案调研</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>ChatGPT</li>
+                            <li>通义千问</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-good">有帮助</span></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td><strong>陈华强</strong></td>
+                    <td class="role-program">💻 程序</td>
+                    <td>03-11 19:56</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>代码生成</li>
+                            <li>代码审查与优化</li>
+                            <li>Bug 排查与调试</li>
+                            <li>单元测试生成</li>
+                            <li>技术方案调研</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>ChatGPT</li>
+                            <li>Claude</li>
+                            <li>豆包</li>
+                            <li>元宝</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-great">效率显著提升</span></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td><strong>唐浩晖</strong></td>
+                    <td class="role-program">💻 程序</td>
+                    <td>03-12 09:45</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>代码优化</li>
+                            <li>需求实现</li>
+                            <li>需求方案查询</li>
+                            <li>架构设计</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>Claude</li>
+                            <li>Copilot</li>
+                            <li>DeepSeek</li>
+                            <li>ChatGPT</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-good">有帮助</span></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td><strong>周广生</strong></td>
+                    <td class="role-program">💻 程序</td>
+                    <td>03-12 10:02</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>代码生成</li>
+                            <li>代码审查与优化</li>
+                            <li>Bug 排查与调试</li>
+                            <li>方案/架构设计</li>
+                            <li>代码注释生成</li>
+                            <li>技术方案调研</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>Claude</li>
+                            <li>GitHub Copilot</li>
+                            <li>ChatGPT</li>
+                            <li>DeepSeek</li>
+                            <li>通义千问</li>
+                            <li>文心一言</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-great">效率显著提升</span></td>
+                    <td>-</td>
+                </tr>
+
+                <!-- 策划组 -->
+                <tr>
+                    <td><strong>王小星</strong></td>
+                    <td class="role-planning">📋 策划</td>
+                    <td>03-11 19:27</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>系统/玩法构思</li>
+                            <li>文案撰写</li>
+                            <li>剧情/对话编写</li>
+                            <li>数值设计/平衡</li>
+                            <li>资料整理/归纳</li>
+                            <li>竞品分析</li>
+                            <li>设计原型图</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>ChatGPT</li>
+                            <li>Kimi</li>
+                            <li>DeepSeek</li>
+                            <li>墨刀</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-good">有帮助</span></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td><strong>赖力</strong></td>
+                    <td class="role-planning">📋 策划</td>
+                    <td>03-11 19:30</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>系统/玩法构思</li>
+                            <li>文案撰写</li>
+                            <li>剧情/对话编写</li>
+                            <li>资料整理/归纳</li>
+                            <li>竞品分析</li>
+                            <li>需求文档编写</li>
+                            <li>实际问题和 bug 分析</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>ChatGPT</li>
+                            <li>Claude</li>
+                            <li>墨刀</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-great">效率显著提升</span></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td><strong>黄广曦</strong></td>
+                    <td class="role-planning">📋 策划</td>
+                    <td>03-11 19:35</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>系统/玩法构思</li>
+                            <li>文案撰写</li>
+                            <li>数值设计/平衡</li>
+                            <li>资料整理/归纳</li>
+                            <li>竞品分析</li>
+                            <li>任务/关卡设计</li>
+                            <li>需求文档编写</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>ChatGPT</li>
+                            <li>Kimi</li>
+                            <li>Claude</li>
+                            <li>通义千问</li>
+                            <li>文心一言</li>
+                            <li>元宝</li>
+                            <li>Excel</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-good">有帮助</span></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td><strong>王鲸</strong></td>
+                    <td class="role-planning">📋 策划</td>
+                    <td>03-11 19:48</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>系统/玩法构思</li>
+                            <li>文案撰写</li>
+                            <li>剧情/对话编写</li>
+                            <li>资料整理/归纳</li>
+                            <li>竞品分析</li>
+                            <li>世界观构建</li>
+                            <li>任务/关卡设计</li>
+                            <li>需求文档编写</li>
+                            <li>制作游戏原型</li>
+                            <li>制作游戏音乐音效</li>
+                            <li>制作 PPT</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>ChatGPT</li>
+                            <li>Kimi</li>
+                            <li>Claude</li>
+                            <li>Stable Diffusion</li>
+                            <li>通义千问</li>
+                            <li>腾讯元宝</li>
+                            <li>WPS</li>
+                            <li>豆包</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-great">效率显著提升</span></td>
+                    <td>-</td>
+                </tr>
+
+                <!-- 美术组 -->
+                <tr>
+                    <td><strong>汤世军</strong></td>
+                    <td class="role-art">🎨 美术</td>
+                    <td>03-12 09:08</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>概念设计</li>
+                            <li>氛围图/情绪板</li>
+                            <li>原画设计</li>
+                            <li>场景参考/素材</li>
+                            <li>修图/放大/优化</li>
+                            <li>风格探索/参考</li>
+                            <li>3D 模型参考</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>ChatGPT</li>
+                            <li>Midjourney</li>
+                            <li>ds</li>
+                            <li>即梦</li>
+                            <li>lovart</li>
+                            <li>豆包</li>
+                            <li>混元</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-good">有帮助</span></td>
+                    <td class="remark">更新国外的模型，跟上最新的模型效率</td>
+                </tr>
+                <tr>
+                    <td><strong>罗园超</strong></td>
+                    <td class="role-art">🎨 美术</td>
+                    <td>03-12 09:08</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>概念设计</li>
+                            <li>氛围图/情绪板</li>
+                            <li>原画设计</li>
+                            <li>角色参考/素材</li>
+                            <li>修图/放大/优化</li>
+                            <li>风格探索/参考</li>
+                            <li>3D 模型参考</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>ChatGPT</li>
+                            <li>Midjourney</li>
+                            <li>ds</li>
+                            <li>即梦</li>
+                            <li>lovart</li>
+                            <li>豆包</li>
+                            <li>混元</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-good">有帮助</span></td>
+                    <td class="remark">更新国外的模型，跟上最新的模型效率</td>
+                </tr>
+                <tr>
+                    <td><strong>曾军</strong></td>
+                    <td class="role-art">🎨 美术</td>
+                    <td>03-12 10:00</td>
+                    <td>
+                        <ul class="scene-list">
+                            <li>概念设计</li>
+                            <li>氛围图/情绪板</li>
+                            <li>POSE 设计</li>
+                            <li>角色参考/素材</li>
+                            <li>风格探索/参考</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="tool-list">
+                            <li>ChatGPT</li>
+                            <li>即梦</li>
+                            <li>豆包</li>
+                            <li>混元</li>
+                        </ul>
+                    </td>
+                    <td><span class="effect-good">有帮助</span></td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px;">
+            <h3 style="color: #667eea; margin-bottom: 15px;">📊 数据统计</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                <div>
+                    <strong>🛠 热门工具 TOP5：</strong>
+                    <ul style="margin-top: 8px; padding-left: 20px;">
+                        <li>ChatGPT - 11 人使用</li>
+                        <li>Claude - 5 人使用</li>
+                        <li>Kimi - 3 人使用</li>
+                        <li>通义千问 - 3 人使用</li>
+                        <li>豆包 - 4 人使用</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>⭐ 使用效果：</strong>
+                    <ul style="margin-top: 8px; padding-left: 20px;">
+                        <li>效率显著提升 - 4 人 (36%)</li>
+                        <li>有帮助 - 7 人 (64%)</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>🎯 策划常用场景：</strong>
+                    <ul style="margin-top: 8px; padding-left: 20px;">
+                        <li>系统/玩法构思 - 4 人</li>
+                        <li>文案撰写 - 4 人</li>
+                        <li>竞品分析 - 4 人</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>💻 程序常用场景：</strong>
+                    <ul style="margin-top: 8px; padding-left: 20px;">
+                        <li>代码生成 - 3 人</li>
+                        <li>代码审查与优化 - 3 人</li>
+                        <li>技术方案调研 - 3 人</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "name": "feishu-sheet-formula",
+  "version": "1.0.0",
+  "description": "飞书表格公式与游戏配表技能，提供公式编写、数据引用、配置表管理、配表验证等能力",
+  "author": "jing",
+  "license": "MIT",
+  "keywords": ["feishu", "sheet", "formula", "配表", "表格", "公式"],
+  "skills": [
+    {
+      "name": "飞书表格公式",
+      "description": "专业的飞书电子表格公式编写与调试能力",
+      "triggers": ["公式", "表格", "飞书", "sheet", "formula", "VLOOKUP", "IMPORTRANGE"]
+    },
+    {
+      "name": "游戏配表",
+      "description": "游戏配置表设计、填写、验证和管理",
+      "triggers": ["配表", "配置表", "策划表", "数值表", "技能表", "宠物表"]
+    },
+    {
+      "name": "数据验证",
+      "description": "配置表数据完整性检查和验证",
+      "triggers": ["验证", "检查", "校验", "数据质量", "重复", "引用"]
+    },
+    {
+      "name": "跨表引用",
+      "description": "飞书表格间的跨表数据引用和同步",
+      "triggers": ["跨表", "引用", "同步", "IMPORTRANGE", "关联"]
+    }
+  ],
+  "files": [
+    "SKILL.md",
+    "参考资料/公式速查表.md",
+    "参考资料/配表规范.md"
+  ]
+}

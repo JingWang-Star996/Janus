@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 飞书企业应用配置指南 - 从 0 到 1 实战</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 16px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+            margin-bottom: 24px;
+        }
+        
+        .header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+        
+        .header .meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .toc {
+            background: #f9fafb;
+            padding: 40px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .toc h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #111827;
+        }
+        
+        .toc ul {
+            list-style: none;
+            counter-reset: toc-counter;
+        }
+        
+        .toc li {
+            counter-increment: toc-counter;
+            margin-bottom: 12px;
+        }
+        
+        .toc a {
+            color: #3b82f6;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .toc a:hover {
+            background: #eff6ff;
+            transform: translateX(4px);
+        }
+        
+        .toc .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 60px 40px;
+        }
+        
+        .section {
+            margin-bottom: 60px;
+        }
+        
+        .section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section h2 {
+            font-size: 2em;
+            color: #111827;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #3b82f6;
+        }
+        
+        .section h3 {
+            font-size: 1.4em;
+            color: #1f2937;
+            margin: 32px 0 16px 0;
+        }
+        
+        .section h4 {
+            font-size: 1.1em;
+            color: #374151;
+            margin: 24px 0 12px 0;
+            font-weight: 600;
+        }
+        
+        .tip {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+        }
+        
+        .tip strong {
+            color: #92400e;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .warning {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+        }
+        
+        .warning strong {
+            color: #991b1b;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 4px solid #10b981;
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+        }
+        
+        .success strong {
+            color: #065f46;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .code-block {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 24px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: "Fira Code", "Cascadia Code", "Source Code Pro", monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .code-block .comment {
+            color: #6b7280;
+        }
+        
+        .code-block .keyword {
+            color: #f472b6;
+        }
+        
+        .code-block .string {
+            color: #a5f3fc;
+        }
+        
+        .code-block .number {
+            color: #fbbf24;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9fafb;
+        }
+        
+        tr:hover {
+            background: #eff6ff;
+        }
+        
+        .step {
+            display: flex;
+            gap: 20px;
+            margin: 24px 0;
+            padding: 24px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .step-num {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-content h4 {
+            margin-top: 0;
+            color: #111827;
+        }
+        
+        ul, ol {
+            margin: 16px 0 16px 24px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            background: #1f2937;
+            color: #9ca3af;
+            padding: 40px;
+            text-align: center;
+            font-size: 0.95em;
+        }
+        
+        .footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #dbeafe;
+            color: #1e40af;
+            border-radius: 999px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin: 4px 8px 4px 0;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #fef3c7 0%, #fde68a 100%);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 12px;
+            }
+            
+            .header {
+                padding: 40px 24px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .toc, .content {
+                padding: 32px 24px;
+            }
+            
+            .section h2 {
+                font-size: 1.6em;
+            }
+            
+            .step {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+        
+        .print-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .print-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(59, 130, 246, 0.6);
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()" title="打印/保存为 PDF">🖨️</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🚀 OpenClaw 飞书企业应用配置指南</h1>
+            <p class="subtitle">从 0 到 1 实战教程 · 避坑手册 · 完整流程</p>
+            <div class="meta">
+                <span>📅 2026 年 3 月 19 日</span>
+                <span>✍️ 游戏人王鲸</span>
+                <span>📚 技术分享</span>
+            </div>
+        </div>
+        
+        <div class="toc">
+            <h2>📑 目录</h2>
+            <ul>
+                <li><a href="#section-1"><span class="num">1</span>背景与目标</a></li>
+                <li><a href="#section-2"><span class="num">2</span>环境准备</a></li>
+                <li><a href="#section-3"><span class="num">3</span>创建飞书企业自建应用</a></li>
+                <li><a href="#section-4"><span class="num">4</span>配置 OpenClaw</a></li>
+                <li><a href="#section-5"><span class="num">5</span>飞书开放平台事件订阅</a></li>
+                <li><a href="#section-6"><span class="num">6</span>常见问题排查</a></li>
+                <li><a href="#section-7"><span class="num">7</span>权限与白名单配置</a></li>
+                <li><a href="#section-8"><span class="num">8</span>测试验证</a></li>
+                <li><a href="#section-9"><span class="num">9</span>最佳实践总结</a></li>
+                <li><a href="#section-10"><span class="num">10</span>附录：配置模板</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div class="section" id="section-1">
+                <h2>1️⃣ 背景与目标</h2>
+                
+                <h3>📌 使用场景</h3>
+                <p>作为游戏制作人，我需要 AI 助手帮助管理研发团队，包括：</p>
+                <ul>
+                    <li>📋 任务分配与进度跟踪</li>
+                    <li>🐛 BUG 收集与问题汇总</li>
+                    <li>📊 日报/周报自动整理</li>
+                    <li>💬 群内信息分析与决策支持</li>
+                </ul>
+                
+                <h3>🎯 核心目标</h3>
+                <p>将 OpenClaw AI 助手接入企业飞书，实现：</p>
+                <ol>
+                    <li><strong>身份识别</strong> - 能区分老板指令和员工汇报</li>
+                    <li><strong>群聊管理</strong> - 可以加入工作群，读取和发送消息</li>
+                    <li><strong>权限控制</strong> - 只有授权人员可以触发 AI 行动</li>
+                    <li><strong>数据安全</strong> - 企业数据不出域，隐私保护</li>
+                </ol>
+                
+                <div class="tip">
+                    <strong>💡 关键洞察</strong>
+                    个人飞书 OAuth 适合个人使用，但企业场景必须用<strong>企业自建应用</strong>，这样才能：
+                    <ul style="margin-top: 12px; margin-bottom: 0;">
+                        <li>访问企业通讯录</li>
+                        <li>加入企业群聊</li>
+                        <li>使用企业级 API 权限</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section" id="section-2">
+                <h2>2️⃣ 环境准备</h2>
+                
+                <h3>🔧 前置条件</h3>
+                <table>
+                    <tr>
+                        <th>组件</th>
+                        <th>要求</th>
+                        <th>验证方式</th>
+                    </tr>
+                    <tr>
+                        <td>OpenClaw</td>
+                        <td>v2026.3.12+</td>
+                        <td><code>openclaw --version</code></td>
+                    </tr>
+                    <tr>
+                        <td>飞书插件</td>
+                        <td>@larksuite/openclaw-lark</td>
+                        <td>已安装在 extensions 目录</td>
+                    </tr>
+                    <tr>
+                        <td>企业管理员权限</td>
+                        <td>飞书开放平台</td>
+                        <td>能创建企业自建应用</td>
+                    </tr>
+                    <tr>
+                        <td>Node.js</td>
+                        <td>v20+</td>
+                        <td><code>node --version</code></td>
+                    </tr>
+                </table>
+                
+                <h3>📁 配置文件位置</h3>
+                <div class="code-block"><span class="comment"># OpenClaw 主配置文件</span>
+~/.openclaw/openclaw.json
+
+<span class="comment"># 飞书插件目录</span>
+~/.openclaw/extensions/openclaw-lark/
+
+<span class="comment"># 日志文件</span>
+/tmp/openclaw/openclaw-YYYY-MM-DD.log</div>
+            </div>
+            
+            <div class="section" id="section-3">
+                <h2>3️⃣ 创建飞书企业自建应用</h2>
+                
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>登录飞书开放平台</h4>
+                        <p>访问 <a href="https://open.feishu.cn/" target="_blank">https://open.feishu.cn/</a>，使用企业管理员账号登录。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>创建应用</h4>
+                        <p>点击<strong>「创建应用」</strong> → 选择<strong>「企业自建应用」</strong></p>
+                        <ul>
+                            <li><strong>应用名称</strong>：AI 助理（或你喜欢的名字）</li>
+                            <li><strong>应用图标</strong>：随便选一个</li>
+                            <li><strong>应用描述</strong>：团队管理助手</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>配置机器人</h4>
+                        <p>在应用管理页面，点击左侧<strong>「机器人」</strong> → <strong>「创建机器人」</strong></p>
+                        <ul>
+                            <li><strong>名称</strong>：AI 助理</li>
+                            <li><strong>头像</strong>：选一个</li>
+                            <li><strong>功能介绍</strong>：团队管理、进度跟踪、周报汇总</li>
+                            <li><strong>消息接收模式</strong>：选择<strong>「接收消息」</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>申请权限</h4>
+                        <p>点击左侧<strong>「权限管理」</strong> → <strong>「权限配置」</strong>，搜索并添加以下权限：</p>
+                        <table>
+                            <tr>
+                                <th>权限名称</th>
+                                <th>权限标识</th>
+                                <th>用途</th>
+                            </tr>
+                            <tr>
+                                <td>读取和发送群消息</td>
+                                <td><code>im:message</code></td>
+                                <td>核心权限，必须</td>
+                            </tr>
+                            <tr>
+                                <td>访问群聊信息</td>
+                                <td><code>im:chat</code></td>
+                                <td>获取群成员列表</td>
+                            </tr>
+                            <tr>
+                                <td>读取员工信息</td>
+                                <td><code>contact:contact</code></td>
+                                <td>识别发送者身份</td>
+                            </tr>
+                            <tr>
+                                <td>访问日历</td>
+                                <td><code>calendar:calendar</code></td>
+                                <td>可选，日程管理</td>
+                            </tr>
+                            <tr>
+                                <td>管理任务</td>
+                                <td><code>task:task</code></td>
+                                <td>可选，任务分配</td>
+                            </tr>
+                            <tr>
+                                <td>访问云文档</td>
+                                <td><code>drive:drive</code></td>
+                                <td>可选，文档管理</td>
+                            </tr>
+                        </table>
+                        <p>点击<strong>「申请权限」</strong> → 管理员审批（自己申请自己批）</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">5</div>
+                    <div class="step-content">
+                        <h4>获取凭证</h4>
+                        <p>点击左侧<strong>「凭证信息」</strong>，记录：</p>
+                        <div class="code-block">App ID:     cli_xxxxxxxxxxxxxx
+App Secret: xxxxxxxxxxxxxxxxxxxxxxxx</div>
+                        <div class="warning">
+                            <strong>⚠️ 安全提醒</strong>
+                            App Secret 相当于密码，不要泄露！配置文件建议设置 600 权限。
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">6</div>
+                    <div class="step-content">
+                        <h4>发布应用</h4>
+                        <p>点击左侧<strong>「版本管理与发布」</strong> → <strong>「创建版本」</strong></p>
+                        <ul>
+                            <li><strong>版本号</strong>：1.0.0</li>
+                            <li><strong>更新说明</strong>：初始版本</li>
+                            <li>点击<strong>「发布」</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section" id="section-4">
+                <h2>4️⃣ 配置 OpenClaw</h2>
+                
+                <h3>📝 编辑配置文件</h3>
+                <p>打开 <code>~/.openclaw/openclaw.json</code>，找到 <code>channels.feishu</code> 部分：</p>
+                
+                <div class="code-block">{
+  <span class="keyword">"channels"</span>: {
+    <span class="keyword">"feishu"</span>: {
+      <span class="keyword">"enabled"</span>: <span class="keyword">true</span>,
+      <span class="keyword">"appId"</span>: <span class="string">"cli_a93172ef3bfa5cb2"</span>,
+      <span class="keyword">"appSecret"</span>: <span class="string">"oi8PM3AyPhPkFsSsW4LJXdzelinkXNZ8"</span>,
+      <span class="keyword">"domain"</span>: <span class="string">"feishu"</span>,
+      <span class="keyword">"connectionMode"</span>: <span class="string">"websocket"</span>,
+      <span class="keyword">"requireMention"</span>: <span class="keyword">false</span>,
+      <span class="keyword">"dmPolicy"</span>: <span class="string">"allowlist"</span>,
+      <span class="keyword">"groupPolicy"</span>: <span class="string">"open"</span>,
+      <span class="keyword">"allowFrom"</span>: [
+        <span class="string">"ou_3833a36af6b901cab181b69ce8b762d1"</span>,
+        <span class="string">"ou_7e31a302531d68cf0ce249417e4a1d0c"</span>
+      ],
+      <span class="keyword">"groupAllowFrom"</span>: []
+    }
+  }
+}</div>
+                
+                <h3>🔑 关键字段说明</h3>
+                <table>
+                    <tr>
+                        <th>字段</th>
+                        <th>说明</th>
+                        <th>推荐值</th>
+                    </tr>
+                    <tr>
+                        <td><code>appId</code></td>
+                        <td>飞书应用 ID</td>
+                        <td>从凭证信息获取</td>
+                    </tr>
+                    <tr>
+                        <td><code>appSecret</code></td>
+                        <td>飞书应用密钥</td>
+                        <td>从凭证信息获取</td>
+                    </tr>
+                    <tr>
+                        <td><code>connectionMode</code></td>
+                        <td>连接模式</td>
+                        <td><code>"websocket"</code>（推荐）</td>
+                    </tr>
+                    <tr>
+                        <td><code>requireMention</code></td>
+                        <td>是否需要@才响应</td>
+                        <td><code>false</code>（群内免@）</td>
+                    </tr>
+                    <tr>
+                        <td><code>dmPolicy</code></td>
+                        <td>私聊策略</td>
+                        <td><code>"allowlist"</code>（白名单）</td>
+                    </tr>
+                    <tr>
+                        <td><code>groupPolicy</code></td>
+                        <td>群聊策略</td>
+                        <td><code>"open"</code>（开放）或 <code>"allowlist"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>allowFrom</code></td>
+                        <td>私聊白名单</td>
+                        <td>用户 open_id 列表</td>
+                    </tr>
+                </table>
+                
+                <h3>🔄 重启网关</h3>
+                <p>配置修改后，重启 OpenClaw 网关：</p>
+                <div class="code-block"><span class="comment"># 方法 1：使用 CLI</span>
+openclaw gateway restart
+
+<span class="comment"># 方法 2：发送信号（热重载）</span>
+kill -USR1 &lt;gateway_pid&gt;</div>
+                
+                <div class="success">
+                    <strong>✅ 验证成功</strong>
+                    重启后查看日志，确认没有报错：
+                    <div class="code-block" style="margin-top: 12px;">tail -f /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log</div>
+                </div>
+            </div>
+            
+            <div class="section" id="section-5">
+                <h2>5️⃣ 飞书开放平台事件订阅</h2>
+                
+                <h3>⚙️ 配置步骤</h3>
+                
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>进入事件订阅页面</h4>
+                        <p>在飞书开放平台应用管理中，点击左侧<strong>「事件订阅」</strong></p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>启用事件订阅</h4>
+                        <p>开启<strong>「启用事件订阅」</strong>开关</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>选择 WebSocket 方式</h4>
+                        <p>选择<strong>「WebSocket 方式」</strong>（不需要配置 Request URL）</p>
+                        <div class="tip">
+                            <strong>💡 为什么选 WebSocket？</strong>
+                            <ul style="margin-top: 8px; margin-bottom: 0;">
+                                <li>不需要公网 URL</li>
+                                <li>飞书主动连接 OpenClaw</li>
+                                <li>适合内网部署</li>
+                                <li>配置简单，不易出错</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>订阅事件</h4>
+                        <p>搜索并添加以下事件：</p>
+                        <div class="code-block">im.message.receive_v1    ← 接收消息（必须）
+im.chat.member.join_v1  ← 成员加入群聊（可选）</div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">5</div>
+                    <div class="step-content">
+                        <h4>保存配置</h4>
+                        <p>点击<strong>「保存」</strong>，等待状态变为<strong>「已启用」</strong></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section" id="section-6">
+                <h2>6️⃣ 常见问题排查</h2>
+                
+                <h3>🐛 问题 1：企业飞书发消息不回复</h3>
+                <div class="code-block"><span class="comment"># 查看日志</span>
+tail -100 /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log | grep feishu
+
+<span class="comment"># 典型错误</span>
+feishu[default]: sender ou_xxx not in DM allowlist</div>
+                
+                <p><strong>原因</strong>：发送者不在白名单中</p>
+                <p><strong>解决</strong>：在 <code>allowFrom</code> 中添加该用户的 open_id</p>
+                
+                <h3>🐛 问题 2：网关启动报错</h3>
+                <div class="code-block"><span class="comment"># 检查配置语法</span>
+cat ~/.openclaw/openclaw.json | python3 -m json.tool
+
+<span class="comment"># 检查插件安装</span>
+ls -la ~/.openclaw/extensions/</div>
+                
+                <p><strong>常见原因</strong>：</p>
+                <ul>
+                    <li>JSON 格式错误（少了逗号或引号）</li>
+                    <li>App ID/Secret 配置错误</li>
+                    <li>插件未安装或版本不匹配</li>
+                </ul>
+                
+                <h3>🐛 问题 3：收不到群消息</h3>
+                <p><strong>检查清单</strong>：</p>
+                <ol>
+                    <li>机器人是否已加入群聊</li>
+                    <li><code>groupPolicy</code> 是否设置为 <code>"open"</code> 或配置了 <code>groupAllowFrom</code></li>
+                    <li>事件订阅中是否添加了 <code>im.message.receive_v1</code></li>
+                    <li>应用是否已发布（不是草稿状态）</li>
+                </ol>
+                
+                <h3>🐛 问题 4：权限不足</h3>
+                <div class="warning">
+                    <strong>⚠️ 典型症状</strong>
+                    工具调用返回 403 错误，提示权限不足。
+                </div>
+                <p><strong>解决</strong>：</p>
+                <ol>
+                    <li>在飞书开放平台检查权限申请状态</li>
+                    <li>确认管理员已审批</li>
+                    <li>重新发布应用版本</li>
+                </ol>
+                
+                <h3>🔍 调试技巧</h3>
+                <div class="code-block"><span class="comment"># 实时查看日志</span>
+tail -f /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
+
+<span class="comment"># 过滤飞书相关日志</span>
+tail -f /tmp/openclaw/openclaw-*.log | grep -E "feishu|lark"
+
+<span class="comment"># 检查网关状态</span>
+openclaw gateway status
+
+<span class="comment"># 查看已加载的插件</span>
+openclaw gateway status | grep -i plugin</div>
+            </div>
+            
+            <div class="section" id="section-7">
+                <h2>7️⃣ 权限与白名单配置</h2>
+                
+                <h3>👥 获取用户 open_id</h3>
+                <p>在飞书群里，发送消息后查看日志：</p>
+                <div class="code-block">feishu[default]: received message from ou_7e31a302531d68cf0ce249417e4a1d0c</div>
+                <p>或使用飞书 API 查询：</p>
+                <div class="code-block"><span class="comment"># 通过姓名搜索用户</span>
+curl -X POST "https://open.feishu.cn/open-apis/contact/v3/users/batch_get_id" \
+  -H "Authorization: Bearer &lt;access_token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{"user_ids": ["ou_xxx"], "id_type": "open_id"}'</div>
+                
+                <h3>📋 白名单策略建议</h3>
+                <table>
+                    <tr>
+                        <th>场景</th>
+                        <th>dmPolicy</th>
+                        <th>groupPolicy</th>
+                        <th>allowFrom</th>
+                    </tr>
+                    <tr>
+                        <td>仅老板可用</td>
+                        <td>allowlist</td>
+                        <td>allowlist</td>
+                        <td>[老板 ID]</td>
+                    </tr>
+                    <tr>
+                        <td>核心团队可用</td>
+                        <td>allowlist</td>
+                        <td>allowlist</td>
+                        <td>[核心成员 ID 列表]</td>
+                    </tr>
+                    <tr>
+                        <td>全员可用</td>
+                        <td>open</td>
+                        <td>open</td>
+                        <td>[]</td>
+                    </tr>
+                    <tr>
+                        <td>老板私聊 + 全员群聊</td>
+                        <td>allowlist</td>
+                        <td>open</td>
+                        <td>[老板 ID]</td>
+                    </tr>
+                </table>
+                
+                <div class="tip">
+                    <strong>💡 最佳实践</strong>
+                    建议采用<strong>「老板私聊 + 全员群聊」</strong>模式：
+                    <ul style="margin-top: 8px; margin-bottom: 0;">
+                        <li>私聊只有老板能触发 AI 行动</li>
+                        <li>群聊中 AI 可以读取消息、整理汇报</li>
+                        <li>员工汇报不会被误认为指令</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section" id="section-8">
+                <h2>8️⃣ 测试验证</h2>
+                
+                <h3>✅ 测试清单</h3>
+                
+                <h4>测试 1：私聊响应</h4>
+                <ol>
+                    <li>在飞书私聊机器人发送「你好」</li>
+                    <li>检查是否收到回复</li>
+                    <li>查看日志确认消息接收和发送</li>
+                </ol>
+                
+                <h4>测试 2：群聊响应</h4>
+                <ol>
+                    <li>将机器人拉入测试群</li>
+                    <li>在群里@机器人发送消息</li>
+                    <li>检查是否收到回复</li>
+                </ol>
+                
+                <h4>测试 3：身份识别</h4>
+                <ol>
+                    <li>用白名单内账号发消息 → 应该响应</li>
+                    <li>用白名单外账号发消息 → 应该忽略（或仅记录）</li>
+                    <li>查看日志确认 <code>sender resolved</code> 信息</li>
+                </ol>
+                
+                <h4>测试 4：工具调用</h4>
+                <ol>
+                    <li>发送指令：「查看我的日程」</li>
+                    <li>检查是否调用 <code>feishu_calendar_event</code> 工具</li>
+                    <li>验证返回结果正确</li>
+                </ol>
+                
+                <h3>📊 日志示例</h3>
+                <div class="code-block"><span class="comment"># 正常消息流</span>
+feishu[default]: message om_xxx in chat oc_xxx — immediate
+sender resolved: 王鲸
+feishu[default]: received message from ou_xxx in oc_xxx (p2p)
+feishu[inbound/handler]: received from ou_xxx in oc_xxx (p2p)
+
+<span class="comment"># 白名单拦截</span>
+feishu[default]: sender ou_xxx not in DM allowlist</div>
+            </div>
+            
+            <div class="section" id="section-9">
+                <h2>9️⃣ 最佳实践总结</h2>
+                
+                <h3>🎯 配置原则</h3>
+                <ol>
+                    <li><strong>最小权限</strong> - 只申请必要的权限</li>
+                    <li><strong>白名单优先</strong> - 默认拒绝，按需授权</li>
+                    <li><strong>WebSocket 模式</strong> - 简单可靠，无需公网</li>
+                    <li><strong>日志监控</strong> - 定期检查异常</li>
+                </ol>
+                
+                <h3>📝 运维建议</h3>
+                <ul>
+                    <li>定期备份配置文件</li>
+                    <li>App Secret 不要提交到版本控制</li>
+                    <li>生产环境用独立的飞书应用</li>
+                    <li>敏感操作（删除、批量发送）需要二次确认</li>
+                </ul>
+                
+                <h3>🔒 安全提醒</h3>
+                <div class="warning">
+                    <strong>⚠️ 重要</strong>
+                    <ul style="margin-top: 8px; margin-bottom: 0;">
+                        <li>不要将 App Secret 泄露给他人</li>
+                        <li>定期轮换密钥（建议每季度）</li>
+                        <li>离职员工及时从白名单移除</li>
+                        <li>敏感数据（薪资、绩效）不要让 AI 处理</li>
+                    </ul>
+                </div>
+                
+                <h3>📈 性能优化</h3>
+                <ul>
+                    <li>群消息多时用 <code>requireMention: true</code> 减少误触发</li>
+                    <li>大文件处理设置超时</li>
+                    <li>定期清理日志文件</li>
+                    <li>高峰期避免批量操作</li>
+                </ul>
+            </div>
+            
+            <div class="section" id="section-10">
+                <h2>🔟 附录：配置模板</h2>
+                
+                <h3>📄 完整配置示例</h3>
+                <div class="code-block">{
+  <span class="keyword">"meta"</span>: {
+    <span class="keyword">"lastTouchedVersion"</span>: <span class="string">"2026.3.12"</span>,
+    <span class="keyword">"lastTouchedAt"</span>: <span class="string">"2026-03-19T10:00:00.000Z"</span>
+  },
+  <span class="keyword">"models"</span>: {
+    <span class="keyword">"mode"</span>: <span class="string">"merge"</span>,
+    <span class="keyword">"providers"</span>: {
+      <span class="keyword">"bailian"</span>: {
+        <span class="keyword">"baseUrl"</span>: <span class="string">"https://coding.dashscope.aliyuncs.com/v1"</span>,
+        <span class="keyword">"apiKey"</span>: <span class="string">"sk-xxx"</span>,
+        <span class="keyword">"api"</span>: <span class="string">"openai-completions"</span>
+      }
+    }
+  },
+  <span class="keyword">"channels"</span>: {
+    <span class="keyword">"feishu"</span>: {
+      <span class="keyword">"enabled"</span>: <span class="keyword">true</span>,
+      <span class="keyword">"appId"</span>: <span class="string">"cli_xxxxxxxxxxxxxx"</span>,
+      <span class="keyword">"appSecret"</span>: <span class="string">"xxxxxxxxxxxxxxxx"</span>,
+      <span class="keyword">"domain"</span>: <span class="string">"feishu"</span>,
+      <span class="keyword">"connectionMode"</span>: <span class="string">"websocket"</span>,
+      <span class="keyword">"requireMention"</span>: <span class="keyword">false</span>,
+      <span class="keyword">"dmPolicy"</span>: <span class="string">"allowlist"</span>,
+      <span class="keyword">"groupPolicy"</span>: <span class="string">"open"</span>,
+      <span class="keyword">"allowFrom"</span>: [
+        <span class="string">"ou_xxxxxxxxxxxxxxxxxx"</span>
+      ],
+      <span class="keyword">"groupAllowFrom"</span>: []
+    }
+  },
+  <span class="keyword">"gateway"</span>: {
+    <span class="keyword">"mode"</span>: <span class="string">"local"</span>,
+    <span class="keyword">"auth"</span>: {
+      <span class="keyword">"mode"</span>: <span class="string">"token"</span>,
+      <span class="keyword">"token"</span>: <span class="string">"xxxxxxxxxx"</span>
+    }
+  },
+  <span class="keyword">"plugins"</span>: {
+    <span class="keyword">"allow"</span>: [<span class="string">"openclaw-lark"</span>],
+    <span class="keyword">"entries"</span>: {
+      <span class="keyword">"openclaw-lark"</span>: {
+        <span class="keyword">"enabled"</span>: <span class="keyword">true</span>
+      }
+    }
+  }
+}</div>
+                
+                <h3>🔗 相关资源</h3>
+                <ul>
+                    <li>OpenClaw 官方文档：<a href="https://docs.openclaw.ai" target="_blank">https://docs.openclaw.ai</a></li>
+                    <li>飞书开放平台：<a href="https://open.feishu.cn/" target="_blank">https://open.feishu.cn/</a></li>
+                    <li>飞书 API 文档：<a href="https://open.feishu.cn/document/ukTMukTMukTM/uEjNwUjLxYDM14SM2ATN" target="_blank">https://open.feishu.cn/document/...</a></li>
+                    <li>GitHub 社区：<a href="https://github.com/openclaw/openclaw" target="_blank">https://github.com/openclaw/openclaw</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>📚 技术分享 · 共同学习</strong></p>
+            <p>本文档基于 OpenClaw v2026.3.12 + 飞书插件 v2026.3.12 编写</p>
+            <p style="margin-top: 16px;">
+                <span class="tag">OpenClaw</span>
+                <span class="tag">飞书集成</span>
+                <span class="tag">企业应用</span>
+                <span class="tag">AI 助手</span>
+                <span class="tag">实战教程</span>
+            </p>
+            <p style="margin-top: 24px; font-size: 0.9em;">
+                署名：【游戏人王鲸】 | 日期：2026 年 3 月 19 日<br>
+                数据已脱敏处理 · 请勿用于商业用途
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        // 打印优化
+        window.addEventListener('beforeprint', () => {
+            document.querySelectorAll('.step').forEach(step => {
+                step.style.breakInside = 'avoid';
+            });
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.breakInside = 'avoid';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+{
+  "date": "2026-04-01",
+  "task": "ZVP 每日工作计划收集 - 10 点",
+  "status": "已发送",
+  "sentTime": "2026-04-01T10:04:00+08:00",
+  "members": [
+    {
+      "name": "周广生",
+      "open_id": "ou_e0c2bfb5836f11311d621fc08c581496",
+      "status": "已发送",
+      "message_id": "om_x100b53f3821ee0a8c4df557d92ef834",
+      "plan": null
+    },
+    {
+      "name": "唐浩晖",
+      "open_id": "ou_afe578ef6653e4ad2879c4bd2105b223",
+      "status": "已发送",
+      "message_id": "om_x100b53f383d1c8a4c2ed9bf7a81e05b",
+      "plan": null
+    },
+    {
+      "name": "罗园超",
+      "open_id": "ou_8a45cd5a924091c67b83b9c10ebabaa5",
+      "status": "已发送",
+      "message_id": "om_x100b53f383b4f8a4c35134f701e2231",
+      "plan": null
+    },
+    {
+      "name": "陈华强",
+      "open_id": "ou_7846f386cd0b1c9297d45daf1b3a1065",
+      "status": "已发送",
+      "message_id": "om_x100b53f383746ca4c22781c6d0d9268",
+      "plan": null
+    },
+    {
+      "name": "吴成刚",
+      "open_id": "ou_35a1045c704043f246d316f62bf99d56",
+      "status": "已跳过",
+      "message_id": null,
+      "plan": null,
+      "note": "排除名单"
+    },
+    {
+      "name": "曾军",
+      "open_id": "ou_9172e4aeb2598e89534579d8b81d5608",
+      "status": "已发送",
+      "message_id": "om_x100b53f3807e089cc4f22926c74fda9",
+      "plan": null
+    },
+    {
+      "name": "齐翔",
+      "open_id": "ou_69eb16cd720e8db944348a314291e023",
+      "status": "已发送",
+      "message_id": "om_x100b53f38035b900c220943878d4d7e",
+      "plan": null
+    },
+    {
+      "name": "王小星",
+      "open_id": "ou_5260d844e5aa7bbe30e305dcb40aadcc",
+      "status": "已发送",
+      "message_id": "om_x100b53f3818c4ca0c437c4df4017e7f",
+      "plan": null
+    },
+    {
+      "name": "黄广曦",
+      "open_id": "ou_3c37b1fc9ffc13e08131a5c4cfa3767e",
+      "status": "已发送",
+      "message_id": "om_x100b53f39f97588cc2a9d19f0fa1654",
+      "plan": null
+    },
+    {
+      "name": "赖力",
+      "open_id": "ou_4efff65d408e203a5eec315a5b508e67",
+      "status": "已发送",
+      "message_id": "om_x100b53f39f53fcb4c3cdba7a15c0f2f",
+      "plan": null
+    },
+    {
+      "name": "王鲸",
+      "open_id": "ou_7e31a302531d68cf0ce249417e4a1d0c",
+      "status": "已发送",
+      "message_id": null,
+      "plan": null,
+      "note": "群主"
+    },
+    {
+      "name": "汤世军",
+      "open_id": "ou_130df4b60c53c7a9cdd6923afbcebc5d",
+      "status": "已发送",
+      "message_id": "om_x100b53f39f23e480c2e2d23cc0323e6",
+      "plan": null
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "sent": 11,
+    "skipped": 1,
+    "replied": 0,
+    "replyRate": "0%"
+  }
+}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZVP 项目组周报收集 - 20260318</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 24px 32px; }
+        .header h1 { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+        .header p { opacity: 0.9; font-size: 14px; }
+        .summary { padding: 20px 32px; background: #fafafa; border-bottom: 1px solid #eee; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .summary-card { background: white; padding: 16px; border-radius: 6px; border: 1px solid #e0e0e0; }
+        .summary-card h3 { font-size: 13px; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .summary-card .value { font-size: 24px; font-weight: 600; color: #333; }
+        .summary-card .sub { font-size: 12px; color: #999; margin-top: 4px; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: #f8f9fa; }
+        th { padding: 14px 16px; text-align: left; font-weight: 600; color: #333; border-bottom: 2px solid #e0e0e0; font-size: 13px; }
+        td { padding: 16px; border-bottom: 1px solid #f0f0f0; vertical-align: top; font-size: 13px; line-height: 1.6; }
+        tbody tr:hover { background: #fafafa; }
+        .name { font-weight: 600; color: #333; white-space: nowrap; }
+        .group { color: #666; font-size: 12px; white-space: nowrap; }
+        .work-item { margin-bottom: 8px; padding-left: 12px; border-left: 2px solid #667eea; }
+        .work-item:last-child { margin-bottom: 0; }
+        .progress { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 500; margin-left: 8px; }
+        .progress-100 { background: #e8f5e9; color: #2e7d32; }
+        .progress-50-99 { background: #fff3e0; color: #ef6c00; }
+        .progress-0-49 { background: #ffebee; color: #c62828; }
+        .progress-ongoing { background: #e3f2fd; color: #1565c0; }
+        .highlight { background: #fff8e1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 ZVP 项目组周报收集</h1>
+            <p>统计周期：2026 年 3 月 18 日 | 提交人数：10 人</p>
+        </div>
+        
+        <div class="summary">
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h3>程序组</h3>
+                    <div class="value">5 人</div>
+                    <div class="sub">唐浩晖、齐翔、赖力、陈华强、周广生</div>
+                </div>
+                <div class="summary-card">
+                    <h3>策划组</h3>
+                    <div class="value">2 人</div>
+                    <div class="sub">黄广曦、王小星</div>
+                </div>
+                <div class="summary-card">
+                    <h3>美术组</h3>
+                    <div class="value">3 人</div>
+                    <div class="sub">曾军、汤世军、罗园超</div>
+                </div>
+                <div class="summary-card">
+                    <h3>本周重点</h3>
+                    <div class="value">320 版本</div>
+                    <div class="sub">模拟经营/战斗/宠物系统大调整</div>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 120px;">姓名</th>
+                    <th style="width: 80px;">小组</th>
+                    <th>本周工作内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="name">黄广曦</td>
+                    <td class="group">策划</td>
+                    <td>
+                        <div class="work-item">320 版本模拟经营产出大调整 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">320 版本主角升级需求大调整 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">320 版本主线战斗掉落大调整 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">320 版本各处细节优化 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">新版本方向内容的讨论 <span class="progress progress-ongoing">持续</span></div>
+                    </td>
+                </tr>
+                <tr class="highlight">
+                    <td class="name">王小星</td>
+                    <td class="group">策划</td>
+                    <td>
+                        <div class="work-item">跟进搜打撤开发 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">联盟基础设计落地 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">跟进开发 320 版本内容 <span class="progress progress-ongoing">进行中</span></div>
+                    </td>
+                </tr>
+                <tr class="highlight">
+                    <td class="name">唐浩晖</td>
+                    <td class="group">程序</td>
+                    <td>
+                        <div class="work-item">【宠物】获得宠物 tips 移动位置 + 弹出上限 60 个 + 间隔加快 0.5s/个</div>
+                        <div class="work-item">【匹配】点击匹配都发送组队消息</div>
+                        <div class="work-item">【宠物图鉴】属性变化通过 simpledata 协议发送 + 槽位升级控制间隔</div>
+                        <div class="work-item">【宠物升级】第一次自动升级没有显示材料消耗的问题修复</div>
+                        <div class="work-item">【枪械】兜底配置属性为 0 的情况</div>
+                        <div class="work-item">【抽卡模型】跳转导致的报错修复</div>
+                        <div class="work-item">【战争迷雾】修复阴影检测偏移 + 添加测试逻辑</div>
+                        <div class="work-item">【图鉴】协议 notice 获取数据逻辑修改，支持增量发送</div>
+                        <div class="work-item">【主界面】点击球触发切倍率逻辑</div>
+                        <div class="work-item">【宠物】槽位红点问题</div>
+                        <div class="work-item">【图鉴】自动领取逻辑优化</div>
+                        <div class="work-item">【视频播放】视频音量通过设置背景音乐来设置</div>
+                        <div class="work-item">【图鉴 + 功能预告】点击以后开启自动领取奖励逻辑</div>
+                        <div class="work-item">【战争迷雾】函数 CollectVisibilityDeltaToDirty 性能优化：<b>10ms→0.02ms（500 倍提升）</b></div>
+                        <div class="work-item">【战争迷雾】优化：只计算玩家这一边的</div>
+                        <div class="work-item">【战争迷雾】人物高速移动导致的上一帧 Color 没有清除的问题</div>
+                        <div class="work-item">【宠物进化】弹窗滑动平滑处理</div>
+                        <div class="work-item">【宠物】列表排序去掉模拟经营因素</div>
+                        <div class="work-item">【战争迷雾】切换地图出现迷雾一直全黑的 bug 修复</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">曾军</td>
+                    <td class="group">美术</td>
+                    <td>
+                        <div class="work-item">01 男角色、步枪动作：走路（6 方向） <span class="progress progress-50-99">进行中</span></div>
+                        <div class="work-item">01 男角色 手枪、步枪动作导入引擎并整理好上传，后续持续跟进引擎内效果</div>
+                        <div class="work-item">四个角色新增眩晕动作，步枪和手枪各一套，共 8 个</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">齐翔</td>
+                    <td class="group">程序</td>
+                    <td>
+                        <div class="work-item">修改 0306 版本 bug</div>
+                        <div class="work-item">刷多波怪新逻辑，现在时间和和死亡立即刷新逻辑</div>
+                        <div class="work-item">搜打撤关卡流程 <span class="progress progress-50-99">50%</span></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">汤世军</td>
+                    <td class="group">美术</td>
+                    <td>
+                        <div class="work-item">天气调试设计</div>
+                        <div class="work-item">线性森林切分</div>
+                        <div class="work-item">森林网格调整</div>
+                        <div class="work-item">沙漠路线调整</div>
+                    </td>
+                </tr>
+                <tr class="highlight">
+                    <td class="name">赖力</td>
+                    <td class="group">程序</td>
+                    <td>
+                        <div class="work-item">【战斗】战斗中移速翻倍，非战斗移速系数改为 1</div>
+                        <div class="work-item">【战斗】普通怪和精英怪远程普攻改为对地抛物线炮弹</div>
+                        <div class="work-item">【战斗】战争迷雾照亮范围 bug</div>
+                        <div class="work-item">【战斗】自动 ai 和手动 ai 的切换问题</div>
+                        <div class="work-item">【宠物】宠物进化时品质上限 bug 处理</div>
+                        <div class="work-item">【宠物】自动进化跳动画太快</div>
+                        <div class="work-item">【图鉴和派遣】新增一键领取功能</div>
+                        <div class="work-item">【综合】跟进 306 版本其他需求</div>
+                        <div class="work-item">【排行榜】新增实时刷新排行榜配置</div>
+                        <div class="work-item">【竞技场】3v3 竞技场重新梳理</div>
+                    </td>
+                </tr>
+                <tr class="highlight">
+                    <td class="name">陈华强</td>
+                    <td class="group">程序</td>
+                    <td>
+                        <div class="work-item">点击选已上阵宠物列表图标也可以把宠物下阵，一键上阵排除掉其他建筑已经上阵的宠物</div>
+                        <div class="work-item">模拟经营宠物上阵加入解锁条件，选宠物列表如果效率高于已上阵的列表需要显示红点</div>
+                        <div class="work-item">重新登陆时，离线收益的界面异常</div>
+                        <div class="work-item">各建筑目前的解锁条件和验证测试</div>
+                        <div class="work-item">宠物列表没有，升级界面也没有，经营的宠物界面展示状态统一</div>
+                        <div class="work-item">模拟经营的建筑很难点中（Hud 等 UI 阻挡简单处理）</div>
+                        <div class="work-item">创角界面调整和灯光过曝等问题（150 减到 120 了）</div>
+                        <div class="work-item">主线 BOSS 战斗没有光（副本场景迷雾简单处理）</div>
+                        <div class="work-item">新号下降时候仓模型没了，营地草地糊的（打包机简单处理）</div>
+                        <div class="work-item">主角手操移动方向不对，角色死了以后尸体可以移动等问题</div>
+                        <div class="work-item">隔了一段时间登陆，离线奖励异常，然后不按球主角不出发</div>
+                        <div class="work-item">抓宠的宠物位置放到刷怪点，算出角色和刷怪点中间 4 米的地方</div>
+                        <div class="work-item">加入角色到目标点的寻路点的特效和基础功能</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">罗园超</td>
+                    <td class="group">美术</td>
+                    <td>
+                        <div class="work-item">1 组新项目男主角模型制作 <span class="progress progress-50-99">60%</span></div>
+                        <div class="work-item">ZVP UI 招聘 <span class="progress progress-50-99">50%</span></div>
+                        <div class="work-item">男角色收尾跟进 <span class="progress progress-50-99">50%</span></div>
+                        <div class="work-item">掉落物品 特效大小调整 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">矩形爆炸提醒特效调整 <span class="progress progress-100">100%</span></div>
+                    </td>
+                </tr>
+                <tr class="highlight">
+                    <td class="name">周广生</td>
+                    <td class="group">程序</td>
+                    <td>
+                        <div class="work-item">模拟经营解锁条件修改 + 一键上下阵实现 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">抽卡框架优化 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">模拟经营农田代码优化 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">图鉴升级宠物协议分离基本数据优化 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">建筑离线收益改为结算时计算加成 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">图鉴批量一步到位升级实现 <span class="progress progress-100">100%</span></div>
+                        <div class="work-item">跟进各系统验收 bug <span class="progress progress-ongoing">持续进行中</span></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

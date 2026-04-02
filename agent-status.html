@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI 助手工作状态监控</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#2c1a4d 0%,#1a1a2e 100%);min-height:100vh;padding:20px;position:relative}
+        body::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:20px 20px;pointer-events:none}
+        .container{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+        .header{text-align:center;margin-bottom:30px;animation:fadeInDown 0.5s}
+        .header h1{font-size:28px;color:#fff;text-shadow:3px 3px 0 #000;margin-bottom:10px}
+        .header .subtitle{font-size:14px;color:#a78bfa}
+        .stats-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:15px;margin-bottom:25px;animation:fadeInUp 0.5s}
+        .stat-card{background:linear-gradient(135deg,#1a1a2e 0%,#2d1f3d 100%);border:2px solid #8b5cf6;border-radius:12px;padding:15px;text-align:center;cursor:pointer;transition:all 0.3s}
+        .stat-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(139,92,246,0.3)}
+        .stat-card.clickable{border-color:#f59e0b}
+        .stat-card.clickable:hover{border-color:#f59e0b;box-shadow:0 8px 20px rgba(245,158,11,0.3)}
+        .stat-number{font-size:28px;font-weight:700;color:#a78bfa;margin-bottom:5px}
+        .stat-label{font-size:12px;color:#6b7280}
+        .section{margin-bottom:25px}
+        .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+        .section-title{font-size:18px;color:#fff;display:flex;align-items:center;gap:10px}
+        .section-title::before{content:'⚡';font-size:20px}
+        .toggle-btn{background:#8b5cf6;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;transition:all 0.3s}
+        .toggle-btn:hover{background:#a78bfa;transform:translateY(-2px)}
+        .agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:20px}
+        .agent-card{background:linear-gradient(135deg,#1a1a2e 0%,#2d1f3d 100%);border:2px solid #8b5cf6;border-radius:16px;padding:20px;transition:all 0.3s;animation:fadeInUp 0.5s}
+        .agent-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(139,92,246,0.3)}
+        .agent-card.working{border-color:#f59e0b;box-shadow:0 0 20px rgba(245,158,11,0.3)}
+        .agent-card.done{border-color:#10b981}
+        .agent-header{display:flex;align-items:center;gap:15px;margin-bottom:15px}
+        .agent-avatar{width:60px;height:60px;background:linear-gradient(135deg,#8b5cf6 0%,#a78bfa 100%);border-radius:12px;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:32px}
+        .agent-info{flex:1}
+        .agent-name{font-size:16px;color:#fff;font-weight:600;margin-bottom:5px}
+        .agent-task{font-size:13px;color:#a78bfa;margin-bottom:8px}
+        .status-badge{display:inline-block;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700}
+        .status-working{background:#f59e0b;color:#fff;animation:pulse 2s infinite}
+        .status-done{background:#10b981;color:#fff}
+        .status-idle{background:#6b7280;color:#fff}
+        .progress-section{margin-bottom:15px}
+        .progress-label{display:flex;justify-content:space-between;font-size:12px;color:#a78bfa;margin-bottom:8px}
+        .progress-track{height:12px;background:#1a1a2e;border-radius:6px;overflow:hidden;border:1px solid #8b5cf6}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#8b5cf6 0%,#a78bfa 100%);border-radius:6px;transition:width 0.8s;position:relative;overflow:hidden}
+        .progress-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:progressShine 2s infinite}
+        .subtasks{margin-top:15px}
+        .subtask-header{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#2d1f3d;border-radius:8px;cursor:pointer;transition:all 0.3s;margin-bottom:10px}
+        .subtask-header:hover{background:#3d2f4f}
+        .subtask-title{font-size:13px;color:#e9d5ff;display:flex;align-items:center;gap:8px}
+        .subtask-toggle{font-size:16px;color:#a78bfa;transition:transform 0.3s}
+        .subtask-list{display:none;padding-left:10px}
+        .subtask-list.expanded{display:block;animation:slideDown 0.3s}
+        .subtask-item{display:flex;align-items:center;gap:8px;padding:8px;background:#1a1a2e;border-radius:6px;margin-bottom:6px;font-size:12px;color:#d1d5db;border-left:3px solid #8b5cf6}
+        .subtask-item.done{border-left-color:#10b981;opacity:0.7}
+        .subtask-item .emoji{font-size:14px}
+        .pending-section{margin-bottom:25px}
+        .history-section{margin-top:30px}
+        .history-card{background:linear-gradient(135deg,#1a1a2e 0%,#2d1f3d 100%);border:2px solid #10b981;border-radius:16px;padding:20px}
+        .history-list{max-height:300px;overflow-y:auto}
+        .history-item{display:flex;align-items:center;gap:12px;padding:12px;background:#2d1f3d;border-radius:8px;margin-bottom:10px;border-left:4px solid #10b981;transition:all 0.3s}
+        .history-item:hover{transform:translateX(5px);background:#3d2f4f}
+        .history-emoji{font-size:18px}
+        .history-info{flex:1}
+        .history-task{font-size:14px;color:#a78bfa;margin-bottom:4px}
+        .history-time{font-size:11px;color:#6b7280}
+        .refresh-btn{position:fixed;bottom:30px;right:30px;width:60px;height:60px;background:linear-gradient(135deg,#8b5cf6 0%,#a78bfa 100%);border:none;border-radius:50%;box-shadow:0 6px 20px rgba(139,92,246,0.4);cursor:pointer;font-size:28px;animation:pulse 2s infinite;z-index:1000}
+        .refresh-btn:hover{transform:scale(1.1)}
+        .last-update{position:fixed;bottom:30px;left:30px;font-size:12px;color:#6b7280;background:#1a1a2e;padding:10px 15px;border-radius:8px;border:2px solid #8b5cf6;z-index:1000}
+        @keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes pulse{0%,100%{box-shadow:0 6px 20px rgba(139,92,246,0.4)}50%{box-shadow:0 6px 30px rgba(139,92,246,0.6)}}
+        @keyframes progressShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+        @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+        @media(max-width:768px){.stats-bar{grid-template-columns:repeat(3,1fr)}.agent-grid{grid-template-columns:1fr}.refresh-btn{bottom:20px;right:20px;width:50px;height:50px}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI 助手工作状态监控</h1>
+            <p class="subtitle">Multi-Agent Real-time Status Monitor</p>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-number" id="statTotal">0</div>
+                <div class="stat-label">📊 总任务</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statCompleted">0</div>
+                <div class="stat-label">✅ 已完成</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statWorking">0</div>
+                <div class="stat-label">⚡ 进行中</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statPending">0</div>
+                <div class="stat-label">⏳ 待处理</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statRate">0%</div>
+                <div class="stat-label">🎯 成功率</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">⚡ 进行中任务</div>
+                <button class="toggle-btn" onclick="toggleAllSubtasks()">展开全部</button>
+            </div>
+            <div class="agent-grid" id="workingAgents">
+                <div style="text-align:center;color:#fff;padding:40px;grid-column:1/-1;">⏳ 加载中...</div>
+            </div>
+        </div>
+
+        <div class="pending-section" id="pendingSection" style="display:none;margin-bottom:25px;">
+            <div class="section-header">
+                <div class="section-title">⏳ 待处理任务</div>
+                <button class="toggle-btn" onclick="togglePending()">收起</button>
+            </div>
+            <div class="history-card">
+                <div class="history-list" id="pendingList"></div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="section-header">
+                <div class="section-title">📜 历史任务</div>
+                <button class="toggle-btn" onclick="toggleHistory()">展开/收起</button>
+            </div>
+            <div class="history-card" id="historyCard" style="display:none;">
+                <div class="history-list" id="historyList"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" onclick="loadStatus()" title="刷新状态">🔄</button>
+    <div class="last-update" id="lastUpdate">上次更新：--:--:--</div>
+
+    <script>
+        let historyExpanded=false;
+        let pendingExpanded=true;
+        
+        // 从 localStorage 读取展开状态
+        function loadExpandedState(){
+            try{
+                const saved=localStorage.getItem('agentStatusExpanded');
+                if(saved){
+                    return JSON.parse(saved);
+                }
+            }catch(e){console.error('读取展开状态失败:',e);}
+            return {subtasks:{},pending:true,history:false};
+        }
+        
+        // 保存展开状态到 localStorage
+        function saveExpandedState(state){
+            try{
+                localStorage.setItem('agentStatusExpanded',JSON.stringify(state));
+            }catch(e){console.error('保存展开状态失败:',e);}
+        }
+        
+        function loadStatus(){
+            console.log('加载状态...');
+            fetch('status.json?t='+Date.now())
+            .then(r=>{
+                console.log('响应状态:',r.status);
+                return r.json();
+            })
+            .then(data=>{
+                console.log('数据:',data);
+                
+                // 更新统计
+                document.getElementById('statTotal').textContent=data.stats?.total_tasks||0;
+                document.getElementById('statCompleted').textContent=data.stats?.completed||0;
+                document.getElementById('statWorking').textContent=data.stats?.working||0;
+                document.getElementById('statPending').textContent=data.stats?.pending||0;
+                document.getElementById('statRate').textContent=data.stats?.success_rate||'0%';
+                
+                // 更新进行中任务（保持展开状态）
+                const expandedState=loadExpandedState();
+                const workingAgents=document.getElementById('workingAgents');
+                if(data.agents&&data.agents.length>0){
+                    workingAgents.innerHTML=data.agents.map(agent=>`
+                        <div class="agent-card ${agent.status}">
+                            <div class="agent-header">
+                                <div class="agent-avatar">${agent.emoji||'🤖'}</div>
+                                <div class="agent-info">
+                                    <div class="agent-name">${agent.name||'AI 助手'}</div>
+                                    <div class="agent-task">${agent.current_task||'空闲中'}</div>
+                                    <span class="status-badge status-${agent.status}">${agent.status==='working'?'⚡ 工作中':'✅ 已完成'}</span>
+                                </div>
+                            </div>
+                            <div class="progress-section">
+                                <div class="progress-label">
+                                    <span>进度：${agent.progress||0}%</span>
+                                    <span>预计：${agent.estimated_end||'--:--'}</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width:${agent.progress||0}%"></div>
+                                </div>
+                            </div>
+                            ${agent.subtasks&&agent.subtasks.length>0?`
+                            <div class="subtasks">
+                                <div class="subtask-header" onclick="toggleSubtasks('${agent.id}')">
+                                    <div class="subtask-title">📋 子任务详情 (${agent.subtasks.filter(t=>t.done).length}/${agent.subtasks.length})</div>
+                                    <div class="subtask-toggle" id="toggle-${agent.id}">${expandedState.subtasks[agent.id]?'▼':'▶'}</div>
+                                </div>
+                                <div class="subtask-list ${expandedState.subtasks[agent.id]?'expanded':''}" id="subtasks-${agent.id}">
+                                    ${agent.subtasks.map(t=>`
+                                        <div class="subtask-item ${t.done?'done':''}">
+                                            <span class="emoji">${t.done?'✅':'⚡'}</span>
+                                            <span>${t.name}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            `:''}
+                        </div>
+                    `).join('');
+                }else{
+                    workingAgents.innerHTML='<div style="text-align:center;color:#6b7280;padding:40px;grid-column:1/-1;">💤 暂无进行中任务</div>';
+                }
+                
+                // 更新待处理任务（保持展开状态）
+                const pendingSection=document.getElementById('pendingSection');
+                const pendingList=document.getElementById('pendingList');
+                const pendingStat=document.getElementById('statPending').parentElement;
+                
+                if(data.pending_tasks&&data.pending_tasks.length>0){
+                    pendingStat.classList.add('clickable');
+                    pendingStat.onclick=togglePending;
+                    pendingSection.style.display=expandedState.pending?'block':'none';
+                    document.querySelector('.pending-section .toggle-btn').textContent=expandedState.pending?'收起':'展开';
+                    pendingList.innerHTML=data.pending_tasks.map(t=>`
+                        <div class="history-item" style="border-left-color:#f59e0b;">
+                            <span class="history-emoji">⏳</span>
+                            <div class="history-info">
+                                <div class="history-task" style="color:#f59e0b;">
+                                    <span style="background:#f59e0b;color:#000;padding:2px 6px;border-radius:4px;font-size:10px;margin-right:6px;">${t.priority}</span>
+                                    ${t.task}
+                                </div>
+                                <div class="history-time">来自：${t.from_user} | ${t.created_at}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }else{
+                    pendingStat.classList.remove('clickable');
+                    pendingSection.style.display='none';
+                }
+                
+                // 更新历史任务（保持展开状态）
+                const historyList=document.getElementById('historyList');
+                const historyCard=document.getElementById('historyCard');
+                if(data.completed_tasks&&data.completed_tasks.length>0){
+                    historyCard.style.display=expandedState.history?'block':'none';
+                    document.querySelector('.history-section .toggle-btn').textContent=expandedState.history?'收起历史':'查看历史';
+                    historyList.innerHTML=data.completed_tasks.map(t=>`
+                        <div class="history-item">
+                            <span class="history-emoji">${t.emoji||'✅'}</span>
+                            <div class="history-info">
+                                <div class="history-task">${t.task}</div>
+                                <div class="history-time">${t.completed_at}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }else{
+                    historyCard.style.display='none';
+                    historyList.innerHTML='<div style="text-align:center;color:#6b7280;padding:20px;">暂无历史记录</div>';
+                }
+                
+                // 更新时间
+                const now=new Date();
+                document.getElementById('lastUpdate').textContent='上次更新：'+now.toLocaleTimeString();
+                console.log('状态加载完成');
+            })
+            .catch(e=>{
+                console.error('加载状态失败:',e);
+                document.getElementById('workingAgents').innerHTML='<div style="text-align:center;color:#f59e0b;padding:40px;grid-column:1/-1;">❌ 加载失败，请刷新页面<br><small>'+e.message+'</small></div>';
+            });
+        }
+        
+        function toggleSubtasks(agentId){
+            const list=document.getElementById(`subtasks-${agentId}`);
+            const toggle=document.getElementById(`toggle-${agentId}`);
+            const expandedState=loadExpandedState();
+            
+            if(list&&list.classList.contains('expanded')){
+                list.classList.remove('expanded');
+                toggle.textContent='▶';
+                expandedState.subtasks[agentId]=false;
+            }else if(list){
+                list.classList.add('expanded');
+                toggle.textContent='▼';
+                expandedState.subtasks[agentId]=true;
+            }
+            saveExpandedState(expandedState);
+        }
+        
+        function toggleAllSubtasks(){
+            const btn=document.querySelector('.section-header .toggle-btn');
+            const lists=document.querySelectorAll('.subtask-list');
+            const toggles=document.querySelectorAll('.subtask-toggle');
+            const isExpanded=lists[0]&&lists[0].classList.contains('expanded');
+            
+            lists.forEach(list=>{
+                if(list){
+                    if(isExpanded){
+                        list.classList.remove('expanded');
+                    }else{
+                        list.classList.add('expanded');
+                    }
+                }
+            });
+            toggles.forEach(toggle=>{
+                if(toggle){
+                    toggle.textContent=isExpanded?'▶':'▼';
+                }
+            });
+            btn.textContent=isExpanded?'展开全部':'收起全部';
+        }
+        
+        function togglePending(){
+            const section=document.getElementById('pendingSection');
+            const btn=document.querySelector('.pending-section .toggle-btn');
+            const expandedState=loadExpandedState();
+            expandedState.pending=!expandedState.pending;
+            if(section){
+                section.style.display=expandedState.pending?'block':'none';
+            }
+            if(btn){
+                btn.textContent=expandedState.pending?'收起':'展开';
+            }
+            saveExpandedState(expandedState);
+        }
+        
+        function toggleHistory(){
+            const card=document.getElementById('historyCard');
+            const btn=document.querySelector('.history-section .toggle-btn');
+            const expandedState=loadExpandedState();
+            expandedState.history=!expandedState.history;
+            if(card){
+                card.style.display=expandedState.history?'block':'none';
+            }
+            if(btn){
+                btn.textContent=expandedState.history?'收起历史':'查看历史';
+            }
+            saveExpandedState(expandedState);
+        }
+        
+        // 初始化展开状态
+        const initialState=loadExpandedState();
+        pendingExpanded=initialState.pending;
+        historyExpanded=initialState.history;
+        
+        console.log('开始加载状态...');
+        setInterval(loadStatus,5000);
+        loadStatus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 做僚机：游戏策划的表格管理新姿势</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: PingFang SC, Microsoft YaHei, sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+        .container {
+            width: 375px;
+            height: 667px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .page {
+            width: 375px;
+            height: 667px;
+            padding: 40px 24px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .page.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .cover-page {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
+        .cover-page h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+        .cover-page .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        .cover-page .tagline {
+            font-size: 14px;
+            opacity: 0.8;
+            font-style: italic;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+        }
+        .content-page {
+            background: #fff;
+        }
+        .content-page h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+        .content-page p {
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        .quote-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            font-size: 14px;
+            font-style: italic;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        .data-box {
+            background: #1a1a2e;
+            color: #eee;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 12px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        ul, ol {
+            margin: 12px 0 12px 20px;
+            font-size: 14px;
+        }
+        li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        .nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nav-dot.active {
+            background: #667eea;
+            width: 20px;
+            border-radius: 4px;
+        }
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.9);
+            color: #fff;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .prev-btn { left: 10px; }
+        .next-btn { right: 10px; }
+        .page-indicator {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #999;
+        }
+        .end-page {
+            background: #1a1a2e;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
+        .end-page h2 {
+            color: #fff;
+            margin-bottom: 24px;
+        }
+        .end-page p {
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        .watermark {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 封面页 -->
+        <div class="page cover-page active" data-page="1">
+            <h1>AI 做僚机</h1>
+            <div class="subtitle">游戏策划的表格管理新姿势</div>
+            <div class="tagline">"一人成军，不是神话，是正在发生的现实"</div>
+            <div class="page-indicator">1 / 15</div>
+        </div>
+
+        <!-- 第2页 -->
+        <div class="page content-page" data-page="2">
+            <h2>配表的折磨</h2>
+            <p>如果你是游戏策划，你一定懂那种感觉。</p>
+            <p>打开表格，发现同事正在编辑，你被锁在外面；好不容易轮到你，改了两个字段，数据对不上……</p>
+            <p>这些事情单个看都不大，但架不住<strong>多、碎、杂</strong>。每天被打断十几次，心流早就没了。</p>
+            <div class="quote-box">"数据不会说谎，但光是让数据乖乖听话，就已经耗尽了策划的精力。"</div>
+            <div class="page-indicator">2 / 15</div>
+        </div>
+
+        <!-- 第3页 -->
+        <div class="page content-page" data-page="3">
+            <h2>技术方案</h2>
+            <p>今天分享一次实操：<strong>如何通过 OpenClaw 打通飞书表格</strong>，让 AI 成为你的"僚机"。</p>
+            <div class="highlight-box"><strong>OpenClaw 是什么？</strong><br>AI Agent 框架，能让 AI 直接调用飞书 API，你只需要用自然语言发指令。</div>
+            <p>支持：文档、表格、多维表格、日历、任务、聊天……</p>
+            <div class="page-indicator">3 / 15</div>
+        </div>
+
+        <!-- 第4页 -->
+        <div class="page content-page" data-page="4">
+            <h2>场景一：跨表引用</h2>
+            <p>游戏项目中，配表分散在多个文件。道具表在 A 文件，商店表在 B 文件。</p>
+            <p>传统做法：手动复制，或写 VLOOKUP 公式，还要处理跨表授权。</p>
+            <div class="data-box">用 OpenClaw，一句话搞定：</div>
+            <div class="data-box">"帮我在商店表加一列，根据道具ID从道具表自动匹配名称。"</div>
+            <div class="page-indicator">4 / 15</div>
+        </div>
+
+        <!-- 第5页 -->
+        <div class="page content-page" data-page="5">
+            <h2>AI 生成的公式</h2>
+            <div class="data-box">=VLOOKUP(A2, IMPORTRANGE("道具表URL", "Sheet1!A:C"), 2, FALSE)</div>
+            <p>你不需要记 IMPORTRANGE 的语法，不需要手动授权跨表访问，AI 会一步步完成。</p>
+            <div class="highlight-box">核心价值：不用学复杂工具 → 用自然语言描述需求 → AI 自动完成</div>
+            <div class="page-indicator">5 / 15</div>
+        </div>
+
+        <!-- 第6页 -->
+        <div class="page content-page" data-page="6">
+            <h2>场景二：复杂公式</h2>
+            <p>有一次，我需要处理组合字段：单元格里有多个值，用竖线分隔，每个值又是"类型*数量"的格式。</p>
+            <p>我要根据类型 ID 去另一个表匹配名称，再重新拼接。</p>
+            <div class="data-box">传统做法？写嵌套公式，查文档，调试半天。</div>
+            <div class="page-indicator">6 / 15</div>
+        </div>
+
+        <!-- 第7页 -->
+        <div class="page content-page" data-page="7">
+            <h2>自然语言描述</h2>
+            <div class="data-box">"这个字段格式是'类型1*数量1|类型2*数量2'，帮我匹配名称，输出'名称1*数量1|名称2*数量2'。"</div>
+            <p>AI 生成的公式涉及 7-8 个函数嵌套：SPLIT、MAP、TEXTJOIN、VLOOKUP、VALUE、INDEX、IFERROR……</p>
+            <div class="highlight-box">自己写至少半小时，用 AI 一句话几十秒搞定。</div>
+            <div class="page-indicator">7 / 15</div>
+        </div>
+
+        <!-- 第8页 -->
+        <div class="page content-page" data-page="8">
+            <h2>场景三：权限问题</h2>
+            <p>传统表格协作最大的痛点：权限冲突。你想编辑，别人也在编辑。</p>
+            <div class="quote-box">用 AI + API 的方式，这个问题迎刃而解。AI 通过 API 操作，不占用你的编辑窗口。</div>
+            <p>你可以在群里发指令："帮我把道具ID 123的价格改成100"，AI 直接完成。</p>
+            <div class="page-indicator">8 / 15</div>
+        </div>
+
+        <!-- 第9页 -->
+        <div class="page content-page" data-page="9">
+            <h2>解放终端</h2>
+            <div class="highlight-box"><strong>这意味着什么？</strong><br>你可以在任何终端操作表格——手机、平板、智能音箱——不需要安装飞书App，只需要一个能发消息的界面。</div>
+            <p>开会时、通勤时、甚至在洗手间，随时发指令处理表格。</p>
+            <div class="page-indicator">9 / 15</div>
+        </div>
+
+        <!-- 第10页 -->
+        <div class="page content-page" data-page="10">
+            <h2>爽点总结</h2>
+            <ol>
+                <li><strong>快速响应</strong>：细碎需求随时发指令让AI处理</li>
+                <li><strong>保护心流</strong>：不需要频繁切换窗口</li>
+                <li><strong>降低门槛</strong>：复杂公式自然语言描述即可</li>
+                <li><strong>解放终端</strong>：任何场景都能操作表格</li>
+            </ol>
+            <div class="page-indicator">10 / 15</div>
+        </div>
+
+        <!-- 第11页 -->
+        <div class="page content-page" data-page="11">
+            <h2>价值思考</h2>
+            <p>做游戏这么多年，我见过太多策划死在表格上。</p>
+            <p>传统配表是什么体验？十个人改同一张表，权限冲突能吵半天；一个数值填错，全服经济崩盘……</p>
+            <div class="quote-box">策划的一天被切成几百个碎片，真正思考设计的时间所剩无几。</div>
+            <div class="page-indicator">11 / 15</div>
+        </div>
+
+        <!-- 第12页 -->
+        <div class="page content-page" data-page="12">
+            <h2>AI 改变了什么</h2>
+            <p>现在策划说"把所有武器伤害乘以 1.2，但稀有度 5 的不超过 500"，AI 直接生成公式，一秒执行。</p>
+            <div class="highlight-box"><strong>更重要的是，AI 保护了心流。</strong><br>策划不需要在"思考设计"和"操作表格"之间反复横跳，想到什么直接说，AI 去落地。</div>
+            <div class="page-indicator">12 / 15</div>
+        </div>
+
+        <!-- 第13页 -->
+        <div class="page content-page" data-page="13">
+            <h2>一人成军</h2>
+            <div class="quote-box">游戏开发的未来不是"人 vs AI"，而是"人 + AI vs 问题"。</div>
+            <p>一个主策划可以同时操作三个 AI 僚机——一个管数值平衡，一个管配置完整性，一个管版本对比。</p>
+            <p><strong>这不是替代，是放大。</strong></p>
+            <div class="page-indicator">13 / 15</div>
+        </div>
+
+        <!-- 第14页 -->
+        <div class="page content-page" data-page="14">
+            <h2>从表格里抬起头</h2>
+            <p>好的工具让人更像人——少做机器该做的事，多做只有人能做的事：创造、判断、赋予意义。</p>
+            <div class="highlight-box">表格还是那个表格，但策划终于可以从表格里抬起头，重新做回"设计游戏"的人。</div>
+            <p>一人成军，不是神话，是正在发生的现实。</p>
+            <div class="page-indicator">14 / 15</div>
+        </div>
+
+        <!-- 尾页 -->
+        <div class="page end-page" data-page="15">
+            <h2>AI 真好用</h2>
+            <p>给我狠狠地用</p>
+            <div class="quote-box">项目牛逼，大家牛逼。<br>AI 做僚机，你做指挥官。<br>这才是未来的工作方式。</div>
+            <p>技术已经就位，工具已经开放。</p>
+            <p>接下来，就看你怎么用了。</p>
+            <div class="watermark">jing | 2026-03-17 | 王鲸</div>
+            <div class="page-indicator" style="color: rgba(255,255,255,0.5);">15 / 15</div>
+        </div>
+
+        <!-- 导航 -->
+        <button class="nav-btn prev-btn" onclick="prevPage()">‹</button>
+        <button class="nav-btn next-btn" onclick="nextPage()">›</button>
+        <div class="nav" id="nav"></div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 15;
+
+        function initNav() {
+            const nav = document.getElementById('nav');
+            for (let i = 1; i <= totalPages; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'nav-dot' + (i === 1 ? ' active' : '');
+                dot.onclick = () => goToPage(i);
+                nav.appendChild(dot);
+            }
+        }
+
+        function updatePage() {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelector(`[data-page="${currentPage}"]`).classList.add('active');
+            document.querySelectorAll('.nav-dot').forEach((d, i) => {
+                d.classList.toggle('active', i + 1 === currentPage);
+            });
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePage();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePage();
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            updatePage();
+        }
+
+        // 触摸滑动
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const diff = e.changedTouches[0].clientX - touchStartX;
+            if (diff > 50) prevPage();
+            if (diff < -50) nextPage();
+        });
+
+        initNav();
+    </script>
+</body>
+</html>

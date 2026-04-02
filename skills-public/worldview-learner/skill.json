@@ -1,0 +1,31 @@
+{
+  "name": "worldview-learner",
+  "version": "1.0.0",
+  "description": "世界观/文档快速学习 Skill，10 分钟读完数十万字文档并结构化总结",
+  "author": "jing（OpenClaw 实践者）",
+  "tags": ["learning", "document", "worldview", "summary", "学习", "文档"],
+  "triggers": [
+    "学习这个文档",
+    "读一下策划案",
+    "总结这个系统",
+    "学习世界观",
+    "文档学习",
+    "知识沉淀",
+    "术语提取"
+  ],
+  "capabilities": [
+    "文档读取",
+    "结构化总结",
+    "术语提取",
+    "记忆存储",
+    "问答索引"
+  ],
+  "files": [
+    "SKILL.md",
+    "skill.json",
+    "rules/learning-rules.md",
+    "templates/summary.md",
+    "templates/terminology.md",
+    "examples/learning-sample.md"
+  ]
+}

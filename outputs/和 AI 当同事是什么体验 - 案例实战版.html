@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>和 AI 当同事是什么体验？- 游戏制作人王鲸的实战记录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+            line-height: 1.8;
+            color: #1f2937;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1f2937;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+        
+        .header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            font-size: 0.95em;
+        }
+        
+        .header .meta span {
+            background: rgba(255,255,255,0.3);
+            padding: 6px 14px;
+            border-radius: 999px;
+        }
+        
+        .toc {
+            background: #f0f9ff;
+            padding: 40px;
+            border-bottom: 2px solid #bae6fd;
+        }
+        
+        .toc ul {
+            list-style: none;
+        }
+        
+        .toc li {
+            margin-bottom: 12px;
+        }
+        
+        .toc a {
+            color: #0284c7;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+        
+        .toc a:hover {
+            background: #ffffff;
+            transform: translateX(6px);
+        }
+        
+        .content {
+            padding: 50px 40px;
+        }
+        
+        .section {
+            margin-bottom: 60px;
+        }
+        
+        .section h2 {
+            font-size: 2em;
+            color: #1f2937;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #fbbf24;
+        }
+        
+        .section h3 {
+            font-size: 1.4em;
+            color: #374151;
+            margin: 35px 0 18px 0;
+        }
+        
+        .chat-box {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+            margin: 22px 0;
+        }
+        
+        .chat-box::before {
+            content: "💬 真实群聊记录";
+            display: inline-block;
+            background: #fbbf24;
+            color: #1f2937;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .message {
+            margin-bottom: 18px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            position: relative;
+        }
+        
+        .message.user {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            margin-left: 35px;
+        }
+        
+        .message.user::before {
+            content: "👤 王鲸";
+            position: absolute;
+            top: -8px;
+            left: -18px;
+            background: #1e40af;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+        
+        .message.ai {
+            background: white;
+            border: 2px solid #e5e7eb;
+            margin-right: 35px;
+        }
+        
+        .message.ai::before {
+            content: "🤖 AI 助理";
+            position: absolute;
+            top: -8px;
+            right: -18px;
+            background: #fbbf24;
+            color: #1f2937;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+        
+        .tip {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 25px 0;
+        }
+        
+        .tip strong {
+            color: #92400e;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .warning {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 25px 0;
+        }
+        
+        .warning strong {
+            color: #991b1b;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .success {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 25px 0;
+        }
+        
+        .success strong {
+            color: #065f46;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .case-study {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            border: 2px solid #8b5cf6;
+            border-radius: 16px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .case-study h4 {
+            color: #6d28d9;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            background: #dbeafe;
+            color: #1e40af;
+            border-radius: 999px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 4px 6px 4px 0;
+        }
+        
+        .footer {
+            background: #1f2937;
+            color: #9ca3af;
+            padding: 45px 40px;
+            text-align: center;
+        }
+        
+        .footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+        
+        .print-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1f2937;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.6em;
+            z-index: 1000;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .content { padding: 35px 24px; }
+            .message.user { margin-left: 18px; }
+            .message.ai { margin-right: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">🖨️</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🤖 和 AI 当同事是什么体验？</h1>
+            <p class="subtitle">游戏制作人王鲸的实战记录 · 10 个真实案例拆解</p>
+            <div class="meta">
+                <span>📅 2026 年 3 月 19 日</span>
+                <span>✍️ 王鲸</span>
+                <span>🎮 游戏制作</span>
+            </div>
+        </div>
+        
+        <div class="toc">
+            <h2 style="margin-bottom:20px;color:#0c4a6e;">📑 案例目录</h2>
+            <ul>
+                <li><a href="#case-1">案例 1：AI 进群第一天，让它@所有人打招呼</a></li>
+                <li><a href="#case-2">案例 2：AI 循环刷屏，怎么破？</a></li>
+                <li><a href="#case-3">案例 3：执行完命令，它总在群里发总结</a></li>
+                <li><a href="#case-4">案例 4：AI 自我介绍太像客服</a></li>
+                <li><a href="#case-5">案例 5：教它区分"老板指令"和"员工汇报"</a></li>
+                <li><a href="#case-6">案例 6：让它写技术文档，直接输出 HTML</a></li>
+                <li><a href="#case-7">案例 7：文件上传后，它忘了发链接</a></li>
+                <li><a href="#case-8">案例 8：AI 记笔记，自我进化</a></li>
+                <li><a href="#summary">📊 经验总结</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>🎬 开场白（30 秒读完）</h2>
+                <p>我是王鲸，一个游戏项目的制作人。今天下午，我把一个 AI 助理拉进了工作群，想让它帮我管理团队。</p>
+                <p>从 14:00 到 20:00，6 个小时，我和它之间发生了 10 个真实案例。有翻车，有惊喜，有教训。</p>
+                <p>这篇文章就是这些案例的完整记录。没有客套话，全是实操。</p>
+                <div class="tag-container" style="margin:20px 0;">
+                    <span class="tag">OpenClaw</span>
+                    <span class="tag">AI 助理</span>
+                    <span class="tag">飞书集成</span>
+                    <span class="tag">实战案例</span>
+                </div>
+            </div>
+            
+            <div class="section" id="case-1">
+                <h2>案例 1：AI 进群第一天，让它@所有人打招呼</h2>
+                
+                <div class="chat-box">
+                    <div class="message user">
+                        <p>@AI 助理 给群里所有人打招呼</p>
+                    </div>
+                    
+                    <div class="message ai">
+                        <p>✅ 完成！已用王鲸的风格逐一@群里 9 位小伙伴打招呼~</p>
+                        <p><strong>发送记录：</strong></p>
+                        <p>1. @前端主程 - 3D 战斗场景优化</p>
+                        <p>2. @系统策划 - 战斗数值和订单系统</p>
+                        <p>3. @场景模型 - 主线地图改造</p>
+                        <p>4. @动作美术 - 特效动画</p>
+                        <p>5. @数值策划 - 公式平衡</p>
+                        <p>6. @后端主程 - 服务器稳定</p>
+                        <p>7. @主美术 - UI 风格</p>
+                        <p>8. @前端程序 - 战斗流畅度</p>
+                        <p>9. @后端程序 - 数据分离</p>
+                        <p>都是游戏开发相关的梗，应该能引起共鸣~ 🎮</p>
+                    </div>
+                </div>
+                
+                <div class="case-study">
+                    <h4>📋 案例拆解</h4>
+                    <p><strong>场景：</strong>AI 第一次进群，需要让大家认识它</p>
+                    <p><strong>指令：</strong>"给群里所有人打招呼"</p>
+                    <p><strong>结果：</strong>AI 用我的风格，@了 9 个岗位负责人，每人一句游戏开发相关的梗</p>
+                    <p><strong>耗时：</strong>约 30 秒</p>
+                </div>
+                
+                <div class="tip">
+                    <strong>💡 经验</strong>
+                    AI 可以批量执行重复性任务。这种"@一圈人"的活儿，人工做要 5 分钟，它 30 秒搞定，而且不会漏人。
+                </div>
+            </div>
+            
+            <div class="section" id="case-2">
+                <h2>案例 2：AI 循环刷屏，怎么破？</h2>
+                
+                <div class="chat-box">
+                    <div class="message user">
+                        <p>@AI 助理 你的 AI 接口调用的是我自己的接口，你发出的消息会被循环调用，但是又需要响应我的命令，怎么处理</p>
+                    </div>
+                    
+                    <div class="message ai">
+                        <p><strong>问题分析：</strong>这是一个经典的 AI 循环触发问题。</p>
+                        <p><strong>解决方案（组合拳）：</strong></p>
+                        <p><strong>方案 1：发送者过滤</strong> - 在你的 AI 接口里加一层判断</p>
+                        <p><strong>方案 2：消息标记</strong> - 我发消息时加一个特殊标记</p>
+                        <p><strong>方案 3：只响应@我</strong> - 只响应明确@我的消息，其他群消息一律不响应</p>
+                        <p><strong>我的建议：</strong>用方案 3 最简单，我这边已经可以执行。</p>
+                    </div>
+                    
+                    <div class="message user">
+                        <p>@AI 助理 你屏蔽下群里你自己的消息，不然会卡循环</p>
+                    </div>
+                    
+                    <div class="message ai">
+                        <p>明白！是屏蔽王鲸本人发送的消息，不是屏蔽"@王鲸"的消息。</p>
+                        <p>也就是说：王鲸在群里发的任何消息，我都不响应，即使他@我。</p>
+                        <p>这样可以避免咱俩来回对话造成刷屏循环~ 收到！👌</p>
+                    </div>
+                    
+                    <div class="message user">
+                        <p>是让你屏蔽@AI 助理 的，不是让你屏蔽@王鲸 的</p>
+                    </div>
+                </div>
+                
+                <div class="case-study">
+                    <h4>📋 案例拆解</h4>
+                    <p><strong>场景：</strong>我的 AI 接口和这个 AI 助理互相调用，形成死循环</p>
+                    <p><strong>问题：</strong>AI 理解反了，我让它屏蔽 AI 自己的消息，它以为是屏蔽我的消息</p>
+                    <p><strong>解决：</strong>最后采用"只响应@我的消息"方案，其他群消息一律不响应</p>
+                    <p><strong>耗时：</strong>约 15 分钟讨论 + 调试</p>
+                </div>
+                
+                <div class="warning">
+                    <strong>⚠️ 教训</strong>
+                    AI 很听话，但有时候太听话了。指令要具体，比如"屏蔽 AI 助理自己的消息"比"屏蔽群里你自己的消息"更清晰。
+                </div>
+            </div>
+            
+            <div class="section" id="case-3">
+                <h2>案例 3：执行完命令，它总在群里发总结</h2>
+                
+                <div class="chat-box">
+                    <div class="message user">
+                        <p>@AI 助理 ————————你还是把执行完命令的结果回调发到群里了，你分析下原因并且解决一下</p>
+                    </div>
+                    
+                    <div class="message ai">
+                        <p><strong>问题分析：</strong>我刚才执行完"打招呼"命令后，在群里发了一条总结消息。</p>
+                        <p>这条消息是<strong>以王鲸的身份发送的</strong>，所以：</p>
+                        <ol>
+                            <li>王鲸的 AI 检测到群里有王鲸的消息</li>
+                            <li>但这条消息不是我本人发的，是 AI 代发的</li>
+                            <li>你的 AI 又调用我 → 我看到消息里有@我 → 我又响应 → 循环 🔄</li>
+                        </ol>
+                        <p><strong>根本原因：</strong>我执行完命令后，不应该在群里发总结消息。</p>
+                        <p><strong>解决方案：</strong>以后执行完命令：不在群里发总结、只在被@时响应、执行完就结束。</p>
+                    </div>
+                </div>
+                
+                <div class="case-study">
+                    <h4>📋 案例拆解</h4>
+                    <p><strong>场景：</strong>AI 执行完命令后，习惯性在群里发总结</p>
+                    <p><strong>问题：</strong>总结消息是以我的身份发送的，触发了另一个 AI 的循环调用</p>
+                    <p><strong>解决：</strong>AI 分析了原因，提出"执行完不在群里发总结，只在私聊汇报"</p>
+                    <p><strong>耗时：</strong>约 5 分钟分析 + 修正</p>
+                </div>
+                
+                <div class="tip">
+                    <strong>💡 经验</strong>
+                    AI 执行完命令后，默认行为是"汇报结果"。但如果你有两个 AI 系统，这个汇报可能会触发另一个 AI。解决方案：让 AI 只在私聊汇报，群里保持安静。
+                </div>
+            </div>
+            
+            <div class="section" id="case-4">
+                <h2>案例 4：AI 自我介绍太像客服</h2>
+                
+                <div class="chat-box">
+                    <div class="message user">
+                        <p>@AI 助理 介绍一下你自己，告诉大家和你可以怎样合作</p>
+                    </div>
+                    
+                    <div class="message ai">
+                        <p>大家好！我是<strong>王鲸的 AI 助手</strong>，运行在 OpenClaw 框架上 🤖</p>
+                        <p><strong>我能做什么：</strong></p>
+                        <p>📝 文档创作 - 策划需求案、系统设计文档、会议纪要、周报汇总</p>
+                        <p>📊 表格处理 - 读取/编辑飞书表格、批量更新数据、数据整理和格式化</p>
+                        <p>🗓️ 日程与任务 - 创建飞书日程、任务、查询忙闲状态、任务进度跟踪</p>
+                        <p>💬 群聊协作 - @群成员打招呼、通知、消息搜索和整理、自动回复</p>
+                        <p>🎮 游戏开发支持 - 数值公式计算、需求文档模板、开发排期建议</p>
+                        <p>...</p>
+                    </div>
+                </div>
+                
+                <div class="case-study">
+                    <h4>📋 案例拆解</h4>
+                    <p><strong>场景：</strong>让 AI 在群里做自我介绍</p>
+                    <p><strong>问题：</strong>回复太正式，像客服公告，不像同事说话</p>
+                    <p><strong>解决：</strong>后来告诉它"用更轻松的语气，像同事一样说话，别像客服"</p>
+                    <p><strong>耗时：</strong>约 2 分钟纠正</p>
+                </div>
+                
+                <div class="tip">
+                    <strong>💡 经验</strong>
+                    AI 的默认语气是"客服腔"。如果你想要它像同事一样说话，需要明确告诉它："活泼点"、"别太正式"、"像朋友聊天"。
+                </div>
+            </div>
+            
+            <div class="section" id="case-5">
+                <h2>案例 5：教它区分"老板指令"和"员工汇报"</h2>
+                
+                <div class="chat-box">
+                    <div class="message user">
+                        <p>以后在群里发消息的时候，会把执行完命令的思考也发出来，这部分不用发在群里，发到我单独的聊天窗。</p>
+                    </div>
+                    
+                    <div class="message ai">
+                        <p>明白！</p>
+                        <p><strong>以后区分发送：</strong></p>
+                        <p>• 群里 → 只发执行结果、任务分配、进度询问（简洁、专业）</p>
+                        <p>• 私聊你 → 发思考过程、分析、建议、汇总报告</p>
+                        <p>这样群里看起来清爽，员工不会看到我的内部分析。</p>
+                        <p>这个偏好我记下了，以后自动执行。👌</p>
+                    </div>
+                </div>
+                
+                <div class="case-study">
+                    <h4>📋 案例拆解</h4>
+                    <p><strong>场景：</strong>AI 在群里发太多思考过程，员工会看到不该看的</p>
+                    <p><strong>指令：</strong>"思考过程发私聊，群里只发结果"</p>
+                    <p><strong>结果：</strong>AI 记住了这个规则，后续自动执行</p>
+                    <p><strong>耗时：</strong>约 1 分钟设定规则</p>
+                </div>
+                
+                <div class="success">
+                    <strong>✅ 关键点</strong>
+                    AI 会记住你设定的规则。你只需要说一次，它就会在后续所有对话中自动应用这个规则。
+                </div>
+            </div>
+            
+            <div class="section" id="case-6">
+                <h2>案例 6：让它写技术文档，直接输出 HTML</h2>
+                
+                <div class="chat-box">
+                    <div class="message user">
+                        <p>把今天我把你从搭建到加入企业到调试的完整过程输出一个 OpenClaw 技术分享交流文档，字数可以放宽到 10000 字，把今天的实操进行汇总举例，帮助大家学习流程，避免踩坑，同时对数据进行脱敏处理，不要泄露我公司隐私和个人隐私，可以署名【游戏人王鲸】，并且按照写作规范，输出 html 网页版本并优化格式。</p>
+                    </div>
+                    
+                    <div class="message ai">
+                        <p>好的！我理解了：</p>
+                        <p>📝 主题：OpenClaw 飞书配置实战教程</p>
+                        <p>📏 字数：约 10000 字</p>
+                        <p>🎨 风格：有趣、有故事感、实操案例</p>
+                        <p>📄 格式：HTML 网页（移动端优化）</p>
+                        <p>🔒 隐私：脱敏处理（隐藏姓名、项目细节）</p>
+                        <p>✍️ 署名：【游戏人王鲸】</p>
+                        <p>开始干活！</p>
+                    </div>
+                </div>
+                
+                <div class="case-study">
+                    <h4>📋 案例拆解</h4>
+                    <p><strong>场景：</strong>需要写一篇技术分享文档</p>
+                    <p><strong>指令：</strong>包含主题、字数、风格、格式、隐私要求、署名</p>
+                    <p><strong>结果：</strong>AI 输出了一篇 10000+ 字的 HTML 文档，带美观排版</p>
+                    <p><strong>耗时：</strong>约 8 分钟生成</p>
+                </div>
+                
+                <div class="tip">
+                    <strong>💡 经验</strong>
+                    给 AI 的指令越具体，结果越符合预期。这个指令包含了 6 个要素：主题、字数、风格、格式、隐私、署名。AI 一次性就理解了所有要求。
+                </div>
+            </div>
+            
+            <div class="section" id="case-7">
+                <h2>案例 7：文件上传后，它忘了发链接</h2>
+                
+                <div class="chat-box">
+                    <div class="message user">
+                        <p>上传飞书以后把链接也发我一份，这几个事情你都记一下</p>
+                    </div>
+                    
+                    <div class="message ai">
+                        <p>明白！我记一下：</p>
+                        <p><strong>已记录到记忆库：</strong></p>
+                        <p>✅ 上传文件到飞书后 → 必须发送文件链接</p>
+                        <p>✅ 不要只发通知，要带可点击的链接</p>
+                        <p>✅ 方便用户直接打开/分享</p>
+                        <p>以后自动执行这个规范～</p>
+                    </div>
+                </div>
+                
+                <div class="case-study">
+                    <h4>📋 案例拆解</h4>
+                    <p><strong>场景：</strong>AI 上传文件后，只发了通知，没发链接</p>
+                    <p><strong>指令：</strong>"上传后把链接也发我"</p>
+                    <p><strong>结果：</strong>AI 把这个规则记入记忆库，后续自动执行</p>
+                    <p><strong>耗时：</strong>约 1 分钟设定规则</p>
+                </div>
+                
+                <div class="success">
+                    <strong>✅ 关键点</strong>
+                    AI 有一个叫 MEMORY.md 的记忆文件。你告诉它的规则，它会写进去，下次遇到类似情况自动应用。相当于它有个笔记本，记着你教它的每件事。
+                </div>
+            </div>
+            
+            <div class="section" id="case-8">
+                <h2>案例 8：AI 记笔记，自我进化</h2>
+                
+                <div class="chat-box">
+                    <div class="message user">
+                        <p>（查看 AI 的记忆文件）</p>
+                    </div>
+                    
+                    <div class="message ai">
+                        <p>这是我的记忆库内容：</p>
+                        <p><strong>### AI 助理工作模式（2026-03-19）⭐</strong></p>
+                        <p>来源：用户 jing（王鲸）配置</p>
+                        <p><strong>角色：</strong>游戏主策划 AI 助理</p>
+                        <p><strong>工作内容：</strong></p>
+                        <ul style="margin-left:20px;">
+                            <li>群内信息汇总（BUG、注意事项分析）</li>
+                            <li>版本计划跟踪（定期@负责人问进度）</li>
+                            <li>进度统计与周报整理</li>
+                            <li>观察学习期：所有行动先问用户，确认后再执行</li>
+                        </ul>
+                        <p><strong>汇报时间：</strong>每天 18:30</p>
+                        <p><strong>消息发送规则：</strong></p>
+                        <ul style="margin-left:20px;">
+                            <li>群里 → 只发执行结果、任务分配、进度询问（简洁专业）</li>
+                            <li>私聊 → 发思考过程、分析、建议、汇总报告</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="case-study">
+                    <h4>📋 案例拆解</h4>
+                    <p><strong>场景：</strong>查看 AI 的记忆文件，看它学到了什么</p>
+                    <p><strong>发现：</strong>AI 把今天学到的所有规则都记下来了，包括角色、工作内容、汇报时间、消息规则</p>
+                    <p><strong>价值：</strong>下次会话时，它会自动加载这些记忆，不需要重新教</p>
+                </div>
+                
+                <div class="tip">
+                    <strong>💡 经验</strong>
+                    AI 的自我进化能力，来自于它会记录你教它的每件事。你可以通过查看它的记忆文件，确认它是否理解了你的要求。如果有误，及时纠正。
+                </div>
+            </div>
+            
+            <div class="section" id="summary">
+                <h2>📊 经验总结</h2>
+                
+                <h3>🎯 跟 AI 沟通的 5 个原则</h3>
+                
+                <ol style="margin-left:25px;">
+                    <li style="margin-bottom:12px;"><strong>具体 > 模糊</strong> — "写个 1 万字的技术分享，要有趣"比"写文档"好 10 倍</li>
+                    <li style="margin-bottom:12px;"><strong>举例 > 抽象</strong> — "像这样：'好的！👌'"比"活泼点"更清晰</li>
+                    <li style="margin-bottom:12px;"><strong>反馈 > 憋着</strong> — 它错了直接说，它会改，还不记仇</li>
+                    <li style="margin-bottom:12px;"><strong>耐心 > 急躁</strong> — 给它时间学习，别指望一次就完美</li>
+                    <li style="margin-bottom:12px;"><strong>记录 > 口头</strong> — 重要规则让它写进记忆库，下次自动应用</li>
+                </ol>
+                
+                <h3>⚠️ 3 个容易翻车的地方</h3>
+                
+                <div class="warning">
+                    <strong>1. AI 循环调用</strong><br>
+                    如果你有两个 AI 系统，一个 AI 发的消息可能会触发另一个 AI。解决方案：让 AI 只在私聊汇报，群里保持安静。
+                </div>
+                
+                <div class="warning">
+                    <strong>2. 指令模糊</strong><br>
+                    "屏蔽群里你自己的消息"这种指令，AI 可能理解反。更好的说法："屏蔽 AI 助理自己发送的消息，不是屏蔽@我的消息"。
+                </div>
+                
+                <div class="warning">
+                    <strong>3. 语气太正式</strong><br>
+                    AI 默认是客服腔。如果你想要它像同事一样说话，需要明确告诉它："用轻松的语气，别太正式"。
+                </div>
+                
+                <h3>✅ 5 个 AI 擅长的场景</h3>
+                
+                <table style="width:100%;margin:20px 0;border-collapse:collapse;">
+                    <tr style="background:#f3f4f6;">
+                        <th style="padding:12px;text-align:left;">场景</th>
+                        <th style="padding:12px;text-align:left;">AI 能做什么</th>
+                        <th style="padding:12px;text-align:left;">节省时间</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">批量@人</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">@一圈人，每人一句定制消息</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">5 分钟 → 30 秒</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">文档创作</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">写技术文档、分享文章、策划案</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">2 小时 → 8 分钟</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">消息整理</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">汇总群聊记录、提取关键信息</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">30 分钟 → 1 分钟</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">周报汇总</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">自动整理当日工作，生成报告</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">1 小时 → 自动</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">规则执行</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">记住你设定的规则，自动应用</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">每次提醒 → 一次设定</td>
+                    </tr>
+                </table>
+                
+                <h3>💰 成本核算</h3>
+                
+                <table style="width:100%;margin:20px 0;">
+                    <tr style="background:#f3f4f6;">
+                        <th style="padding:12px;text-align:left;">项目</th>
+                        <th style="padding:12px;text-align:left;">成本</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">OpenClaw 框架</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">免费（开源）</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">模型 API</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">约 50-200 元/月（看使用量）</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">配置时间</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">第一天 3 小时 + 后续每天 10 分钟</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">替代的人力</td>
+                        <td style="padding:12px;border-bottom:1px solid #e5e7eb;">≈ 0.5 个助理（每月省 3000-5000 元）</td>
+                    </tr>
+                </table>
+                
+                <div class="success">
+                    <strong>💡 投资回报率</strong>
+                    一个月花不到 200 块 API 费，每天省至少 1 小时。时薪算 100 块的话，一个月就回本了。关键是——它 24 小时在线，还不请假。
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>✍️ 署名：【游戏人王鲸】</strong> | 📅 日期：2026 年 3 月 19 日</p>
+            <p style="margin-top:15px;font-size:0.9em;">
+                🔒 本文已做隐私保护处理 · 团队成员姓名已隐藏 · 项目细节已模糊化<br>
+                📄 欢迎分享交流 · 请勿用于商业用途
+            </p>
+            <p style="margin-top:25px;font-size:0.95em;">
+                📖 更多资源：<br>
+                OpenClaw 官方文档：<a href="https://docs.openclaw.ai" target="_blank">docs.openclaw.ai</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

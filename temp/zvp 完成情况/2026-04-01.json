@@ -1,0 +1,84 @@
+{
+  "date": "2026-04-01",
+  "task": "ZVP 每日工作完成情况收集 - 18 点",
+  "status": "已发送消息",
+  "sentTime": "2026-04-01T18:02:00+08:00",
+  "members": [
+    {
+      "name": "周广生",
+      "open_id": "ou_e0c2bfb5836f11311d621fc08c581496",
+      "status": "已发送",
+      "message_id": "om_x100b53fa9c6d508cc244fa37fe00c8a",
+      "response": null
+    },
+    {
+      "name": "唐浩晖",
+      "open_id": "ou_afe578ef6653e4ad2879c4bd2105b223",
+      "status": "已发送",
+      "message_id": "om_x100b53fa9c531ca8c491e857f2e85f9",
+      "response": null
+    },
+    {
+      "name": "罗园超",
+      "open_id": "ou_8a45cd5a924091c67b83b9c10ebabaa5",
+      "status": "已发送",
+      "message_id": "om_x100b53fa9c53eca0c4fb746df4b7bc9",
+      "response": null
+    },
+    {
+      "name": "陈华强",
+      "open_id": "ou_7846f386cd0b1c9297d45daf1b3a1065",
+      "status": "已发送",
+      "message_id": "om_x100b53fa9c5308bcc291930504297ac",
+      "response": null
+    },
+    {
+      "name": "曾军",
+      "open_id": "ou_9172e4aeb2598e89534579d8b81d5608",
+      "status": "已发送",
+      "message_id": "om_x100b53fa9c6d7c88c105c5fe7653b5e",
+      "response": null
+    },
+    {
+      "name": "齐翔",
+      "open_id": "ou_69eb16cd720e8db944348a314291e023",
+      "status": "已发送",
+      "message_id": "om_x100b53fa9c6d34a4c3c02e4ee7fc5af",
+      "response": null
+    },
+    {
+      "name": "王小星",
+      "open_id": "ou_5260d844e5aa7bbe30e305dcb40aadcc",
+      "status": "已发送",
+      "message_id": "om_x100b53fa9c5328a4c2dc4e21c34ac10",
+      "response": null
+    },
+    {
+      "name": "黄广曦",
+      "open_id": "ou_3c37b1fc9ffc13e08131a5c4cfa3767e",
+      "status": "已发送",
+      "message_id": "om_x100b53fa9c6cb890c2d155a92e2636b",
+      "response": null
+    },
+    {
+      "name": "赖力",
+      "open_id": "ou_4efff65d408e203a5eec315a5b508e67",
+      "status": "已发送",
+      "message_id": "om_x100b53fa9c6d68a4c344f404ec338ea",
+      "response": null
+    },
+    {
+      "name": "汤世军",
+      "open_id": "ou_130df4b60c53c7a9cdd6923afbcebc5d",
+      "status": "已发送",
+      "message_id": "om_x100b53fa9c6de4bcc4e70f68ffe1869",
+      "response": null
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "sent": 10,
+    "replied": 0,
+    "replyRate": "0%"
+  }
+}

@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>团队 AI 使用情况收集表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        .datetime {
+            text-align: center;
+            color: #667eea;
+            font-size: 12px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            background: #f0f4ff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            width: 100%;
+        }
+        .instructions {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .instructions ol {
+            color: #856404;
+            padding-left: 20px;
+            font-size: 12px;
+        }
+        .instructions li {
+            margin-bottom: 4px;
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .scene-section {
+            display: none;
+            margin-bottom: 20px;
+        }
+        .scene-section.active {
+            display: block;
+        }
+        .section-header {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .section-program {
+            background: linear-gradient(135deg, #70AD47 0%, #5a8a37 100%);
+        }
+        .section-planning {
+            background: linear-gradient(135deg, #FFC000 0%, #e6ac00 100%);
+        }
+        .section-art {
+            background: linear-gradient(135deg, #C5504B 0%, #9e403c 100%);
+        }
+        .scene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .scene-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+        .scene-item:active {
+            transform: scale(0.98);
+        }
+        .scene-item:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+        .scene-item.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        .scene-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .scene-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 0;
+            line-height: 1.4;
+        }
+        .other-input {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .other-input label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .other-input input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .other-input input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .tools-section {
+            margin-bottom: 20px;
+        }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .tool-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        .tool-item:active {
+            transform: scale(0.98);
+        }
+        .tool-item:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+        .tool-item.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        .tool-item input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .tool-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 0;
+        }
+        .effect-input {
+            margin-bottom: 20px;
+        }
+        .effect-input label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .effect-input select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .remark-input textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            min-height: 80px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .remark-input textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .generate-btn {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+        .generate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .result-section {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-section.active {
+            display: block;
+        }
+        .result-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+        }
+        .result-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            min-height: 300px;
+            resize: vertical;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+        .result-textarea:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+        .copy-btn {
+            flex: 1;
+            padding: 12px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .copy-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        .reset-btn {
+            flex: 1;
+            padding: 12px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .reset-btn:hover {
+            background: #5a6268;
+        }
+        .reset-btn:active {
+            transform: translateY(0);
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 20px 15px;
+            }
+            h1 {
+                font-size: 18px;
+            }
+            .subtitle {
+                font-size: 12px;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .scene-grid {
+                grid-template-columns: 1fr;
+            }
+            .tools-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+            .generate-btn, .copy-btn, .reset-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 团队 AI 使用情况收集表</h1>
+        <p class="subtitle">填写一次，自动生成汇报文本</p>
+        <p class="datetime" id="currentDatetime">📅 加载中...</p>
+
+        <div class="instructions">
+            <h3>📝 填写说明</h3>
+            <ol>
+                <li>填写姓名和选择岗位</li>
+                <li>勾选你常用的 AI 使用场景（可多选）</li>
+                <li>勾选你使用的 AI 工具（可多选）</li>
+                <li>选择使用效果评价</li>
+                <li>点击"生成汇报文本"按钮</li>
+                <li>点击"一键复制"按钮，发送给负责人</li>
+            </ol>
+        </div>
+
+        <form id="collectForm">
+            <!-- 基本信息 -->
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="userName">📛 姓名</label>
+                        <input type="text" id="userName" placeholder="请输入你的姓名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userRole">💼 岗位</label>
+                        <select id="userRole" required onchange="showRoleScenes()">
+                            <option value="">请选择岗位</option>
+                            <option value="program">💻 程序</option>
+                            <option value="planning">📋 策划</option>
+                            <option value="art">🎨 美术</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 程序场景 -->
+            <div id="programSection" class="scene-section">
+                <div class="section-header section-program">
+                    💻 程序组 AI 使用场景（勾选你常用的）
+                </div>
+                <div class="scene-grid">
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="prog1" value="代码生成">
+                        <label for="prog1">代码生成（函数/类/模块）</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="prog2" value="代码审查与优化">
+                        <label for="prog2">代码审查与优化</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="prog3" value="Bug 排查与调试">
+                        <label for="prog3">Bug 排查与调试</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="prog4" value="方案/架构设计">
+                        <label for="prog4">方案/架构设计</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="prog5" value="技术文档编写">
+                        <label for="prog5">技术文档编写</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="prog6" value="单元测试生成">
+                        <label for="prog6">单元测试生成</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="prog7" value="代码注释生成">
+                        <label for="prog7">代码注释生成</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="prog8" value="技术方案调研">
+                        <label for="prog8">技术方案调研</label>
+                    </div>
+                </div>
+                <div class="other-input">
+                    <label for="progOther">➕ 其他使用场景（如有请补充）</label>
+                    <input type="text" id="progOther" placeholder="请输入其他使用场景">
+                </div>
+            </div>
+
+            <!-- 策划场景 -->
+            <div id="planningSection" class="scene-section">
+                <div class="section-header section-planning">
+                    📋 策划组 AI 使用场景（勾选你常用的）
+                </div>
+                <div class="scene-grid">
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="plan1" value="系统/玩法构思">
+                        <label for="plan1">系统/玩法构思</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="plan2" value="文案撰写">
+                        <label for="plan2">文案撰写（道具/技能描述）</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="plan3" value="剧情/对话编写">
+                        <label for="plan3">剧情/对话编写</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="plan4" value="数值设计/平衡">
+                        <label for="plan4">数值设计/平衡</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="plan5" value="资料整理/归纳">
+                        <label for="plan5">资料整理/归纳</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="plan6" value="竞品分析">
+                        <label for="plan6">竞品分析</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="plan7" value="世界观构建">
+                        <label for="plan7">世界观构建</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="plan8" value="任务/关卡设计">
+                        <label for="plan8">任务/关卡设计</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="plan9" value="需求文档编写">
+                        <label for="plan9">需求文档编写</label>
+                    </div>
+                </div>
+                <div class="other-input">
+                    <label for="planOther">➕ 其他使用场景（如有请补充）</label>
+                    <input type="text" id="planOther" placeholder="请输入其他使用场景">
+                </div>
+            </div>
+
+            <!-- 美术场景 -->
+            <div id="artSection" class="scene-section">
+                <div class="section-header section-art">
+                    🎨 美术组 AI 使用场景（勾选你常用的）
+                </div>
+                <div class="scene-grid">
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="art1" value="概念设计">
+                        <label for="art1">概念设计（角色/场景）</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="art2" value="氛围图/情绪板">
+                        <label for="art2">氛围图/情绪板</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="art3" value="原画设计">
+                        <label for="art3">原画设计</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="art4" value="角色设计">
+                        <label for="art4">角色设计</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="art5" value="场景参考/素材">
+                        <label for="art5">场景参考/素材</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="art6" value="修图/放大/优化">
+                        <label for="art6">修图/放大/优化</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="art7" value="UI 辅助设计">
+                        <label for="art7">UI 辅助设计</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="art8" value="图标/素材生成">
+                        <label for="art8">图标/素材生成</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="art9" value="风格探索/参考">
+                        <label for="art9">风格探索/参考</label>
+                    </div>
+                    <div class="scene-item" onclick="toggleScene(this)">
+                        <input type="checkbox" id="art10" value="3D 模型参考">
+                        <label for="art10">3D 模型参考</label>
+                    </div>
+                </div>
+                <div class="other-input">
+                    <label for="artOther">➕ 其他使用场景（如有请补充）</label>
+                    <input type="text" id="artOther" placeholder="请输入其他使用场景">
+                </div>
+            </div>
+
+            <!-- 使用工具 -->
+            <div class="tools-section">
+                <div class="section-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    🛠️ 使用的 AI 工具（勾选你常用的）
+                </div>
+                <div class="tools-grid">
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool1" value="Cursor">
+                        <label for="tool1">Cursor</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool2" value="GitHub Copilot">
+                        <label for="tool2">GitHub Copilot</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool3" value="ChatGPT">
+                        <label for="tool3">ChatGPT</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool4" value="Kimi">
+                        <label for="tool4">Kimi</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool5" value="Claude">
+                        <label for="tool5">Claude</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool6" value="Midjourney">
+                        <label for="tool6">Midjourney</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool7" value="Stable Diffusion">
+                        <label for="tool7">Stable Diffusion</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool8" value="通义千问">
+                        <label for="tool8">通义千问</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool9" value="文心一言">
+                        <label for="tool9">文心一言</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool10" value="Copilot for Microsoft 365">
+                        <label for="tool10">Copilot for Microsoft 365</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool11" value="Notion AI">
+                        <label for="tool11">Notion AI</label>
+                    </div>
+                    <div class="tool-item" onclick="toggleTool(this)">
+                        <input type="checkbox" id="tool12" value="其他">
+                        <label for="tool12">其他</label>
+                    </div>
+                </div>
+                <div class="other-input">
+                    <label for="toolOther">➕ 其他工具（如有请补充）</label>
+                    <input type="text" id="toolOther" placeholder="请输入其他 AI 工具名称">
+                </div>
+            </div>
+
+            <!-- 使用效果 -->
+            <div class="effect-input">
+                <label for="userEffect">⭐ 使用效果评价</label>
+                <select id="userEffect">
+                    <option value="">请选择</option>
+                    <option value="效率显著提升">⭐⭐⭐⭐⭐ 效率显著提升</option>
+                    <option value="有帮助">⭐⭐⭐⭐ 有帮助</option>
+                    <option value="一般">⭐⭐⭐ 一般</option>
+                    <option value="效果有限">⭐⭐ 效果有限</option>
+                    <option value="不太适用">⭐ 不太适用</option>
+                </select>
+            </div>
+
+            <!-- 备注 -->
+            <div class="remark-input">
+                <label for="userRemark">📝 其他说明或建议（可选）</label>
+                <textarea id="userRemark" placeholder="如：希望团队采购某工具、使用中的问题、改进建议等"></textarea>
+            </div>
+
+            <!-- 生成按钮 -->
+            <button type="button" class="generate-btn" id="generateBtn" onclick="generateResult()">
+                ✨ 生成汇报文本
+            </button>
+
+            <!-- 生成结果 -->
+            <div id="resultSection" class="result-section">
+                <div class="result-header">
+                    📋 生成的汇报文本（点击一键复制）
+                </div>
+                <textarea id="resultText" class="result-textarea" readonly></textarea>
+                <div class="btn-group">
+                    <button type="button" class="copy-btn" onclick="copyResult()">
+                        📋 一键复制
+                    </button>
+                    <button type="button" class="reset-btn" onclick="resetForm()">
+                        🔄 重新填写
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // 显示当前日期时间
+        function updateDatetime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const datetimeStr = `${year}-${month}-${day} ${hours}:${minutes}`;
+            document.getElementById('currentDatetime').textContent = `📅 当前时间：${datetimeStr}`;
+        }
+
+        // 显示对应岗位的场景
+        function showRoleScenes() {
+            const role = document.getElementById('userRole').value;
+            
+            // 隐藏所有场景
+            document.getElementById('programSection').classList.remove('active');
+            document.getElementById('planningSection').classList.remove('active');
+            document.getElementById('artSection').classList.remove('active');
+            
+            // 显示对应场景
+            if (role === 'program') {
+                document.getElementById('programSection').classList.add('active');
+            } else if (role === 'planning') {
+                document.getElementById('planningSection').classList.add('active');
+            } else if (role === 'art') {
+                document.getElementById('artSection').classList.add('active');
+            }
+        }
+
+        // 切换场景选中状态
+        function toggleScene(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                
+                if (checkbox.checked) {
+                    element.classList.add('selected');
+                } else {
+                    element.classList.remove('selected');
+                }
+            }
+        }
+
+        // 切换工具选中状态
+        function toggleTool(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                
+                if (checkbox.checked) {
+                    element.classList.add('selected');
+                } else {
+                    element.classList.remove('selected');
+                }
+            }
+        }
+
+        // 生成结果文本
+        function generateResult() {
+            const name = document.getElementById('userName').value.trim();
+            const role = document.getElementById('userRole').value;
+            const effect = document.getElementById('userEffect').value;
+            const remark = document.getElementById('userRemark').value.trim();
+
+            // 验证必填项
+            if (!name) {
+                alert('请填写姓名');
+                document.getElementById('userName').focus();
+                return;
+            }
+            if (!role) {
+                alert('请选择岗位');
+                document.getElementById('userRole').focus();
+                return;
+            }
+
+            // 获取当前时间
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const datetimeStr = `${year}-${month}-${day} ${hours}:${minutes}`;
+
+            // 获取选中的场景
+            const scenes = [];
+            const checkboxes = document.querySelectorAll(`#${role}Section input[type="checkbox"]:checked`);
+            checkboxes.forEach(cb => {
+                if (cb.value !== '其他') {
+                    scenes.push(cb.value);
+                }
+            });
+
+            // 获取其他场景输入（修复 ID 映射）
+            const otherSceneIds = {
+                'program': 'progOther',
+                'planning': 'planOther',
+                'art': 'artOther'
+            };
+            const otherScene = document.getElementById(otherSceneIds[role]).value.trim();
+            if (otherScene) {
+                scenes.push(`其他：${otherScene}`);
+            }
+
+            if (scenes.length === 0) {
+                alert('请至少勾选一个使用场景或填写其他场景');
+                return;
+            }
+
+            // 获取选中的工具
+            const tools = [];
+            const toolCheckboxes = document.querySelectorAll('.tools-section input[type="checkbox"]:checked');
+            toolCheckboxes.forEach(cb => {
+                if (cb.value !== '其他') {
+                    tools.push(cb.value);
+                }
+            });
+
+            // 获取其他工具输入
+            const otherTool = document.getElementById('toolOther').value.trim();
+            if (otherTool) {
+                tools.push(`其他：${otherTool}`);
+            }
+
+            // 生成文本
+            let result = `【AI 使用情况反馈】\n`;
+            result += `📅 填写时间：${datetimeStr}\n\n`;
+            result += `📛 姓名：${name}\n`;
+            
+            const roleNames = {
+                'program': '💻 程序',
+                'planning': '📋 策划',
+                'art': '🎨 美术'
+            };
+            result += `💼 岗位：${roleNames[role]}\n\n`;
+            
+            result += `🎯 使用场景：\n`;
+            scenes.forEach((scene, index) => {
+                result += `  ${index + 1}. ${scene}\n`;
+            });
+            result += `\n`;
+            
+            if (tools.length > 0) {
+                result += `🛠️ 使用工具：${tools.join('、')}\n\n`;
+            }
+            
+            if (effect) {
+                result += `⭐ 使用效果：${effect}\n\n`;
+            }
+            
+            if (remark) {
+                result += `📝 备注说明：${remark}\n\n`;
+            }
+            
+            result += `─────────────────`;
+
+            // 显示结果
+            document.getElementById('resultText').value = result;
+            document.getElementById('resultSection').classList.add('active');
+            
+            // 滚动到结果区域
+            setTimeout(() => {
+                document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // 一键复制结果
+        function copyResult() {
+            const resultText = document.getElementById('resultText');
+            resultText.select();
+            resultText.setSelectionRange(0, 99999);
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert('✅ 已复制到剪贴板！可以直接粘贴发送了~');
+                } else {
+                    throw new Error('execCommand failed');
+                }
+            } catch (err) {
+                // 备用方案
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(resultText.value).then(() => {
+                        alert('✅ 已复制到剪贴板！可以直接粘贴发送了~');
+                    }).catch(() => {
+                        alert('❌ 复制失败，请长按文本选择复制');
+                    });
+                } else {
+                    alert('❌ 复制失败，请长按文本选择复制');
+                }
+            }
+        }
+
+        // 重置表单
+        function resetForm() {
+            document.getElementById('collectForm').reset();
+            document.getElementById('programSection').classList.remove('active');
+            document.getElementById('planningSection').classList.remove('active');
+            document.getElementById('artSection').classList.remove('active');
+            document.getElementById('resultSection').classList.remove('active');
+            
+            // 清除选中状态
+            document.querySelectorAll('.scene-item, .tool-item').forEach(item => {
+                item.classList.remove('selected');
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                if (checkbox) {
+                    checkbox.checked = false;
+                }
+            });
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // 更新时间
+            updateDatetime();
+        }
+
+        // 页面加载时更新时间
+        updateDatetime();
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "daily-report-automation",
+  "version": "1.0.0",
+  "description": "日报/进度汇报自动化 - 自动抓取群聊消息生成日报周报",
+  "author": "王鲸 (starmark996)",
+  "license": "CC-BY-4.0",
+  "tags": ["report", "automation", "daily", "progress"],
+  "category": "工作流",
+  "created_at": "2026-03-24",
+  "updated_at": "2026-03-24"
+}

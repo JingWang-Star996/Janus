@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组队结果解析 - 优化版</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .instructions {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+        .instructions h3 {
+            color: #155724;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        .instructions ol {
+            color: #155724;
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            min-height: 200px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .result-section {
+            display: none;
+            margin-top: 25px;
+        }
+        .result-section.active {
+            display: block;
+        }
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .card {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .card-a {
+            background: linear-gradient(135deg, #70AD47 0%, #5a8a37 100%);
+            color: white;
+        }
+        .card-b {
+            background: linear-gradient(135deg, #ffc107 0%, #e6ac00 100%);
+            color: white;
+        }
+        .card-mixer {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+        .card .number {
+            font-size: 36px;
+            font-weight: bold;
+            display: block;
+        }
+        .card .label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .team-section {
+            margin-bottom: 30px;
+        }
+        .team-header {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .team-a {
+            background: linear-gradient(135deg, #70AD47 0%, #5a8a37 100%);
+        }
+        .team-b {
+            background: linear-gradient(135deg, #ffc107 0%, #e6ac00 100%);
+        }
+        .team-c {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        .team-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+        .member-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .member-card .name {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .member-card .role {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .member-card .choices {
+            font-size: 12px;
+            color: #667eea;
+        }
+        .member-card .choices span {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin: 2px;
+            display: inline-block;
+        }
+        .member-card .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .badge-first {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .badge-second {
+            background: linear-gradient(135deg, #ffc107 0%, #e6ac00 100%);
+            color: white;
+        }
+        .member-card.mixer {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+        .member-card.mixer .name {
+            color: #dc3545;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        .warning-box h3 {
+            color: #856404;
+            margin-bottom: 12px;
+        }
+        .warning-box ul {
+            color: #856404;
+            padding-left: 20px;
+            line-height: 1.8;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .match-type {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .match-first {
+            background: linear-gradient(135deg, #70AD47 0%, #5a8a37 100%);
+            color: white;
+        }
+        .match-second {
+            background: linear-gradient(135deg, #ffc107 0%, #e6ac00 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 组队结果解析 <span style="font-size: 14px; color: #666;">v2.0</span></h1>
+        <p class="subtitle">解密投票数据 · 第一优选 + 第二备选匹配</p>
+
+        <div class="instructions">
+            <h3>📝 使用说明</h3>
+            <ol>
+                <li>将所有成员提交的加密代码粘贴到下方文本框（每行一个）</li>
+                <li>点击"解密并分析"按钮</li>
+                <li>查看匹配结果：第一优选双向→A 组；第二备选双向→A 组；未匹配→B 组</li>
+                <li>可导出 Excel 或复制结果</li>
+            </ol>
+        </div>
+
+        <div class="form-group">
+            <label>📋 粘贴所有加密代码（每行一个）</label>
+            <textarea id="codesInput" placeholder="ZVP_VOTE_V2_U2FsdGVkX1...&#10;ZVP_VOTE_V2_U2FsdGVkX1...&#10;ZVP_VOTE_V2_U2FsdGVkX1..."></textarea>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="analyze()">🔍 解密并分析</button>
+            <button class="btn btn-success" onclick="exportExcel()">📊 导出 Excel</button>
+        </div>
+
+        <div id="resultSection" class="result-section">
+            <div class="summary-cards">
+                <div class="card card-a">
+                    <span class="number" id="teamACount">0</span>
+                    <span class="label">A 组（双向匹配）</span>
+                </div>
+                <div class="card card-b">
+                    <span class="number" id="teamBCount">0</span>
+                    <span class="label">B 组（未匹配）</span>
+                </div>
+                <div class="card card-mixer">
+                    <span class="number" id="mixerCount">0</span>
+                    <span class="label">混子（无人选择）</span>
+                </div>
+            </div>
+
+            <div class="team-section">
+                <div class="team-header team-a">
+                    ✅ A 组队建议（双向匹配优先）
+                </div>
+                <div class="team-list" id="teamAList"></div>
+            </div>
+
+            <div class="team-section">
+                <div class="team-header team-b">
+                    ⚠️ B 组队建议（未匹配成员）
+                </div>
+                <div class="team-list" id="teamBList"></div>
+            </div>
+
+            <div class="team-section">
+                <div class="team-header team-c">
+                    🔴 混子名单（无人选择 + 未选择别人）
+                </div>
+                <div class="team-list" id="mixerList"></div>
+            </div>
+
+            <div class="warning-box">
+                <h3>🎯 匹配规则说明</h3>
+                <ul>
+                    <li><strong>第一优选双向匹配：</strong>A 的第一优选有 B，且 B 的第一优选有 A → A 组（最高优先级）</li>
+                    <li><strong>第二备选双向匹配：</strong>第一优选未匹配，但第二备选双向 → A 组（次优先级）</li>
+                    <li><strong>单向选择：</strong>只有一方选择另一方 → 不匹配，进入 B 组</li>
+                    <li><strong>混子判定：</strong>无人选择 + 未选择任何人 = 纯混子（红色标记）</li>
+                    <li><strong>B 组：</strong>所有未匹配的成员（包括单向选择和无人选择）</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3 style="margin-bottom: 15px; color: #333;">📊 详细数据表</h3>
+                <table id="detailTable">
+                    <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>岗位</th>
+                            <th>第一优选</th>
+                            <th>第二备选</th>
+                            <th>被谁第一优选</th>
+                            <th>被谁第二备选</th>
+                            <th>匹配类型</th>
+                            <th>分组</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 团队成员名单
+        const members = [
+            { id: 1, name: '罗园超', role: '主美术' },
+            { id: 2, name: '曾军', role: '动作美术' },
+            { id: 3, name: '汤世军', role: '场景模型' },
+            { id: 4, name: '齐翔', role: '后端主程' },
+            { id: 5, name: '周广生', role: '后端程序' },
+            { id: 6, name: '陈华强', role: '前端主程' },
+            { id: 7, name: '唐浩晖', role: '前端程序' },
+            { id: 8, name: '赖力', role: '系统策划' },
+            { id: 9, name: '黄广曦', role: '数值策划' },
+            { id: 10, name: '王小星', role: '系统策划' }
+        ];
+
+        // AES 加密密钥（必须与投票页一致）
+        const SECRET_KEY = 'TeamBuild2026SecretKey#ZVP';
+
+        // 存储解析结果
+        let voteResults = [];
+
+        // 解密并分析
+        function analyze() {
+            const input = document.getElementById('codesInput').value.trim();
+            if (!input) {
+                alert('❌ 请先粘贴加密代码！');
+                return;
+            }
+
+            const codes = input.split('\n').map(line => line.trim()).filter(line => line);
+            voteResults = [];
+
+            // 解密每个代码
+            codes.forEach((code, index) => {
+                try {
+                    // 验证格式
+                    if (!code.startsWith('ZVP_VOTE_V2_')) {
+                        throw new Error('格式错误，请确认是 v2 版本的代码');
+                    }
+
+                    // 提取加密部分
+                    const encrypted = code.replace('ZVP_VOTE_V2_', '');
+
+                    // 解密
+                    const decrypted = CryptoJS.AES.decrypt(encrypted, SECRET_KEY);
+                    const jsonString = decrypted.toString(CryptoJS.enc.Utf8);
+                    const voteData = JSON.parse(jsonString);
+
+                    // 查找对应成员
+                    const member = members.find(m => m.id === voteData.selfId);
+
+                    if (member) {
+                        voteResults.push({
+                            member: member,
+                            selfId: voteData.selfId,
+                            first: voteData.first || [],
+                            second: voteData.second || [],
+                            timestamp: voteData.timestamp,
+                            index: index + 1
+                        });
+                    }
+                } catch (err) {
+                    console.error(`第${index + 1}个代码解密失败:`, err);
+                    alert(`⚠️ 第${index + 1}个代码解密失败：${err.message}`);
+                }
+            });
+
+            if (voteResults.length === 0) {
+                alert('❌ 没有成功解密的代码，请检查加密密钥或代码格式');
+                return;
+            }
+
+            // 分析选择关系
+            analyzeRelationships();
+        }
+
+        // 分析选择关系
+        function analyzeRelationships() {
+            // 构建选择矩阵
+            const firstSelectedBy = {}; // 第一优选被谁选择
+            const secondSelectedBy = {}; // 第二备选被谁选择
+            const firstChose = {}; // 第一优选选择了谁
+            const secondChose = {}; // 第二备选选择了谁
+
+            members.forEach(m => {
+                firstSelectedBy[m.id] = [];
+                secondSelectedBy[m.id] = [];
+                firstChose[m.id] = [];
+                secondChose[m.id] = [];
+            });
+
+            voteResults.forEach(vote => {
+                const voterId = vote.selfId;
+                vote.first.forEach(selectedId => {
+                    firstChose[voterId].push(selectedId);
+                    firstSelectedBy[selectedId].push(voterId);
+                });
+                vote.second.forEach(selectedId => {
+                    secondChose[voterId].push(selectedId);
+                    secondSelectedBy[selectedId].push(voterId);
+                });
+            });
+
+            // 计算双向匹配
+            const mutualFirst = new Set(); // 第一优选双向匹配
+            const mutualSecond = new Set(); // 第二备选双向匹配
+            const processed = new Set();
+
+            // 第一优选双向匹配（最高优先级）
+            members.forEach(m1 => {
+                if (processed.has(m1.id)) return;
+                firstChose[m1.id].forEach(m2Id => {
+                    if (firstChose[m2Id]?.includes(m1.id) && !processed.has(m2Id)) {
+                        mutualFirst.add(m1.id);
+                        mutualFirst.add(m2Id);
+                        processed.add(m1.id);
+                        processed.add(m2Id);
+                    }
+                });
+            });
+
+            // 第二备选双向匹配（次优先级，排除已匹配的）
+            members.forEach(m1 => {
+                if (processed.has(m1.id)) return;
+                secondChose[m1.id].forEach(m2Id => {
+                    if (secondChose[m2Id]?.includes(m1.id) && !processed.has(m2Id)) {
+                        mutualSecond.add(m1.id);
+                        mutualSecond.add(m2Id);
+                        processed.add(m1.id);
+                        processed.add(m2Id);
+                    }
+                });
+            });
+
+            // 分类
+            const teamA = [];
+            const teamB = [];
+            const mixers = [];
+
+            members.forEach(m => {
+                const isFirstMutual = mutualFirst.has(m.id);
+                const isSecondMutual = mutualSecond.has(m.id);
+                const isSelectedFirst = firstSelectedBy[m.id].length > 0;
+                const isSelectedSecond = secondSelectedBy[m.id].length > 0;
+                const choseFirst = firstChose[m.id].length > 0;
+                const choseSecond = secondChose[m.id].length > 0;
+
+                if (isFirstMutual) {
+                    // 第一优选双向 → A 组
+                    teamA.push({
+                        member: m,
+                        matchType: 'first',
+                        first: firstChose[m.id],
+                        second: secondChose[m.id],
+                        selectedByFirst: firstSelectedBy[m.id],
+                        selectedBySecond: secondSelectedBy[m.id],
+                        isMixer: false
+                    });
+                } else if (isSecondMutual) {
+                    // 第二备选双向 → A 组
+                    teamA.push({
+                        member: m,
+                        matchType: 'second',
+                        first: firstChose[m.id],
+                        second: secondChose[m.id],
+                        selectedByFirst: firstSelectedBy[m.id],
+                        selectedBySecond: secondSelectedBy[m.id],
+                        isMixer: false
+                    });
+                } else if (!isSelectedFirst && !isSelectedSecond && !choseFirst && !choseSecond) {
+                    // 纯混子：没人选他，他也未选任何人
+                    mixers.push({
+                        member: m,
+                        matchType: 'none',
+                        first: firstChose[m.id],
+                        second: secondChose[m.id],
+                        selectedByFirst: firstSelectedBy[m.id],
+                        selectedBySecond: secondSelectedBy[m.id],
+                        isMixer: true
+                    });
+                } else {
+                    // 其他 → B 组
+                    teamB.push({
+                        member: m,
+                        matchType: 'none',
+                        first: firstChose[m.id],
+                        second: secondChose[m.id],
+                        selectedByFirst: firstSelectedBy[m.id],
+                        selectedBySecond: secondSelectedBy[m.id],
+                        isMixer: false
+                    });
+                }
+            });
+
+            // 显示结果
+            displayResults(teamA, teamB, mixers);
+        }
+
+        // 显示结果
+        function displayResults(teamA, teamB, mixers) {
+            document.getElementById('teamACount').textContent = teamA.length;
+            document.getElementById('teamBCount').textContent = teamB.length;
+            document.getElementById('mixerCount').textContent = mixers.length;
+
+            // A 组
+            const teamAList = document.getElementById('teamAList');
+            teamAList.innerHTML = teamA.map(item => `
+                <div class="member-card">
+                    <div class="badge ${item.matchType === 'first' ? 'badge-first' : 'badge-second'}">
+                        ${item.matchType === 'first' ? '⭐ 第一优选双向' : '🔄 第二备选双向'}
+                    </div>
+                    <div class="name">${item.member.name}</div>
+                    <div class="role">${item.member.role}</div>
+                    <div class="choices">
+                        第一优选：${item.first.map(id => members.find(m => m.id === id).name).map(n => `<span>${n}</span>`).join('') || '<span style="color: #999;">无</span>'}
+                    </div>
+                    <div class="choices" style="margin-top: 6px;">
+                        第二备选：${item.second.map(id => members.find(m => m.id === id).name).map(n => `<span>${n}</span>`).join('') || '<span style="color: #999;">无</span>'}
+                    </div>
+                    <div class="choices" style="margin-top: 6px;">
+                        被第一优选：${item.selectedByFirst.map(id => members.find(m => m.id === id).name).map(n => `<span>${n}</span>`).join('') || '<span style="color: #999;">无</span>'}
+                    </div>
+                </div>
+            `).join('');
+
+            // B 组
+            const teamBList = document.getElementById('teamBList');
+            teamBList.innerHTML = teamB.map(item => `
+                <div class="member-card">
+                    <div class="badge" style="background: #6c757d; color: white;">⚠️ 未匹配</div>
+                    <div class="name">${item.member.name}</div>
+                    <div class="role">${item.member.role}</div>
+                    <div class="choices">
+                        第一优选：${item.first.map(id => members.find(m => m.id === id).name).map(n => `<span>${n}</span>`).join('') || '<span style="color: #999;">无</span>'}
+                    </div>
+                    <div class="choices" style="margin-top: 6px;">
+                        第二备选：${item.second.map(id => members.find(m => m.id === id).name).map(n => `<span>${n}</span>`).join('') || '<span style="color: #999;">无</span>'}
+                    </div>
+                    <div class="choices" style="margin-top: 6px;">
+                        被选择：${[...item.selectedByFirst, ...item.selectedBySecond].map(id => members.find(m => m.id === id).name).map(n => `<span>${n}</span>`).join('') || '<span style="color: #999;">无</span>'}
+                    </div>
+                </div>
+            `).join('');
+
+            // 混子
+            const mixerList = document.getElementById('mixerList');
+            mixerList.innerHTML = mixers.map(item => `
+                <div class="member-card mixer">
+                    <div class="badge" style="background: #dc3545; color: white;">🔴 纯混子</div>
+                    <div class="name">${item.member.name}</div>
+                    <div class="role">${item.member.role}</div>
+                    <div class="choices">
+                        第一优选：${item.first.map(id => members.find(m => m.id === id).name).map(n => `<span>${n}</span>`).join('') || '<span style="color: #999;">无</span>'}
+                    </div>
+                    <div class="choices" style="margin-top: 6px;">
+                        第二备选：${item.second.map(id => members.find(m => m.id === id).name).map(n => `<span>${n}</span>`).join('') || '<span style="color: #999;">无</span>'}
+                    </div>
+                    <div class="choices" style="margin-top: 6px;">
+                        被选择：无人选择
+                    </div>
+                </div>
+            `).join('');
+
+            // 详细表格
+            const tableBody = document.getElementById('detailTableBody');
+            const allMembers = [...teamA, ...teamB, ...mixers];
+            tableBody.innerHTML = allMembers.map(item => `
+                <tr>
+                    <td><strong>${item.member.name}</strong></td>
+                    <td>${item.member.role}</td>
+                    <td>${item.first.map(id => members.find(m => m.id === id).name).join('、') || '无'}</td>
+                    <td>${item.second.map(id => members.find(m => m.id === id).name).join('、') || '无'}</td>
+                    <td>${item.selectedByFirst.map(id => members.find(m => m.id === id).name).join('、') || '无'}</td>
+                    <td>${item.selectedBySecond.map(id => members.find(m => m.id === id).name).join('、') || '无'}</td>
+                    <td>${item.matchType === 'first' ? '<span class="match-type match-first">第一优选双向</span>' : (item.matchType === 'second' ? '<span class="match-type match-second">第二备选双向</span>' : '-')}</td>
+                    <td>${item.isMixer ? '<span style="color: #dc3545; font-weight: bold;">混子</span>' : (teamA.find(x => x.member.id === item.member.id) ? 'A 组' : 'B 组')}</td>
+                </tr>
+            `).join('');
+
+            // 显示结果区域
+            document.getElementById('resultSection').classList.add('active');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 导出 Excel
+        function exportExcel() {
+            if (voteResults.length === 0) {
+                alert('❌ 请先解密分析！');
+                return;
+            }
+
+            alert('📊 Excel 导出功能开发中...\n\n你可以直接复制表格粘贴到 Excel！');
+        }
+    </script>
+</body>
+</html>

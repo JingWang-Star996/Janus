@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>普通大学生如何快速部署 OpenClaw</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+        .slides-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 40px 30px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            overflow-y: auto;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        .slide-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        h1 {
+            font-size: 28px;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 22px;
+            color: #667eea;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+            padding-left: 12px;
+        }
+        h3 {
+            font-size: 18px;
+            color: #333;
+            margin: 20px 0 12px 0;
+        }
+        p {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        .highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .highlight p {
+            color: white;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .feature-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .feature-item .icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .feature-item .title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .feature-item .desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .step-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+        .step-list li {
+            counter-increment: step-counter;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            position: relative;
+            padding-left: 50px;
+        }
+        .step-list li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .step-list li strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+        .step-list li span {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .nav-dots {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+        .nav-buttons {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-btn:hover {
+            transform: scale(1.1);
+        }
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            z-index: 1000;
+        }
+        .progress-fill {
+            height: 100%;
+            background: white;
+            transition: width 0.3s ease;
+        }
+        .slide-indicator {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            color: white;
+            font-size: 14px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+        .emoji-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .emoji-list li {
+            padding: 8px 0;
+            font-size: 15px;
+            color: #555;
+        }
+        .emoji-list li:before {
+            content: "✅ ";
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .warning p {
+            color: #856404;
+            margin-bottom: 8px;
+        }
+        @media (max-width: 600px) {
+            .slide-content {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            h1 { font-size: 24px; }
+            h2 { font-size: 20px; }
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 12.5%"></div>
+    </div>
+    <div class="slide-indicator" id="slideIndicator">1 / 8</div>
+
+    <div class="slides-container">
+        <!-- Slide 1: 封面 -->
+        <div class="slide active" data-slide="1">
+            <div class="slide-content">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="font-size: 80px; margin-bottom: 20px;">🤖</div>
+                    <h1>普通大学生如何快速部署 OpenClaw</h1>
+                    <p style="color: #666; font-size: 16px;">AI 自动化助手 · 零编程基础 · 2 小时上手</p>
+                </div>
+                <div class="highlight">
+                    <p style="text-align: center; font-size: 18px; margin-bottom: 0;">
+                        📱 左右滑动翻页<br>
+                        👆 或点击底部按钮
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: 为什么现在要学习 -->
+        <div class="slide" data-slide="2">
+            <div class="slide-content">
+                <h2>🤔 为什么现在要学习 AI 自动化？</h2>
+                
+                <div class="highlight">
+                    <p><strong>2026 年，AI 不再是选修课，而是必修课！</strong></p>
+                </div>
+
+                <h3>📈 行业趋势</h3>
+                <ul class="emoji-list">
+                    <li>90% 的工作岗位将被 AI 影响</li>
+                    <li>会用 AI 的人效率提升 10 倍+</li>
+                    <li>企业招聘优先考虑 AI 技能</li>
+                    <li>自动化是未来 5 年最热门技能</li>
+                </ul>
+
+                <h3>🎯 大学生优势</h3>
+                <ul class="emoji-list">
+                    <li>学习能力强，接受新事物快</li>
+                    <li>时间充裕，可以系统学习</li>
+                    <li>试错成本低，可以大胆尝试</li>
+                    <li>毕业前掌握，就业竞争力翻倍</li>
+                </ul>
+
+                <div class="warning">
+                    <p><strong>⚠️ 注意：</strong>不会用 AI 的人，将被会用 AI 的人取代！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: OpenClaw 有什么用 -->
+        <div class="slide" data-slide="3">
+            <div class="slide-content">
+                <h2>🚀 OpenClaw 能帮你做什么？</h2>
+
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="icon">📝</div>
+                        <div class="title">自动写文档</div>
+                        <div class="desc">周报、日报、总结、PPT 大纲，一键生成</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">📊</div>
+                        <div class="title">数据处理</div>
+                        <div class="desc">整理表格、分析数据、生成图表</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">💬</div>
+                        <div class="title">消息自动化</div>
+                        <div class="desc">自动回复、定时发送、群消息管理</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">🌐</div>
+                        <div class="title">网页生成</div>
+                        <div class="desc">自动创建 HTML 页面、分享网页</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">📱</div>
+                        <div class="title">多平台集成</div>
+                        <div class="desc">Telegram、微信、Discord 等</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">🤖</div>
+                        <div class="title">创建 AI Agent</div>
+                        <div class="desc">定制专属 AI 助手，自动化工作流</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">📚</div>
+                        <div class="title">学习资料整理</div>
+                        <div class="desc">笔记整理、知识点总结、复习提纲</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">⏰</div>
+                        <div class="title">定时任务</div>
+                        <div class="desc">定时提醒、周期性任务自动化</div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <p><strong>💡 核心价值：</strong>把重复性工作交给 AI，你专注于创造性思考！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: 实际应用场景 -->
+        <div class="slide" data-slide="4">
+            <div class="slide-content">
+                <h2>💼 大学生实际应用场景</h2>
+
+                <h3>📖 学习场景</h3>
+                <ul class="step-list">
+                    <li>
+                        <strong>课堂笔记整理</strong>
+                        <span>录音转文字 → 自动总结重点 → 生成复习提纲</span>
+                    </li>
+                    <li>
+                        <strong>作业辅助</strong>
+                        <span>代码检查、文档润色、PPT 大纲生成</span>
+                    </li>
+                    <li>
+                        <strong>论文写作</strong>
+                        <span>文献整理、格式调整、摘要生成</span>
+                    </li>
+                </ul>
+
+                <h3>🎯 社团/项目场景</h3>
+                <ul class="step-list">
+                    <li>
+                        <strong>活动组织</strong>
+                        <span>自动通知、报名统计、签到管理</span>
+                    </li>
+                    <li>
+                        <strong>周报汇总</strong>
+                        <span>收集团员周报 → 自动整理 → 生成汇总报告</span>
+                    </li>
+                    <li>
+                        <strong>资料管理</strong>
+                        <span>文件分类、标签管理、快速检索</span>
+                    </li>
+                </ul>
+
+                <h3>💰 兼职/实习场景</h3>
+                <ul class="step-list">
+                    <li>
+                        <strong>内容创作</strong>
+                        <span>小红书文案、公众号文章、视频脚本</span>
+                    </li>
+                    <li>
+                        <strong>数据分析</strong>
+                        <span>Excel 处理、报表生成、可视化图表</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 5: 部署前准备 -->
+        <div class="slide" data-slide="5">
+            <div class="slide-content">
+                <h2>📋 部署前准备</h2>
+
+                <div class="warning">
+                    <p><strong>⏱️ 预计时间：</strong>1-2 小时</p>
+                    <p><strong>💰 成本：</strong>免费（基础功能）</p>
+                    <p><strong>🎓 要求：</strong>无需编程基础，会用手机电脑即可</p>
+                </div>
+
+                <h3>✅ 硬件准备</h3>
+                <ul class="emoji-list">
+                    <li>一台电脑（Windows/Mac/Linux 均可）</li>
+                    <li>稳定的网络连接</li>
+                    <li>智能手机（用于接收消息）</li>
+                </ul>
+
+                <h3>✅ 软件准备</h3>
+                <ul class="emoji-list">
+                    <li>Node.js（v18 或更高版本）</li>
+                    <li>Git（用于代码管理）</li>
+                    <li>Telegram 账号（或其他消息平台）</li>
+                </ul>
+
+                <h3>✅ 账号准备</h3>
+                <ul class="emoji-list">
+                    <li>GitHub 账号（克隆代码）</li>
+                    <li>AI 模型 API（阿里云百炼/其他）</li>
+                </ul>
+
+                <div class="highlight">
+                    <p><strong>💡 提示：</strong>所有软件都是免费的，按照官方文档安装即可！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: 快速部署步骤 -->
+        <div class="slide" data-slide="6">
+            <div class="slide-content">
+                <h2>🚀 5 步快速部署</h2>
+
+                <ul class="step-list">
+                    <li>
+                        <strong>安装 Node.js</strong>
+                        <span>访问 nodejs.org 下载安装包，一路下一步即可</span>
+                        <div class="code-block">node -v  # 验证安装，显示版本号即成功</div>
+                    </li>
+                    <li>
+                        <strong>安装 OpenClaw</strong>
+                        <span>打开终端/命令行，执行安装命令</span>
+                        <div class="code-block">npm install -g openclaw</div>
+                    </li>
+                    <li>
+                        <strong>配置 AI 模型</strong>
+                        <span>使用阿里云百炼或其他 AI 服务</span>
+                        <div class="code-block">openclaw configure --section models</div>
+                    </li>
+                    <li>
+                        <strong>配置消息渠道</strong>
+                        <span>连接 Telegram 或其他消息平台</span>
+                        <div class="code-block">openclaw configure --section channels</div>
+                    </li>
+                    <li>
+                        <strong>启动服务</strong>
+                        <span>启动 Gateway，开始使用</span>
+                        <div class="code-block">openclaw gateway start</div>
+                    </li>
+                </ul>
+
+                <div class="highlight">
+                    <p><strong>🎉 完成！</strong>现在你可以开始和 AI 助手对话了！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: 使用示例 -->
+        <div class="slide" data-slide="7">
+            <div class="slide-content">
+                <h2>💬 开始使用</h2>
+
+                <h3>📱 连接方式</h3>
+                <ul class="emoji-list">
+                    <li>Telegram 机器人（推荐）</li>
+                    <li>Web 聊天界面</li>
+                    <li>Discord 机器人</li>
+                    <li>微信（需要额外配置）</li>
+                </ul>
+
+                <h3>🎯 试试这些命令</h3>
+                <div class="code-block"># 生成周报
+帮我整理今天的工作内容，生成一份周报
+
+# 创建网页
+把这个内容做成一个网页发给我
+
+# 数据处理
+帮我分析这个 Excel 表格，生成统计图表
+
+# 创建 Agent
+创建一个游戏制作人 Agent，叫王鲸
+
+# 定时任务
+每天早上 9 点提醒我看邮件</div>
+
+                <h3>📚 学习资源</h3>
+                <ul class="emoji-list">
+                    <li>官方文档：docs.openclaw.ai</li>
+                    <li>社区：Discord 频道</li>
+                    <li>技能市场：clawhub.com</li>
+                </ul>
+
+                <div class="highlight">
+                    <p><strong>💡 提示：</strong>有问题随时问 AI 助手，它会帮你解决！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 总结与行动 -->
+        <div class="slide" data-slide="8">
+            <div class="slide-content">
+                <h2>🎯 总结与行动</h2>
+
+                <div class="highlight">
+                    <p style="font-size: 18px; text-align: center;">
+                        🚀 <strong>AI 时代，行动力决定竞争力！</strong>
+                    </p>
+                </div>
+
+                <h3>📌 核心要点</h3>
+                <ul class="emoji-list">
+                    <li>AI 自动化是未来 5 年最热门技能</li>
+                    <li>OpenClaw 零门槛，2 小时上手</li>
+                    <li>应用场景广泛，学习/工作/兼职都能用</li>
+                    <li>早学早受益，毕业前掌握=就业优势</li>
+                </ul>
+
+                <h3>🎯 行动计划</h3>
+                <ul class="step-list">
+                    <li>
+                        <strong>今天</strong>
+                        <span>安装 OpenClaw，完成基础配置</span>
+                    </li>
+                    <li>
+                        <strong>本周</strong>
+                        <span>尝试 3-5 个实用功能，熟悉基本操作</span>
+                    </li>
+                    <li>
+                        <strong>本月</strong>
+                        <span>创建自己的第一个 AI Agent，自动化日常工作</span>
+                    </li>
+                </ul>
+
+                <div class="warning">
+                    <p><strong>⚠️ 最后提醒：</strong>最好的学习时间是现在，不要等！</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <p style="font-size: 24px;">💪 <strong>开始你的 AI 自动化之旅吧！</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分页指示器 -->
+    <div class="pagination" id="pagination"></div>
+
+    <!-- 导航按钮 -->
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()">←</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">→</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+
+        function showSlide(slide) {
+            if (slide < 1) slide = 1;
+            if (slide > totalSlides) slide = totalSlides;
+
+            // 更新页面显示
+            document.querySelectorAll('.slide').forEach(s => {
+                s.classList.remove('active');
+                if (parseInt(s.dataset.slide) === slide) {
+                    s.classList.add('active');
+                }
+            });
+
+            // 更新分页指示器
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === slide);
+            });
+
+            // 更新按钮状态
+            document.getElementById('prevBtn').disabled = slide === 1;
+            document.getElementById('nextBtn').disabled = slide === totalSlides;
+
+            // 更新进度条
+            const progress = (slide / totalSlides) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            // 更新页码指示器
+            document.getElementById('slideIndicator').textContent = slide + ' / ' + totalSlides;
+
+            currentSlide = slide;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        // 初始化分页指示器
+        function initPagination() {
+            const container = document.getElementById('pagination');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i === 1 ? ' active' : '');
+                dot.onclick = () => showSlide(i);
+                container.appendChild(dot);
+            }
+        }
+
+        // 触摸滑动支持
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        }
+
+        // 键盘导航
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // 初始化
+        initPagination();
+        showSlide(1);
+    </script>
+</body>
+</html>

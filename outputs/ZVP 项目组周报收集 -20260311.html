@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深圳孵化二组 ZVP 项目组周报收集 - 2026/3/11</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 { text-align: center; color: #333; margin-bottom: 10px; font-size: 24px; }
+        .date { text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            white-space: nowrap;
+        }
+        tr:nth-child(even) { background: #f8f9fa; }
+        tr:hover { background: #e9ecef; }
+        .content-cell { white-space: pre-wrap; line-height: 1.8; font-size: 13px; }
+        .module { font-weight: bold; color: #667eea; }
+        .progress { color: #28a745; }
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+        .summary-box h2 { margin-bottom: 15px; font-size: 18px; text-align: center; }
+        .summary-box .speech { font-size: 15px; line-height: 2; white-space: pre-wrap; }
+        .highlight { background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 深圳孵化二组 ZVP 项目组周报收集</h1>
+        <p class="date">📅 日期：2026/3/11</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 15%;">汇报项目</th>
+                    <th style="width: 15%;">汇报类别</th>
+                    <th style="width: 35%;">上周工作内容</th>
+                    <th style="width: 35%;">本周工作内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="5" style="text-align: center; vertical-align: middle; font-weight: bold;">ZVP 项目</td>
+                    <td style="text-align: center; vertical-align: middle; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: bold;">📊 制作人总结</td>
+                    <td class="content-cell"><span class="module">【战斗】</span>曲线子弹/顶视角/攻击圈/拾取道具/预警特效
+
+<span class="module">【宠物】</span>上阵界面/特殊日常/复活血条
+
+<span class="module">【抽卡】</span>预览逻辑分离/模型预览
+
+<span class="module">【模拟经营】</span>森林地图/沙漠地图/buff 球接口
+
+<span class="module">【数值】</span>30 日签到/日常副本/奖池解锁
+
+<span class="module">【主线】</span>搜打撤落地/抓宠方案/新手引导
+
+<span class="module">【美术】</span>男角色动作（跑/射/待机完成）</td>
+                    <td class="content-cell"><span class="module">【战斗】</span><span class="progress"> 80%</span> 对地技能/战争迷雾/预警圈/Boss 技能
+
+<span class="module">【宠物】</span><span class="progress"> 90%</span> 进化奖励/升级优化/复活血条
+
+<span class="module">【抽卡】</span><span class="progress"> 100%</span> 奖池等级/抽卡重构/Boss 控制
+
+<span class="module">【模拟经营】</span><span class="progress"> 95%</span> 离线奖励/快捷上阵/种田简化
+
+<span class="module">【战争迷雾】</span><span class="progress"> 85%</span> 初版本/性能优化/数据上报
+
+<span class="module">【创角】</span><span class="progress"> 90%</span> 3D 角色/枪械加载/渲染修复
+
+<span class="module">【主线】</span><span class="progress"> 60%</span> 搜打撤开发/场景切换</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; background: linear-gradient(135deg, #70AD47 0%, #5a8a37 100%); color: white; font-weight: bold;">💻 程序</td>
+                    <td class="content-cell"><span class="module">【战斗】</span>曲线子弹/顶视角/攻击圈/拾取道具/预警特效
+
+<span class="module">【宠物】</span>上阵界面/特殊日常/复活血条
+
+<span class="module">【抽卡】</span>预览逻辑分离/模型预览
+
+<span class="module">【模拟经营】</span>森林地图/沙漠地图/buff 球接口
+
+<span class="module">【技术】</span>版本号/副本解锁 GM/职业设置</td>
+                    <td class="content-cell"><span class="module">【战斗】</span><span class="progress"> 80%</span> 对地技能/战争迷雾/预警圈/Boss 技能/战斗状态区分
+
+<span class="module">【宠物】</span><span class="progress"> 90%</span> 进化奖励/升级优化/复活血条/上阵红点
+
+<span class="module">【抽卡】</span><span class="progress"> 100%</span> 奖池等级/抽卡重构/Boss 控制
+
+<span class="module">【模拟经营】</span><span class="progress"> 95%</span> 离线奖励/快捷上阵/种田简化/效率加成
+
+<span class="module">【战争迷雾】</span><span class="progress"> 85%</span> 初版本/创角隐藏/Boss 处理/性能优化
+
+<span class="module">【创角】</span><span class="progress"> 90%</span> 3D 角色/枪械加载/渲染修复
+
+<span class="module">【主线】</span><span class="progress"> 60%</span> 场景切换/Boss 冲突/接口修复</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; background: linear-gradient(135deg, #FFC000 0%, #e6ac00 100%); color: white; font-weight: bold;">📋 策划</td>
+                    <td class="content-cell"><span class="module">【新版本】</span>方向讨论（持续）
+
+<span class="module">【数值】</span>30 日签到/日常副本/奖池解锁/306 优化
+
+<span class="module">【主线】</span>搜打撤/抓宠/新手引导/装备 UE
+
+<span class="module">【模拟经营】</span>建筑产出/解锁节奏</td>
+                    <td class="content-cell"><span class="module">【新版本】</span><span class="progress"> 持续</span> 方向讨论
+
+<span class="module">【抽卡】</span><span class="progress"> 100%</span> 奖池等级设计/界面优化
+
+<span class="module">【模拟经营】</span><span class="progress"> 90%</span> 建筑产出/解锁节奏（50%）
+
+<span class="module">【技能】</span><span class="progress"> 100%</span> Boss 对地技能配置
+
+<span class="module">【主线】</span><span class="progress"> 60%</span> 搜打撤关卡（10%）/版本号</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; background: linear-gradient(135deg, #C5504B 0%, #9e403c 100%); color: white; font-weight: bold;">🎨 美术</td>
+                    <td class="content-cell"><span class="module">【角色动作】</span>男角色步枪：跑/射/待机完成
+
+<span class="module">【场景】</span>森林地图切分</td>
+                    <td class="content-cell"><span class="module">【角色动作】</span><span class="progress"> 70%</span> 走路/死亡/疾跑/待机/下蹲进行中
+
+<span class="module">【场景】</span><span class="progress"> 100%</span> 森林地图/沙漠地图
+
+<span class="module">【特效】</span><span class="progress"> 90%</span> 3D 选角/拾取特效/爆炸提醒（50%）/攻击圈</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle; background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%); color: white; font-weight: bold;">🧪 测试组</td>
+                    <td class="content-cell" style="text-align: center;">暂无</td>
+                    <td class="content-cell" style="text-align: center;">暂无</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="summary-box">
+            <h2>🎤 制作人汇报稿（2 分钟版）</h2>
+            <div class="speech">各位好，306 版本周报汇报：
+
+<span class="highlight">一、本周重点完成（3 个 100%）</span>
+1. <span class="highlight">抽卡系统重构完成</span>——奖池等级与抽奖次数挂钩，Boss 关控制条件已实现
+2. <span class="highlight">模拟经营改版</span>——离线奖励功能上线，种田简化为新界面
+3. <span class="highlight">Boss 对地技能配置完成</span>——程序和策划配合落地
+
+<span class="highlight">二、进度正常（4 个 80%+）</span>
+1. 战斗系统 80%——对地技能、战争迷雾、预警圈都在收尾
+2. 宠物系统 90%——进化奖励提示、升级功能优化完成
+3. 战争迷雾 85%——初版本完成，性能优化中
+4. 创角界面 90%——3D 角色旋转、枪械加载完成
+
+<span class="highlight">三、需要关注（2 个 60%）</span>
+1. <span class="highlight">主线剧情 60%</span>——搜打撤关卡设计刚启动（10%），场景切换有冲突问题
+2. <span class="highlight">美术动作 70%</span>——男角色步枪动作还有走路/死亡等在进行中
+
+<span class="highlight">四、风险提示</span>
+• 主线进度偏慢，需要策划加快搜打撤关卡设计
+• 战争迷雾性能还需要优化
+
+<span class="highlight">五、下周重点</span>
+1. 主线剧情推进到 80%
+2. 战争迷雾性能优化完成
+3. 美术动作收尾
+
+汇报完毕。</div>
+        </div>
+    </div>
+</body>
+</html>

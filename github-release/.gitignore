@@ -1,0 +1,28 @@
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.log
+*.bak
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node.js
+node_modules/
+package-lock.json
+
+# 构建产物
+dist/
+build/
+
+# 敏感信息
+.env
+.env.local
+*.key
+*.pem

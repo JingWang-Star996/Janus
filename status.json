@@ -1,0 +1,36 @@
+{
+  "monitoring_enabled": true,
+  "agents": [
+    {
+      "id": "main",
+      "name": "主 AI 助手",
+      "emoji": "🤖",
+      "current_task": "待机中",
+      "progress": 100,
+      "status": "idle",
+      "start_time": null,
+      "estimated_end": null,
+      "subtasks": [],
+      "expanded": false
+    }
+  ],
+  "pending_tasks": [],
+  "completed_tasks": [
+    {"task": "📝《AI 做僚机》文章创作（全文版 + 翻页版 + 截图版）", "completed_at": "2026-03-17 20:30", "emoji": "✅"},
+    {"task": "📝 美洲文明展游戏评审报告", "completed_at": "2026-03-17 16:14", "emoji": "✅"},
+    {"task": "📊 飞书表格公式处理", "completed_at": "2026-03-17 18:57", "emoji": "✅"},
+    {"task": "📚 创建飞书公式技能文档", "completed_at": "2026-03-17 19:33", "emoji": "✅"}
+  ],
+  "completed_summary": {
+    "total": 24,
+    "today": 4,
+    "this_week": 21
+  },
+  "stats": {
+    "total_tasks": 34,
+    "completed": 24,
+    "working": 0,
+    "pending": 0,
+    "success_rate": "97%"
+  }
+}

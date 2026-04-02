@@ -1,0 +1,18 @@
+{
+  "name": "🦞 龙虾每日进化",
+  "schedule": {
+    "kind": "cron",
+    "expr": "0 9 * * *",
+    "tz": "Asia/Shanghai"
+  },
+  "payload": {
+    "kind": "agentTurn",
+    "message": "🦞 执行龙虾进化计划：\n\n1. 运行 clawhub explore --limit 20 探索最新技能\n2. 运行 clawhub search \"popular\" --limit 10 搜索热门技能\n3. 运行 clawhub list 查看已安装技能\n4. 对比昨天和今天的差异，找出新技能\n5. 对每个新技能运行 clawhub inspect <slug> 查看详情\n6. 评估每个技能：\n   - 是否有用？\n   - 是否需要额外配置？\n   - 是否与现有技能冲突？\n7. 整理成日报格式，发送给用户\n\n日报格式：\n🦞 龙虾进化日报 - YYYY-MM-DD\n\n📊 今日扫描：X 个技能\n🆕 新增技能：X 个\n⭐ 推荐安装：X 个\n\n【🌟 强烈推荐】\n1. 技能名称 - 简介\n   - 用途：xxx\n   - 依赖：xxx\n   - 推荐理由：xxx\n\n【⚠️ 需要确认】\n1. 技能名称 - 简介\n   - 需要确认：xxx\n\n【📦 已安装技能】\n总计：X 个\n本周更新：X 个\n\n【🔧 一键指令】\n安装推荐：clawhub install skill-1 skill-2",
+    "timeoutSeconds": 300
+  },
+  "sessionTarget": "isolated",
+  "delivery": {
+    "mode": "announce"
+  },
+  "enabled": true
+}

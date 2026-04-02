@@ -1,0 +1,36 @@
+{
+  "name": "bug-tracker-automation",
+  "version": "1.0.0",
+  "description": "飞书 BUG 管理自动化 Skill，提供 BUG 表格创建、录入、跟踪、统计全流程自动化",
+  "author": "jing（OpenClaw 实践者）",
+  "tags": ["feishu", "bug", "tracker", "automation", "BUG", "管理"],
+  "triggers": [
+    "创建 BUG 收集表",
+    "录入 BUG",
+    "跟踪 BUG 进度",
+    "BUG 管理",
+    "BUG 统计",
+    "问题跟踪",
+    "缺陷管理",
+    "BUG 报表"
+  ],
+  "capabilities": [
+    "BUG 表格创建",
+    "BUG 录入",
+    "BUG 跟踪",
+    "BUG 分析",
+    "进度报表",
+    "趋势分析"
+  ],
+  "files": [
+    "SKILL.md",
+    "skill.json",
+    "rules/bug-rules.md",
+    "rules/severity-guide.md",
+    "templates/bug-table.md",
+    "templates/daily-report.md",
+    "templates/weekly-report.md",
+    "examples/bug-entry.md",
+    "examples/bug-analysis.md"
+  ]
+}

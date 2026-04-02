@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZVP 306 版本更新日志</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);padding:40px 20px;min-height:100vh}
+        .container{max-width:900px;margin:0 auto;background:#fff;border-radius:20px;padding:40px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+        .header{text-align:center;margin-bottom:40px;padding-bottom:30px;border-bottom:3px solid #1e3a8a}
+        .header h1{font-size:36px;color:#1e3a8a;margin-bottom:10px;font-weight:700}
+        .header .version{font-size:20px;color:#64748b;margin-bottom:20px}
+        .header .date{font-size:14px;color:#94a3b8}
+        .section{margin-bottom:35px}
+        .section h2{font-size:24px;color:#1e3a8a;margin-bottom:20px;padding-left:15px;border-left:4px solid #3b82f6;font-weight:600}
+        .update-card{background:#f8f9fa;border-radius:12px;padding:20px;margin-bottom:15px;border-left:4px solid #3b82f6}
+        .update-card:hover{background:#e9ecef;transform:translateX(5px);transition:all 0.3s}
+        .update-card h3{font-size:18px;color:#1e3a8a;margin-bottom:12px;font-weight:600}
+        .update-card ul{list-style:none;padding-left:0}
+        .update-card li{padding:6px 0;font-size:14px;color:#475569;padding-left:20px;position:relative}
+        .update-card li::before{content:"✓";color:#10b981;font-weight:700;position:absolute;left:0}
+        .tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;margin:3px}
+        .tag-p0{background:#dc3545;color:#fff}
+        .tag-p1{background:#f59e0b;color:#fff}
+        .tag-done{background:#10b981;color:#fff}
+        .tag-progress{background:#3b82f6;color:#fff}
+        .highlight-box{background:linear-gradient(135deg,#1e3a8a 0%,#3b82f6 100%);color:#fff;padding:25px;border-radius:12px;margin-bottom:30px}
+        .highlight-box h3{color:#fff;margin-bottom:10px;font-size:18px}
+        .highlight-box p{font-size:14px;line-height:1.7;opacity:0.95}
+        .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:30px}
+        .stat-card{background:linear-gradient(135deg,#1e3a8a 0%,#3b82f6 100%);color:#fff;padding:20px;border-radius:12px;text-align:center}
+        .stat-number{font-size:32px;font-weight:700;display:block;margin-bottom:5px}
+        .stat-label{font-size:13px;opacity:0.9}
+        @media print{body{background:#fff;padding:0}.container{box-shadow:none}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 ZVP 项目组 306 版本更新日志</h1>
+            <p class="version">Version 306 - 核心玩法优化版本</p>
+            <p class="date">📅 开发周期：2026 年 3 月 2 日 - 3 月 13 日 | 🎯 状态：版本打包完成，BUG 修复中</p>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🎉 版本核心亮点</h3>
+            <p>
+                306 版本聚焦核心玩法优化，完成了战斗系统升级、抽奖系统重构、宠物养成优化、营地玩法简化等核心内容。
+                版本打包已完成，正在进行最终 BUG 修复，目标本周五提审。
+            </p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card"><span class="stat-number">20+</span><span class="stat-label">新增功能</span></div>
+            <div class="stat-card" style="background:linear-gradient(135deg,#10b981 0%,#059669 100%)"><span class="stat-number">15+</span><span class="stat-label">已完成</span></div>
+            <div class="stat-card" style="background:linear-gradient(135deg,#f59e0b 0%,#d97706 100%)"><span class="stat-number">5+</span><span class="stat-label">进行中</span></div>
+            <div class="stat-card" style="background:linear-gradient(135deg,#3b82f6 0%,#1d4ed8 100%)"><span class="stat-number">92%</span><span class="stat-label">整体进度</span></div>
+        </div>
+
+        <div class="section">
+            <h2>⚔️ 战斗系统</h2>
+            <div class="update-card">
+                <h3>🔴 P0 核心功能</h3>
+                <ul>
+                    <li>血条功能扩展：可配表让血量写在血条上 <span class="tag tag-done">已完成</span></li>
+                    <li>战斗镜头调整：固定方向（无自由旋转），高视角镜头 <span class="tag tag-done">已完成</span></li>
+                    <li>新增常驻玩家攻击范围圈，主角攻击状态（红圈白圈表示），目标脚下小红圈 <span class="tag tag-done">已完成</span></li>
+                    <li>战斗中可拾取道具系统 <span class="tag tag-done">已完成</span></li>
+                </ul>
+            </div>
+            <div class="update-card">
+                <h3>🟠 P1 优化功能</h3>
+                <ul>
+                    <li>BOSS 技能可视化 + 技能改造：直线地裂效果（2 米×5 米） <span class="tag tag-progress">进行中</span></li>
+                    <li>新增攻击类型：炮弹（抛物线 + 目标点区域伤害） <span class="tag tag-done">已完成</span></li>
+                    <li>离线自动战斗功能关闭 <span class="tag tag-progress">进行中</span></li>
+                    <li>主线非战斗寻路暂时关闭手操 <span class="tag tag-done">已完成</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎰 抽奖系统</h2>
+            <div class="update-card">
+                <h3>🔴 P0 核心功能</h3>
+                <ul>
+                    <li>抽奖系统简化：去掉普通抽奖 <span class="tag tag-done">已完成</span></li>
+                    <li>增加奖池预览 + 概率说明 <span class="tag tag-done">已完成</span></li>
+                </ul>
+            </div>
+            <div class="update-card">
+                <h3>🟠 P1 优化功能</h3>
+                <ul>
+                    <li>宠物抽奖表现完善：开转视频 + <span class="tag tag-done">已完成</span></li>
+                    <li>抽奖界面随机轮播展示奖池最高品质宠物 <span class="tag tag-progress">已实现，本版本屏蔽</span></li>
+                    <li>卡池升级逻辑：抽够一定次数后提升卡池等级，卡池等级越高，抽出更高品质奖励权重越高 <span class="tag tag-done">已完成</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🐾 宠物系统</h2>
+            <div class="update-card">
+                <h3>🟠 P1 优化功能</h3>
+                <ul>
+                    <li>宠物按钮默认打开宠物列表界面 <span class="tag tag-done">已完成</span></li>
+                    <li>上阵宠物详情界面增加宠物升级按钮，取消原宠物底座升级界面，改为单宠物升级 <span class="tag tag-done">已完成</span></li>
+                    <li>上阵宠物详情界面增加宠物上阵按钮，按钮点击后跳转到上阵界面，宠物出现【替换】按钮，替换后弹出属性变化 <span class="tag tag-done">已完成</span></li>
+                    <li>宠物升级按钮效果改为一次消耗全部材料 <span class="tag tag-done">已完成</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏠 营地系统</h2>
+            <div class="update-card">
+                <h3>🟠 P1 优化功能</h3>
+                <ul>
+                    <li>种田简化为上阵居民 + 时间收益新界面 <span class="tag tag-done">已完成</span></li>
+                    <li>复用基地界面，所有都是基地新增加成选项 <span class="tag tag-done">已完成</span></li>
+                    <li>主基地增加搜捕器等级切页 <span class="tag tag-done">已完成</span></li>
+                    <li>主基地增加职业切页 <span class="tag tag-done">已完成</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 副本系统</h2>
+            <div class="update-card">
+                <h3>🟠 P1 新增内容</h3>
+                <ul>
+                    <li>新增日常副本（周常改款），奖励为信息素 <span class="tag tag-done">已完成</span></li>
+                    <li>每 100 关解锁 1 个，使用岩浆地图 <span class="tag tag-done">已完成</span></li>
+                    <li>标准副本时间 3 分钟，9 波怪物 <span class="tag tag-done">已完成</span></li>
+                    <li>每个日常副本每日最多挑战 5 次 <span class="tag tag-done">已完成</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 版本数据</h2>
+            <div class="update-card">
+                <h3>📈 开发统计</h3>
+                <ul>
+                    <li><strong>开发周期：</strong>2026 年 3 月 2 日 - 3 月 13 日（12 天）</li>
+                    <li><strong>参与人员：</strong>程序 4 人、策划 2 人、美术 3 人，共 9 人</li>
+                    <li><strong>功能模块：</strong>战斗/抽奖/宠物/营地/副本，共 5 大模块</li>
+                    <li><strong>优先级分布：</strong>P0 核心功能 4 项、P1 优化功能 16+ 项</li>
+                    <li><strong>完成状态：</strong>已完成 15+ 项、进行中 5+ 项</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📅 后续计划</h2>
+            <div class="update-card">
+                <h3>🎯 提审准备</h3>
+                <ul>
+                    <li>完成所有 P0/P1 BUG 修复</li>
+                    <li>本周五提交版本审核</li>
+                    <li>准备上线后数据监控方案</li>
+                    <li>美术资源收尾工作（男角色动作等）</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align:center;margin-top:40px;padding-top:30px;border-top:2px solid #e2e8f0;color:#64748b;font-size:13px;">
+            <p>ZVP 项目组 | 306 版本更新日志 | 2026 年 3 月 13 日</p>
+        </div>
+    </div>
+</body>
+</html>

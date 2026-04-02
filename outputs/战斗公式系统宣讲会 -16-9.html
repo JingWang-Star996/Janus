@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280, height=720">
+    <title>战斗公式系统宣讲会</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
+            background: #1a1a2e;
+            overflow: hidden;
+        }
+        .slide { 
+            width: 1280px; 
+            height: 720px; 
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+        .slide.active { display: flex; }
+        .slide:nth-child(odd) { background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); }
+        .slide:nth-child(even) { background: linear-gradient(135deg, #e74c3c 0%, #f39c12 100%); }
+        h1 { 
+            font-size: 56px; 
+            color: white; 
+            margin-bottom: 30px; 
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        h2 { 
+            font-size: 42px; 
+            color: white; 
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        h3 { 
+            font-size: 32px; 
+            color: #fff3cd; 
+            margin-bottom: 25px;
+        }
+        p { 
+            font-size: 24px; 
+            color: white; 
+            line-height: 1.6; 
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        ul { 
+            font-size: 24px; 
+            color: white; 
+            line-height: 1.8; 
+            margin-left: 40px;
+        }
+        li { margin-bottom: 15px; }
+        .highlight { color: #ffeaa7; font-weight: bold; }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 30px; 
+            margin: 30px 0;
+            width: 100%;
+        }
+        .card { 
+            background: rgba(255,255,255,0.95); 
+            padding: 25px; 
+            border-radius: 15px; 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .card h4 { 
+            color: #667eea; 
+            margin-bottom: 15px; 
+            font-size: 26px;
+        }
+        .card p { 
+            color: #333; 
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .formula { 
+            background: rgba(0,0,0,0.3); 
+            padding: 25px; 
+            border-radius: 10px; 
+            font-family: "Courier New", monospace; 
+            font-size: 20px; 
+            color: #ffeaa7;
+            margin: 25px 0;
+            width: 100%;
+            border-left: 5px solid #ffeaa7;
+        }
+        .nav { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            background: rgba(255,255,255,0.9); 
+            padding: 15px 30px; 
+            border-radius: 30px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+        .nav button { 
+            margin: 0 10px; 
+            padding: 10px 25px; 
+            border: none; 
+            border-radius: 25px; 
+            background: #667eea; 
+            color: white; 
+            font-size: 18px; 
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nav button:hover { background: #5568d3; transform: scale(1.05); }
+        .page-number { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 20px; 
+            background: rgba(255,255,255,0.9); 
+            padding: 10px 25px; 
+            border-radius: 25px; 
+            font-size: 18px;
+            color: #333;
+        }
+        .cover { text-align: center; }
+        .cover-info { 
+            background: rgba(255,255,255,0.1); 
+            padding: 40px; 
+            border-radius: 20px; 
+            margin-top: 50px;
+            text-align: left;
+        }
+        .cover-info p { font-size: 28px; margin-bottom: 20px; }
+        .toc-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 25px; 
+            margin: 40px 0;
+            width: 100%;
+        }
+        .toc-card { 
+            background: rgba(255,255,255,0.95); 
+            padding: 25px; 
+            border-radius: 15px; 
+            text-align: center;
+        }
+        .toc-card h4 { 
+            color: #667eea; 
+            margin-bottom: 10px; 
+            font-size: 22px;
+        }
+        .toc-card p { 
+            color: #666; 
+            font-size: 18px;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 25px 0;
+            background: rgba(255,255,255,0.95);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td { 
+            padding: 15px; 
+            text-align: left; 
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            font-size: 20px;
+        }
+        th { 
+            background: rgba(0,0,0,0.2); 
+            color: #ffeaa7;
+            font-weight: bold;
+        }
+        td { color: white; }
+    </style>
+</head>
+<body>
+    <!-- 封面 -->
+    <div class="slide active cover" id="slide-1">
+        <h1>🎮 战斗公式系统宣讲会</h1>
+        <p style="text-align: center; font-size: 32px; color: #ffeaa7;">吸血鬼 like 肉鸽游戏核心战斗机制</p>
+        <div class="cover-info">
+            <p><strong>📅 时间：</strong><span class="highlight">待定</span></p>
+            <p><strong>👥 主讲：</strong>AI 助理</p>
+            <p><strong>📍 地点：</strong>线上会议</p>
+            <p><strong>⏱️ 时长：</strong>约 60 分钟</p>
+        </div>
+    </div>
+
+    <!-- 目录 -->
+    <div class="slide" id="slide-2">
+        <h2>📊 公式分类总览</h2>
+        <p>战斗系统共包含 <span class="highlight">80 个核心公式</span>，分为 9 大类</p>
+        <div class="toc-grid">
+            <div class="toc-card">
+                <h4>🏃 英雄属性</h4>
+                <p>F001-F008</p>
+                <p>8 个公式</p>
+            </div>
+            <div class="toc-card">
+                <h4>💚 回血机制</h4>
+                <p>F009-F015</p>
+                <p>7 个公式</p>
+            </div>
+            <div class="toc-card">
+                <h4>🎯 暴击判定</h4>
+                <p>F016-F018</p>
+                <p>3 个公式</p>
+            </div>
+            <div class="toc-card">
+                <h4>🔫 子弹系统</h4>
+                <p>F019-F031</p>
+                <p>13 个公式</p>
+            </div>
+            <div class="toc-card">
+                <h4>⚔️ 武器技能</h4>
+                <p>F032-F049</p>
+                <p>18 个公式</p>
+            </div>
+            <div class="toc-card">
+                <h4>🛡️ 战斗增益</h4>
+                <p>F050-F067</p>
+                <p>18 个公式</p>
+            </div>
+            <div class="toc-card">
+                <h4>💰 掉落获取</h4>
+                <p>F068-F070</p>
+                <p>3 个公式</p>
+            </div>
+            <div class="toc-card">
+                <h4>👹 敌人属性</h4>
+                <p>F071-F074</p>
+                <p>4 个公式</p>
+            </div>
+            <div class="toc-card">
+                <h4>⚔️ 伤害计算</h4>
+                <p>F075-F080</p>
+                <p>6 个公式</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 英雄属性 -->
+    <div class="slide" id="slide-3">
+        <h2>🏃 英雄属性（F001-F008）</h2>
+        <div class="formula">
+            F001 英雄最终攻击力：<br>
+            (等级攻击加成 + 技能固定攻击加成 + 基础攻击力 + 训练攻击加成) × (1 + 攻击力百分比加成) >> 0
+        </div>
+        <div class="formula">
+            F003 综合战力：<br>
+            Math.ceil(4 × (最终攻击力 × 暴击期望 / 冷却倍率 + 最大生命值 × (1 + 减伤率)))
+        </div>
+        <h3>设计要点</h3>
+        <ul>
+            <li><span class="highlight">>>0</span> 位运算向下取整</li>
+            <li>百分比加成<span class="highlight">先累加再统一乘算</span></li>
+            <li>战力公式：攻击力权重<span class="highlight">4</span>，生命值权重<span class="highlight">1</span></li>
+            <li>冷却倍率最小值保护<span class="highlight">0.1</span></li>
+        </ul>
+    </div>
+
+    <!-- 回血机制 -->
+    <div class="slide" id="slide-4">
+        <h2>💚 回血机制（F009-F015）</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>类型</th>
+                    <th>触发条件</th>
+                    <th>特点</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🍖 吃肉回血</td>
+                    <td>拾取肉类掉落物</td>
+                    <td>掉落值/100 + 百分比</td>
+                </tr>
+                <tr>
+                    <td>✨ 技能回血</td>
+                    <td>自动回血/技能触发</td>
+                    <td>百分比 × 最大生命值</td>
+                </tr>
+                <tr>
+                    <td>⬆️ 升级回血</td>
+                    <td>英雄等级提升</td>
+                    <td>百分比 × 最大生命值</td>
+                </tr>
+                <tr>
+                    <td>💊 复活回血</td>
+                    <td>玩家复活</td>
+                    <td>+3 秒无敌时间</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>特殊机制</h3>
+        <ul>
+            <li><span class="highlight">过量回血转护盾</span>（F013）</li>
+            <li><span class="highlight">护盾优先级</span>：普通护盾 > 能量护盾 > 生命值</li>
+            <li><span class="highlight">濒死无敌</span>（F015）：仅触发一次</li>
+        </ul>
+    </div>
+
+    <!-- 暴击判定 -->
+    <div class="slide" id="slide-5">
+        <h2>🎯 暴击判定（F016-F018）</h2>
+        <h3>判定优先级</h3>
+        <div style="font-size: 36px; text-align: center; margin: 40px 0; color: #ffeaa7;">
+            <span style="color: #e74c3c;">⚡ 秒杀</span> > 
+            <span style="color: #f39c12;">💥 超级暴击</span> > 
+            <span style="color: #3498db;">🎯 普通暴击</span> > 
+            <span style="color: #95a5a6;">普通伤害</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>类型</th>
+                    <th>伤害计算</th>
+                    <th>倍率</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>秒杀</td>
+                    <td>目标当前生命值</td>
+                    <td>直接击杀</td>
+                </tr>
+                <tr>
+                    <td>超级暴击</td>
+                    <td>基础伤害 × 超级暴击倍数</td>
+                    <td>通常 3.0</td>
+                </tr>
+                <tr>
+                    <td>普通暴击</td>
+                    <td>基础伤害 × 暴击倍数</td>
+                    <td>通常 2.0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 子弹系统 -->
+    <div class="slide" id="slide-6">
+        <h2>🔫 子弹系统（F019-F031）</h2>
+        <div class="grid">
+            <div class="card">
+                <h4>💥 攻击力</h4>
+                <p>F019：子弹伤害标记>0 时使用 F004</p>
+            </div>
+            <div class="card">
+                <h4>📏 形状尺寸</h4>
+                <p>F021-F024：矩形/圆形/扇形</p>
+                <p>×30 转像素</p>
+            </div>
+            <div class="card">
+                <h4>⚡ 速度</h4>
+                <p>F026：基础速度 × 倍率 × 30</p>
+                <p>像素/秒</p>
+            </div>
+            <div class="card">
+                <h4>🎯 射程</h4>
+                <p>F027：基础射程 × 倍率 × 30</p>
+                <p>像素</p>
+            </div>
+        </div>
+        <h3>特殊效果</h3>
+        <ul>
+            <li><span class="highlight">穿透</span>（F028）：影响可击中敌人数量</li>
+            <li><span class="highlight">弹射</span>（F029）：连续击中敌人</li>
+            <li><span class="highlight">分裂</span>（F030）：消失时生成新子弹</li>
+        </ul>
+    </div>
+
+    <!-- 武器技能 -->
+    <div class="slide" id="slide-7">
+        <h2>⚔️ 武器技能（F032-F049）</h2>
+        <div class="grid">
+            <div class="card">
+                <h4>武器核心</h4>
+                <p>F032 冷却倍率：1 - 冷却减免</p>
+                <p>F038 发射间隔：基础间隔 / 攻速倍率</p>
+                <p>F039 子弹数量：基础 + 加成</p>
+                <p>F040 触发概率：Math.min(100, 基础 + 加成)</p>
+            </div>
+            <div class="card">
+                <h4>技能核心</h4>
+                <p>F042 冷却时间：基础 × (1 - 减免)</p>
+                <p>F043 持续时间：基础 × 倍率</p>
+                <p>F044 作用范围：基础 × 倍率 × 30</p>
+            </div>
+        </div>
+        <h3>倍率系统</h3>
+        <p>经验倍率（F045）、金币倍率（F046）、掉落倍率（F047）、磁铁范围（F048）</p>
+    </div>
+
+    <!-- 战斗增益 -->
+    <div class="slide" id="slide-8">
+        <h2>🛡️ 战斗增益（F050-F067）</h2>
+        <div class="grid">
+            <div class="card">
+                <h4>防御类</h4>
+                <p>⭐ 无敌时长（F050）</p>
+                <p>🛡️ 护盾层数（F051）</p>
+                <p>💎 能量护盾值（F052）</p>
+            </div>
+            <div class="card">
+                <h4>进攻类</h4>
+                <p>🎯 伤害倍率（F055-F058）</p>
+                <p>💥 最终伤害加成（F062）</p>
+            </div>
+            <div class="card">
+                <h4>抗性类</h4>
+                <p>🔄 击退抗性（F059）</p>
+                <p>🎮 控制抗性（F060）</p>
+                <p>🛡️ 伤害减免（F061）</p>
+            </div>
+            <div class="card">
+                <h4>其他增益</h4>
+                <p>⚡ 攻速倍率（F066）</p>
+                <p>⏱️ 冷却减免（F067）</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 掉落获取 -->
+    <div class="slide" id="slide-9">
+        <h2>💰 掉落获取（F068-F070）</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>类型</th>
+                    <th>公式</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>经验</td>
+                    <td>基础经验 × 经验倍率 × 难度倍率</td>
+                    <td>向下取整</td>
+                </tr>
+                <tr>
+                    <td>金币</td>
+                    <td>基础金币 × 金币倍率 × 难度倍率</td>
+                    <td>向下取整</td>
+                </tr>
+                <tr>
+                    <td>掉落物</td>
+                    <td>基础数量 × 掉落倍率</td>
+                    <td>向下取整</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>难度倍率设计</h3>
+        <ul>
+            <li>由挑战模式配置决定</li>
+            <li>普通模式倍率为<span class="highlight">1</span></li>
+            <li>高难度模式倍率>1，奖励更丰厚</li>
+        </ul>
+    </div>
+
+    <!-- 敌人属性 -->
+    <div class="slide" id="slide-10">
+        <h2>👹 敌人属性（F071-F074）</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>公式</th>
+                    <th>名称</th>
+                    <th>公式</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>F071</td>
+                    <td>最终攻击力</td>
+                    <td>基础攻击力 × 难度攻击倍率</td>
+                </tr>
+                <tr>
+                    <td>F072</td>
+                    <td>最终生命值</td>
+                    <td>基础生命值 × 难度生命倍率</td>
+                </tr>
+                <tr>
+                    <td>F073</td>
+                    <td>移动速度</td>
+                    <td>基础速度 × 难度速度倍率 × 30</td>
+                </tr>
+                <tr>
+                    <td>F074</td>
+                    <td>攻击间隔</td>
+                    <td>基础间隔 / 难度攻速倍率</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>设计意图</h3>
+        <ul>
+            <li>通过难度倍率调整游戏挑战性</li>
+            <li>高难度下敌人更强，奖励倍率也更高</li>
+            <li>保持游戏平衡性</li>
+        </ul>
+    </div>
+
+    <!-- 伤害计算 -->
+    <div class="slide" id="slide-11">
+        <h2>⚔️ 伤害计算（F075-F080）</h2>
+        <div class="formula">
+            if(暴击类型 = SECKILL) {<br>
+            &nbsp;&nbsp;伤害 = 目标当前生命值<br>
+            } else if(暴击类型 = SUPER_CRIT) {<br>
+            &nbsp;&nbsp;伤害 = 基础伤害 × 超级暴击倍数<br>
+            } else if(暴击类型 = CRIT) {<br>
+            &nbsp;&nbsp;伤害 = 基础伤害 × 暴击倍数<br>
+            } else {<br>
+            &nbsp;&nbsp;伤害 = 基础伤害<br>
+            }
+        </div>
+        <h3>等级加成</h3>
+        <ul>
+            <li>📚 技能等级加成（F079）：技能当前等级 - 1</li>
+            <li>🔫 武器等级加成（F080）：武器当前等级 - 1</li>
+            <li>1 级加成为<span class="highlight">0</span>，每级提升<span class="highlight">+1</span></li>
+        </ul>
+    </div>
+
+    <!-- 核心原则 -->
+    <div class="slide" id="slide-12">
+        <h2>📝 核心设计原则</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>原则</th>
+                    <th>说明</th>
+                    <th>示例</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🎯 数值平衡</td>
+                    <td>向下取整、最小值保护、最大值限制</td>
+                    <td>Math.max、Math.min、>>0</td>
+                </tr>
+                <tr>
+                    <td>⚖️ 权重分配</td>
+                    <td>攻击力权重 4，生命值权重 1</td>
+                    <td>战力公式设计</td>
+                </tr>
+                <tr>
+                    <td>🔄 优先级明确</td>
+                    <td>秒杀>超暴>普暴>普通</td>
+                    <td>暴击判定流程</td>
+                </tr>
+                <tr>
+                    <td>🛡️ 防御层次</td>
+                    <td>普通护盾>能量护盾>生命值</td>
+                    <td>扣血计算逻辑</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 结束页 -->
+    <div class="slide cover" id="slide-13">
+        <h1>谢谢观看！</h1>
+        <p style="text-align: center; font-size: 36px; color: #ffeaa7;">Q&A 环节 🎤</p>
+        <div class="cover-info">
+            <h3>📚 相关文档</h3>
+            <p>• <a href="https://fcnqx3qaebse.feishu.cn/wiki/HONowsglhiwd6TkRgpJcEHw3ntd" style="color: #ffeaa7;">战斗公式表格（80 个公式 + 超链接）</a></p>
+            <p>• <a href="https://www.feishu.cn/docx/WgvYdESAOoEm7Lxhsg9c0OiTncg" style="color: #ffeaa7;">战斗公式说明文档（含流程图）</a></p>
+        </div>
+        <p style="text-align: center; margin-top: 40px; font-size: 24px; color: #95a5a6;">深圳孵化团队 · 2026 年 3 月</p>
+    </div>
+
+    <!-- 导航 -->
+    <div class="page-number">第 <span id="current">1</span> / 13 页</div>
+    <div class="nav">
+        <button onclick="prevSlide()">◀ 上一页</button>
+        <button onclick="nextSlide()">下一页 ▶</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 13;
+
+        function showSlide(n) {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.getElementById('slide-' + n).classList.add('active');
+            document.getElementById('current').textContent = n;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+    </script>
+</body>
+</html>

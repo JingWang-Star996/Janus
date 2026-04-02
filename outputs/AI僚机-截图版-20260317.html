@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 做僚机：游戏策划的表格管理新姿势（截图版）</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: PingFang SC, Microsoft YaHei, sans-serif;
+            background: #f5f5f5;
+        }
+        .page {
+            width: 375px;
+            height: 1334px;
+            margin: 0 auto 20px;
+            padding: 40px 24px;
+            background: #fff;
+            position: relative;
+        }
+        .cover-page {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 40px;
+        }
+        .cover-page h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .cover-page .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+        .cover-page .tagline {
+            font-size: 16px;
+            opacity: 0.8;
+            font-style: italic;
+            padding: 20px 24px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #1a1a2e;
+            border-left: 4px solid #667eea;
+            padding-left: 16px;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .quote-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: #fff;
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+            font-size: 16px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .data-box {
+            background: #1a1a2e;
+            color: #eee;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 14px;
+            font-family: monospace;
+            word-break: break-all;
+            line-height: 1.5;
+        }
+        ul, ol {
+            margin: 20px 0 20px 24px;
+            font-size: 16px;
+        }
+        li {
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+        .page-footer {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #999;
+        }
+        .end-page {
+            background: #1a1a2e;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 40px;
+        }
+        .end-page h2 {
+            color: #fff;
+            border: none;
+            padding: 0;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+        .end-page p {
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 第1页：封面 -->
+    <div class="page cover-page">
+        <h1>AI 做僚机</h1>
+        <div class="subtitle">游戏策划的表格管理新姿势</div>
+        <div class="tagline">"AI 真好用，给我狠狠地用"</div>
+        <p style="margin-top: 40px; opacity: 0.7; font-size: 14px;">从权限冲突到自然语言操作<br>一次技术实操与价值思考</p>
+        <div class="page-footer" style="color: rgba(255,255,255,0.5);">第 1 页 / 共 9 页</div>
+    </div>
+
+    <!-- 第2页：痛点 -->
+    <div class="page">
+        <h2>配表这件事，为什么这么折磨人？</h2>
+        <p>如果你是游戏策划，或者跟游戏开发沾过边，你一定懂那种感觉。</p>
+        <p>配表，看似简单的活儿，实际做起来简直是精神消耗战。打开表格，发现同事正在编辑，你被锁在外面；好不容易轮到你，改了两个字段，发现数据对不上，又要来回确认；老板突然要一个紧急数据，你翻遍十几个表，找到眼花。</p>
+        <div class="quote-box">"数据不会说谎，但要学会听数据在说什么。"<br><br>而现实是，光是让数据乖乖听话，就已经耗尽了策划的精力。</div>
+        <p>这些事情单个看都不大，但架不住<strong>多、碎、杂</strong>。每天被这些琐事打断十几次，心流早就没了。等你真正想静下来思考设计，大脑已经疲惫不堪。</p>
+        <div class="page-footer">第 2 页 / 共 9 页</div>
+    </div>
+
+    <!-- 第3页：方案 -->
+    <div class="page">
+        <h2>技术实操：AI + 飞书表格</h2>
+        <p>今天，我想分享一次技术实操经验：如何通过 OpenClaw 打通飞书表格，让 AI 成为你的"僚机"，从此告别那些消耗精神的琐碎操作。</p>
+        <div class="highlight-box"><strong>OpenClaw 是什么？</strong><br><br>简单说，OpenClaw 是一个 AI Agent 框架，能让 AI 直接调用各种 API 完成操作。它支持飞书全家桶：文档、表格、多维表格、日历、任务、聊天……<br><br>你只需要用自然语言发指令，AI 就能帮你执行。</div>
+        <div class="quote-box">核心价值：<br>不用学复杂工具 → 用自然语言描述需求 → AI 自动调用 API 完成</div>
+        <div class="page-footer">第 3 页 / 共 9 页</div>
+    </div>
+
+    <!-- 第4页：实操1 -->
+    <div class="page">
+        <h2>实操场景一：跨表引用</h2>
+        <p>游戏项目中，配表经常分散在多个文件。比如"道具表"在 A 文件，"商店表"在 B 文件，你想在商店表里自动填充道具名称。</p>
+        <p><strong>传统做法：</strong></p>
+        <ol>
+            <li>打开道具表，找到道具 ID 和名称的对应关系</li>
+            <li>手动复制，或者写 VLOOKUP 公式</li>
+            <li>如果道具表更新，再手动同步</li>
+        </ol>
+        <p><strong>用 OpenClaw：</strong></p>
+        <div class="data-box">"帮我在商店表里加一列，根据道具 ID 从道具表自动匹配道具名称。"</div>
+        <p>AI 会自动帮你写好跨表引用公式：</p>
+        <div class="data-box">=VLOOKUP(A2, IMPORTRANGE("道具表URL", "Sheet1!A:C"), 2, FALSE)</div>
+        <div class="page-footer">第 4 页 / 共 9 页</div>
+    </div>
+
+    <!-- 第5页：实操2 -->
+    <div class="page">
+        <h2>实操场景二：复杂公式</h2>
+        <p>有一次，我需要处理一个组合字段：单元格里有多个值，用竖线分隔，每个值又是"类型*数量"的格式。我要根据类型去另一个表匹配名称，再重新拼接。</p>
+        <p><strong>传统做法？</strong>写嵌套公式，查文档，调试半天。</p>
+        <p><strong>用 OpenClaw：</strong></p>
+        <div class="data-box">"这个字段格式是'类型1*数量1|类型2*数量2'，帮我根据类型ID去另一个表匹配名称，输出'名称1*数量1|名称2*数量2'。"</div>
+        <p>AI 生成的公式涉及 7-8 个函数嵌套：SPLIT、MAP、TEXTJOIN、VLOOKUP、VALUE、INDEX、IFERROR……</p>
+        <div class="highlight-box">如果让我自己写，至少半小时。用 AI，一句话，几十秒搞定。</div>
+        <div class="page-footer">第 5 页 / 共 9 页</div>
+    </div>
+
+    <!-- 第6页：实操3 -->
+    <div class="page">
+        <h2>实操场景三：权限不再是问题</h2>
+        <p>传统表格协作最大的痛点：权限冲突。你想编辑，别人也在编辑，要么被锁住，要么互相覆盖。</p>
+        <div class="quote-box">用 AI + API 的方式，这个问题迎刃而解。<br><br>AI 通过 API 操作表格，不占用你的编辑窗口。你可以在群里发指令："帮我把道具 ID 123 的价格改成 100"，AI 直接调用 API 完成，不需要你打开表格。</div>
+        <div class="highlight-box"><strong>这意味着什么？</strong><br><br>你可以在任何终端（手机、平板、甚至智能音箱）操作表格，不需要安装飞书 App，只需要一个能发消息的界面。</div>
+        <div class="page-footer">第 6 页 / 共 9 页</div>
+    </div>
+
+    <!-- 第7页：价值思考 -->
+    <div class="page">
+        <h2>价值思考：AI 做僚机意味着什么？</h2>
+        <p><strong>传统配表的四大痛点：</strong></p>
+        <ul>
+            <li><strong>权限冲突</strong>：多人协作，互相锁定，效率低下</li>
+            <li><strong>流程缺失</strong>：没有统一的检查规则，错误容易遗漏</li>
+            <li><strong>操作繁琐</strong>：细碎操作多，精神消耗大</li>
+            <li><strong>门槛高</strong>：复杂公式、跨表引用，学习成本高</li>
+        </ul>
+        <div class="quote-box">核心循环不稳，一切都是空中楼阁。配表是游戏研发的基础循环，如果这个环节消耗太多精神力，上层的设计质量必然受影响。</div>
+        <div class="page-footer">第 7 页 / 共 9 页</div>
+    </div>
+
+    <!-- 第8页：未来 -->
+    <div class="page">
+        <h2>未来：一人操作多 AI 落地</h2>
+        <div class="highlight-box"><strong>AI 带来的改变：</strong><br><br>从"手动操作"到"指令驱动"：你说需求，AI 执行<br>从"学习工具"到"自然语言"：不需要记公式语法<br>从"单人串行"到"多AI并行"：一个指令，多个AI同时处理</div>
+        <p><strong>对小型团队 / 独立开发者的意义：</strong></p>
+        <p>大公司可以雇专职数据配置，小团队呢？策划既是设计师，又是配置工，还是测试员。一个人干三个人的活，精神力被琐事耗尽，核心设计反而没时间打磨。</p>
+        <div class="quote-box">AI 做僚机，等于给你配了一个"虚拟助理"。它不领工资，不会累，随时待命。你可以把琐碎的配表工作交给它，自己专注在核心设计上。</div>
+        <div class="page-footer">第 8 页 / 共 9 页</div>
+    </div>
+
+    <!-- 第9页：尾页 -->
+    <div class="page end-page">
+        <h2>AI 真好用，给我狠狠地用</h2>
+        <p>游戏行业有一句话：核心循环不稳，一切都是空中楼阁。配表就是游戏研发的核心循环之一。</p>
+        <p>如果这个环节还在用传统方式——手动打开表格、复制粘贴、查公式文档、被权限锁住——那你的精神力已经被消耗殆尽了。</p>
+        <div class="quote-box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">项目牛逼，大家牛逼。<br>AI 做僚机，你做指挥官。<br>这才是未来的工作方式。</div>
+        <p>技术已经就位，工具已经开放。<br>接下来，就看你怎么用了。</p>
+        <p style="margin-top: 40px; opacity: 0.6; font-size: 14px;">作者：jing<br>日期：2026-03-17<br>技术支持：OpenClaw + 飞书 API</p>
+        <div class="page-footer" style="color: rgba(255,255,255,0.3);">第 9 页 / 共 9 页</div>
+    </div>
+</body>
+</html>

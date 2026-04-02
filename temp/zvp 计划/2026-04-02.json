@@ -1,0 +1,116 @@
+{
+  "date": "2026-04-02",
+  "task": "ZVP 每日工作计划收集 - 10 点",
+  "group_chat_id": "oc_66c7a852f218a2a538e648315f5d24ab",
+  "group_name": "ZVP 大群",
+  "excluded_member": "吴成刚",
+  "members": [
+    {
+      "name": "周广生",
+      "open_id": "ou_e0c2bfb5836f11311d621fc08c581496",
+      "chat_id": "oc_6a5d5b9f98a66a3a39f8d63037697226",
+      "message_id": "om_x100b53e8a4fe6494c347963c4e96ed5",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    },
+    {
+      "name": "唐浩晖",
+      "open_id": "ou_afe578ef6653e4ad2879c4bd2105b223",
+      "chat_id": "oc_e83c5a02f8a92d4aef11935c61790354",
+      "message_id": "om_x100b53e8a4f994b0c2ad1a1557ad693",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    },
+    {
+      "name": "罗园超",
+      "open_id": "ou_8a45cd5a924091c67b83b9c10ebabaa5",
+      "chat_id": "oc_4ffb6f4612c1fd0955003994b30a4c52",
+      "message_id": "om_x100b53e8a4feaca8c3fb87640885e24",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    },
+    {
+      "name": "陈华强",
+      "open_id": "ou_7846f386cd0b1c9297d45daf1b3a1065",
+      "chat_id": "oc_3162bbec2420eea8e7354c8ecc500205",
+      "message_id": "om_x100b53e8a4fe30a8c3c7eaac92685d6",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    },
+    {
+      "name": "曾军",
+      "open_id": "ou_9172e4aeb2598e89534579d8b81d5608",
+      "chat_id": "oc_ee9f0f4406a96be942a9e3586c5211d9",
+      "message_id": "om_x100b53e8a4f98080c4f86248ef05916",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    },
+    {
+      "name": "齐翔",
+      "open_id": "ou_69eb16cd720e8db944348a314291e023",
+      "chat_id": "oc_514c9b1101fb82e63b4865006e8bf6c3",
+      "message_id": "om_x100b53e8a5a5c8bcc324977fd6b6ce8",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    },
+    {
+      "name": "王小星",
+      "open_id": "ou_5260d844e5aa7bbe30e305dcb40aadcc",
+      "chat_id": "oc_89d5bce187365fbdd69994481757151a",
+      "message_id": "om_x100b53e8a5a43888c2b361b0d77d13c",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    },
+    {
+      "name": "黄广曦",
+      "open_id": "ou_3c37b1fc9ffc13e08131a5c4cfa3767e",
+      "chat_id": "oc_430228b8d1646831685908dae7cdd4d5",
+      "message_id": "om_x100b53e8a5a7e084c22fa43c247de24",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    },
+    {
+      "name": "赖力",
+      "open_id": "ou_4efff65d408e203a5eec315a5b508e67",
+      "chat_id": "oc_66c63c98ed9ccff721caae3ba65ef862",
+      "message_id": "om_x100b53e8a5a520b8c2ee117850258ff",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    },
+    {
+      "name": "王鲸",
+      "open_id": "ou_7e31a302531d68cf0ce249417e4a1d0c",
+      "chat_id": "oc_644d88b4a61ed5636fc9380d3c17ba8a",
+      "message_id": "om_x100b53e8a5a7b8a4c14212ad0dcadcc",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    },
+    {
+      "name": "汤世军",
+      "open_id": "ou_130df4b60c53c7a9cdd6923afbcebc5d",
+      "chat_id": "oc_0b883348aa3df5ead9e096fd4c26fceb",
+      "message_id": "om_x100b53e8a5a5448cc49eab476ac311f",
+      "status": "已发送",
+      "plan": "",
+      "reply_time": ""
+    }
+  ],
+  "summary": {
+    "total_members": 11,
+    "messaged": 11,
+    "replied": 0,
+    "pending": 11
+  },
+  "created_at": "2026-04-02T10:03:00+08:00",
+  "updated_at": "2026-04-02T10:03:00+08:00"
+}

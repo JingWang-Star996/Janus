@@ -1,0 +1,30 @@
+{
+  "task_id": "orch-20260402102846",
+  "main_task": "你是一个专业的任务规划专家。你的任务是将复杂任务分解为多个可执行的子任务。\n\n## 输入任务\n分析竞品游戏《XX传奇》，输出完整报告\n\n## 可用 Agent 列表\nmarket-analyst, game-designer, data-analyst, report-writer\n\n## 分解要求\n\n1. **子任务数量**：3-5 个（不要太多，也不要太少）\n2. **每个子任务必须**：\n   - 有明确的目标\n   - 可以独立执行\n   - 有明确的输出\n3. **分配合适的 Agent**：根据子任务类型选择最匹配的 Agent\n\n## 输出格式\n\n**必须严格遵循以下 JSON 格式**：\n\n{\n  \"main_task\": \"原始任务描述\",\n  \"subtasks\": [\n    {\n      \"id\": 1,\n      \"agent\": \"agent-id\",\n      \"task\": \"子任务描述\",\n      \"expected_output\": \"期望的输出\"\n    }\n  ]\n}\n\n## 示例\n\n**输入**：\n任务：\"分析竞品游戏，输出报告\"\nAgent 列表：[\"market-analyst\", \"game-designer\", \"data-analyst\", \"report-writer\"]\n\n**输出**：\n{\n  \"main_task\": \"分析竞品游戏，输出报告\",\n  \"subtasks\": [\n    {\n      \"id\": 1,\n      \"agent\": \"market-analyst\",\n      \"task\": \"收集竞品游戏的基本信息（下载量、收入、用户评价等）\",\n      \"expected_output\": \"竞品数据汇总表\"\n    },\n    {\n      \"id\": 2,\n      \"agent\": \"game-designer\",\n      \"task\": \"分析竞品游戏的核心玩法、系统设计、数值平衡\",\n      \"expected_output\": \"玩法分析报告\"\n    },\n    {\n      \"id\": 3,\n      \"agent\": \"data-analyst\",\n      \"task\": \"分析竞品游戏的付费设计、广告变现、留存数据\",\n      \"expected_output\": \"付费设计分析报告\"\n    },\n    {\n      \"id\": 4,\n      \"agent\": \"report-writer\",\n      \"task\": \"汇总以上分析，输出完整的竞品分析报告\",\n      \"expected_output\": \"完整的竞品分析报告（Markdown 格式）\"\n    }\n  ]\n}\n\n---\n\n**请分解以下任务**：\n任务：{task}\nAgent 列表：{agents}\n",
+  "progress": 0,
+  "status": "running",
+  "subtasks": [
+    {
+      "id": 1,
+      "agent": "market-analyst",
+      "task": "子任务 1",
+      "expected_output": "输出 1",
+      "status": "pending",
+      "retry_count": 0,
+      "started_at": null,
+      "completed_at": null
+    },
+    {
+      "id": 2,
+      "agent": "game-designer",
+      "task": "子任务 2",
+      "expected_output": "输出 2",
+      "status": "pending",
+      "retry_count": 0,
+      "started_at": null,
+      "completed_at": null
+    }
+  ],
+  "created_at": "2026-04-02T10:28:46.497Z",
+  "updated_at": "2026-04-02T10:28:46.497Z"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "ai-persona-positioning",
+  "version": "1.0.0",
+  "description": "AI 分身定位法 - 重新定义 AI 与用户的关系，从助手到分身",
+  "author": "王鲸 (starmark996)",
+  "license": "CC-BY-4.0",
+  "tags": ["identity", "persona", "positioning", "management"],
+  "category": "方法论",
+  "created_at": "2026-03-24",
+  "updated_at": "2026-03-24"
+}

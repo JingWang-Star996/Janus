@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>研发团队组队投票</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .instructions {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        .instructions ol {
+            color: #856404;
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .member-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .member-item:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        .member-item.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        .member-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .member-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 0;
+            font-weight: normal;
+        }
+        .role-badge {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(0,0,0,0.1);
+        }
+        .generate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        .result-section {
+            display: none;
+            margin-top: 25px;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-section.active {
+            display: block;
+        }
+        .result-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .result-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            min-height: 150px;
+            resize: vertical;
+            background: #f8f9fa;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+        .result-textarea:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+        .copy-btn {
+            width: 100%;
+            padding: 14px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .copy-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            color: #721c24;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 研发团队组队投票</h1>
+        <p class="subtitle">匿名双向选择 · 公平公正组队</p>
+
+        <div class="instructions">
+            <h3>📝 投票说明</h3>
+            <ol>
+                <li><strong>必须勾选自己</strong>（用于身份确认）</li>
+                <li><strong>勾选你想合作的伙伴</strong>（可多选，至少选 1 人）</li>
+                <li>点击"生成加密代码"按钮</li>
+                <li>复制加密代码，发送给制作人</li>
+                <li><strong>注意：</strong>加密代码包含你的选择，请勿泄露给他人</li>
+            </ol>
+        </div>
+
+        <form id="voteForm">
+            <div class="form-group">
+                <label>👥 选择自己和合作伙伴（必选）</label>
+                <div class="member-grid" id="memberGrid">
+                    <!-- 成员列表由 JS 生成 -->
+                </div>
+                <div id="selectionHint" style="color: #666; font-size: 13px; margin-top: 10px;">
+                    已选择 <span id="selectedCount" style="color: #667eea; font-weight: bold;">0</span> 人（至少选择 2 人：自己 +1 个伙伴）
+                </div>
+            </div>
+
+            <button type="button" class="generate-btn" onclick="generateCode()">
+                🔐 生成加密代码
+            </button>
+
+            <div id="resultSection" class="result-section">
+                <div class="result-header">
+                    📋 你的加密代码（复制发送给制作人）
+                </div>
+                <textarea id="resultText" class="result-textarea" readonly></textarea>
+                <button type="button" class="copy-btn" onclick="copyResult()">
+                    📋 复制代码
+                </button>
+                <div class="warning">
+                    <strong>⚠️ 重要提示：</strong>
+                    <ul style="margin-top: 8px; padding-left: 20px;">
+                        <li>此代码包含你的投票信息，请勿泄露给他人</li>
+                        <li>复制后直接发送给制作人，不要修改任何内容</li>
+                        <li>如果需要修改投票，重新填写生成新代码即可</li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // 团队成员名单
+        const members = [
+            { id: 1, name: '罗园超', role: '主美术' },
+            { id: 2, name: '曾军', role: '动作美术' },
+            { id: 3, name: '汤世军', role: '场景模型' },
+            { id: 4, name: '齐翔', role: '后端主程' },
+            { id: 5, name: '周广生', role: '后端程序' },
+            { id: 6, name: '陈华强', role: '前端主程' },
+            { id: 7, name: '唐浩晖', role: '前端程序' },
+            { id: 8, name: '赖力', role: '系统策划' },
+            { id: 9, name: '黄广曦', role: '数值策划' },
+            { id: 10, name: '王小星', role: '系统策划' }
+        ];
+
+        // AES 加密密钥（只有制作人知道）
+        const SECRET_KEY = 'TeamBuild2026SecretKey#ZVP';
+
+        // 生成成员列表
+        function renderMembers() {
+            const grid = document.getElementById('memberGrid');
+            grid.innerHTML = members.map(member => `
+                <div class="member-item" onclick="toggleMember(this)">
+                    <input type="checkbox" id="member_${member.id}" value="${member.id}">
+                    <label for="member_${member.id}">
+                        ${member.name}
+                        <span class="role-badge">${member.role}</span>
+                    </label>
+                </div>
+            `).join('');
+        }
+
+        // 切换选择状态
+        function toggleMember(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            element.classList.toggle('selected', checkbox.checked);
+            updateCount();
+        }
+
+        // 更新计数
+        function updateCount() {
+            const count = document.querySelectorAll('#memberGrid input[type="checkbox"]:checked').length;
+            document.getElementById('selectedCount').textContent = count;
+        }
+
+        // 生成加密代码
+        function generateCode() {
+            const selected = Array.from(document.querySelectorAll('#memberGrid input[type="checkbox"]:checked'))
+                .map(cb => parseInt(cb.value));
+
+            // 验证
+            if (selected.length === 0) {
+                alert('❌ 请至少选择自己！');
+                return;
+            }
+
+            if (selected.length < 2) {
+                alert('❌ 请至少选择 2 人：自己 + 至少 1 个想合作的伙伴');
+                return;
+            }
+
+            // 生成数据结构
+            const voteData = {
+                timestamp: new Date().toISOString(),
+                selections: selected.sort((a, b) => a - b)
+            };
+
+            // AES 加密
+            const jsonString = JSON.stringify(voteData);
+            const encrypted = CryptoJS.AES.encrypt(jsonString, SECRET_KEY).toString();
+
+            // 生成最终代码（添加版本标识）
+            const code = `ZVP_VOTE_V1_${encrypted}`;
+
+            // 显示结果
+            document.getElementById('resultText').value = code;
+            document.getElementById('resultSection').classList.add('active');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 复制结果
+        function copyResult() {
+            const resultText = document.getElementById('resultText');
+            resultText.select();
+            resultText.setSelectionRange(0, 99999);
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert('✅ 已复制到剪贴板！\n\n请直接发送给制作人。');
+                } else {
+                    throw new Error('execCommand failed');
+                }
+            } catch (err) {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(resultText.value).then(() => {
+                        alert('✅ 已复制到剪贴板！\n\n请直接发送给制作人。');
+                    }).catch(() => {
+                        alert('❌ 复制失败，请手动复制');
+                    });
+                } else {
+                    alert('❌ 复制失败，请手动复制');
+                }
+            }
+        }
+
+        // 初始化
+        renderMembers();
+    </script>
+</body>
+</html>

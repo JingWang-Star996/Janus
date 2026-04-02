@@ -1,0 +1,37 @@
+{
+  "name": "ai-onboarding-flow",
+  "version": "1.0.0",
+  "description": "AI 员工入职流程 Skill，提供 AI 助理融入企业团队的完整工作流和配置指南",
+  "author": "jing（OpenClaw 实践者）",
+  "tags": ["ai", "onboarding", "workflow", "team", "入职", "协作"],
+  "triggers": [
+    "如何让 AI 融入团队",
+    "AI 第一天上班",
+    "团队 AI 助理配置",
+    "AI 协作流程",
+    "AI 入职",
+    "AI 员工",
+    "AI 团队集成",
+    "AI 工作流"
+  ],
+  "capabilities": [
+    "入职前准备",
+    "第一天工作流",
+    "第一周工作流",
+    "第一个月工作流",
+    "检查清单生成",
+    "日报模板",
+    "术语词典"
+  ],
+  "files": [
+    "SKILL.md",
+    "skill.json",
+    "rules/onboarding-rules.md",
+    "rules/chat-rules.md",
+    "templates/checklist.md",
+    "templates/daily-report.md",
+    "templates/terminology.md",
+    "examples/day1-plan.md",
+    "examples/week1-summary.md"
+  ]
+}

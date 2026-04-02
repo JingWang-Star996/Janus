@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 健康监控</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .status-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .status-title { font-size: 1.2em; font-weight: 600; }
+        .status-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .status-indicator.healthy { background: #00ff88; }
+        .status-indicator.warning { background: #ffaa00; }
+        .status-indicator.error { background: #ff4444; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .metric {
+            background: rgba(0,0,0,0.3);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+        .log-container {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: "Courier New", monospace;
+            font-size: 0.85em;
+        }
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .log-entry:last-child { border-bottom: none; }
+        .log-time { color: #00d9ff; margin-right: 8px; }
+        .log-success { color: #00ff88; }
+        .log-error { color: #ff4444; }
+        .log-warning { color: #ffaa00; }
+        .log-info { color: #00d9ff; }
+        .refresh-btn {
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: #1a1a2e;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .refresh-btn:hover { opacity: 0.9; }
+        .last-update {
+            text-align: center;
+            margin-top: 16px;
+            opacity: 0.7;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦞 OpenClaw 健康监控</h1>
+        
+        <div class="status-card">
+            <div class="status-header">
+                <span class="status-title">系统状态</span>
+                <div class="status-indicator healthy" id="statusIndicator"></div>
+            </div>
+            <div class="metric-grid">
+                <div class="metric">
+                    <div class="metric-value" id="gatewayStatus">-</div>
+                    <div class="metric-label">Gateway</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="systemdStatus">-</div>
+                    <div class="metric-label">Systemd</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="rpcStatus">-</div>
+                    <div class="metric-label">RPC</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="uptimeValue">-</div>
+                    <div class="metric-label">运行时间</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-card">
+            <div class="status-header">
+                <span class="status-title">最近日志</span>
+            </div>
+            <div class="log-container" id="logContainer">
+                <div class="log-entry">加载中...</div>
+            </div>
+        </div>
+
+        <button class="refresh-btn" onclick="refreshData()">🔄 刷新数据</button>
+        <div class="last-update" id="lastUpdate">最后更新：-</div>
+    </div>
+
+    <script>
+        async function refreshData() {
+            try {
+                // 获取 Gateway 状态
+                const statusResponse = await fetch('/api/gateway-status');
+                const statusData = await statusResponse.json();
+                
+                // 获取健康检查日志
+                const logResponse = await fetch('/api/healthcheck-log');
+                const logData = await logResponse.json();
+                
+                updateUI(statusData, logData);
+            } catch (error) {
+                console.error('刷新失败:', error);
+                document.getElementById('statusIndicator').className = 'status-indicator error';
+            }
+        }
+
+        function updateUI(status, logs) {
+            // 更新状态指示器
+            const indicator = document.getElementById('statusIndicator');
+            if (status.gateway === 'running' && status.systemd === 'active') {
+                indicator.className = 'status-indicator healthy';
+            } else if (status.gateway === 'starting' || status.systemd === 'activating') {
+                indicator.className = 'status-indicator warning';
+            } else {
+                indicator.className = 'status-indicator error';
+            }
+
+            // 更新指标
+            document.getElementById('gatewayStatus').textContent = 
+                status.gateway === 'running' ? '✅ 运行中' : '❌ 已停止';
+            document.getElementById('systemdStatus').textContent = 
+                status.systemd === 'active' ? '✅ 正常' : '⚠️ 异常';
+            document.getElementById('rpcStatus').textContent = 
+                status.rpc === 'ok' ? '✅ 响应' : '❌ 无响应';
+            document.getElementById('uptimeValue').textContent = 
+                status.uptime || '-';
+
+            // 更新日志
+            const logContainer = document.getElementById('logContainer');
+            if (logs && logs.length > 0) {
+                logContainer.innerHTML = logs.slice(-20).map(log => {
+                    let className = 'log-info';
+                    if (log.includes('✅')) className = 'log-success';
+                    else if (log.includes('❌')) className = 'log-error';
+                    else if (log.includes('⚠️')) className = 'log-warning';
+                    
+                    const timeMatch = log.match(/\[(.*?)\]/);
+                    const time = timeMatch ? timeMatch[1] : '';
+                    const message = log.replace(/\[.*?\]\s*/, '');
+                    
+                    return `<div class="log-entry ${className}">
+                        <span class="log-time">${time}</span>${message}
+                    </div>`;
+                }).join('');
+            }
+
+            // 更新时间
+            document.getElementById('lastUpdate').textContent = 
+                '最后更新：' + new Date().toLocaleTimeString('zh-CN');
+        }
+
+        // 初始加载
+        refreshData();
+        
+        // 自动刷新（每 30 秒）
+        setInterval(refreshData, 30000);
+    </script>
+</body>
+</html>

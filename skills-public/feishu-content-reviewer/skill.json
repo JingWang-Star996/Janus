@@ -1,0 +1,32 @@
+{
+  "name": "feishu-content-reviewer",
+  "version": "1.0.0",
+  "description": "飞书内容隐私审查 Skill，自动检查并脱敏对外发布内容中的商业隐私信息",
+  "author": "jing（OpenClaw 实践者）",
+  "tags": ["feishu", "privacy", "review", "content", "脱敏", "审查"],
+  "triggers": [
+    "帮我审查这篇文章",
+    "准备发公众号，检查一下",
+    "对外分享的内容",
+    "脱敏处理",
+    "隐私审查",
+    "内审部",
+    "发布前检查",
+    "内容脱敏"
+  ],
+  "capabilities": [
+    "隐私脱敏审查",
+    "风险分级",
+    "审查报告生成",
+    "飞书文档创建",
+    "修改对比表"
+  ],
+  "files": [
+    "SKILL.md",
+    "skill.json",
+    "rules/review-rules.md",
+    "templates/review-report.md",
+    "examples/before.md",
+    "examples/after.md"
+  ]
+}
