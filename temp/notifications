@@ -1,0 +1,5 @@
+[
+  {"id": 1, "type": "info", "message": "System started", "timestamp": "2026-04-03T18:00:00+08:00"},
+  {"id": 2, "type": "warning", "message": "High memory usage detected", "timestamp": "2026-04-03T18:15:00+08:00"},
+  {"id": 3, "type": "error", "message": "Worker-3 connection lost", "timestamp": "2026-04-03T18:25:00+08:00"}
+]

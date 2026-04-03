@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard v4 (P0 Fixed)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #48bb78;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.error {
+            background: #f56565;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: #2d3748;
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .metric {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-retry {
+            background: #f56565;
+            color: white;
+            margin-left: 12px;
+        }
+
+        .error-message {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            color: #c53030;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #718096;
+            padding: 8px;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #2d3748;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .data-table tr:hover {
+            background: #f7fafc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Dashboard v4 (P0 Fixed)</h1>
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">连接正常</span>
+                </div>
+                <div class="status-indicator">
+                    <span>最后更新：<span id="lastUpdate">-</span></span>
+                </div>
+                <button class="btn btn-primary" onclick="openDetailsModal()">查看详情</button>
+                <button class="btn btn-retry" id="retryBtn" onclick="retryConnection()" style="display: none;">重试连接</button>
+            </div>
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>👥 活跃用户</h2>
+                <div class="metric" id="activeUsers">-</div>
+                <div class="metric-label">当前在线</div>
+            </div>
+
+            <div class="card">
+                <h2>💰 今日收入</h2>
+                <div class="metric" id="todayRevenue">-</div>
+                <div class="metric-label">人民币</div>
+            </div>
+
+            <div class="card">
+                <h2>🎮 游戏会话</h2>
+                <div class="metric" id="gameSessions">-</div>
+                <div class="metric-label">进行中</div>
+            </div>
+
+            <div class="card">
+                <h2>⚡ 系统负载</h2>
+                <div class="metric" id="systemLoad">-</div>
+                <div class="metric-label">CPU 使用率</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>📈 用户趋势（7 天）</h2>
+                <div class="chart-container">
+                    <canvas id="userChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>💵 收入趋势（7 天）</h2>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📋 详细数据</h2>
+                <button class="modal-close" onclick="closeDetailsModal()">&times;</button>
+            </div>
+            <div id="modalBody">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div>加载数据中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== P0 FIX #1: 弹窗状态管理 ====================
+        // 问题：弹窗状态混乱，关闭后刷新可能重新打开
+        // 修复：添加正确的关闭事件监听，修复 modalState 状态管理
+        
+        const API_BASE = window.location.origin;
+        let mainInterval = null;
+        let charts = {};
+        
+        // 正确的弹窗状态管理
+        const modalState = {
+            isOpen: false,
+            element: null
+        };
+
+        function openDetailsModal() {
+            const modal = document.getElementById('detailsModal');
+            if (!modal) return;
+            
+            modalState.isOpen = true;
+            modalState.element = modal;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            
+            // 加载详细数据
+            loadModalData();
+        }
+
+        function closeDetailsModal() {
+            const modal = document.getElementById('detailsModal');
+            if (!modal) return;
+            
+            // P0 FIX: 确保状态正确更新
+            modalState.isOpen = false;
+            modalState.element = null;
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+            
+            // P0 FIX: 添加关闭事件监听，确保彻底清理
+            modal.dispatchEvent(new CustomEvent('modal:closed', { bubbles: true }));
+        }
+
+        // P0 FIX: 添加正确的关闭事件监听
+        document.addEventListener('modal:closed', () => {
+            console.log('[Dashboard] Modal closed event triggered');
+        });
+
+        // 点击模态框背景关闭
+        document.getElementById('detailsModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'detailsModal') {
+                closeDetailsModal();
+            }
+        });
+
+        // ESC 键关闭
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalState.isOpen) {
+                closeDetailsModal();
+            }
+        });
+
+        async function loadModalData() {
+            const modalBody = document.getElementById('modalBody');
+            if (!modalBody) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/details`, {
+                    timeout: 5000
+                });
+                
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                
+                const data = await response.json();
+                
+                modalBody.innerHTML = `
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>指标</th>
+                                <th>数值</th>
+                                <th>变化</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Object.entries(data).map(([key, value]) => `
+                                <tr>
+                                    <td>${key}</td>
+                                    <td>${value.current}</td>
+                                    <td style="color: ${value.change >= 0 ? '#48bb78' : '#f56565'}">
+                                        ${value.change >= 0 ? '↑' : '↓'} ${Math.abs(value.change)}%
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (err) {
+                console.error('[Dashboard] 加载详细数据失败:', err);
+                modalBody.innerHTML = `
+                    <div class="error-message show">
+                        加载详细数据失败，请稍后重试
+                    </div>
+                `;
+            }
+        }
+
+        // ==================== P0 FIX #2: 错误处理 + 重试机制 ====================
+        // 问题：API 失败时没有重试，只显示错误
+        // 修复：添加错误计数、重试机制、最后成功时间追踪
+        
+        let errorCount = 0;
+        let lastSuccessTime = Date.now();
+        const MAX_ERRORS = 3;
+        const RETRY_DELAY = 3000;
+
+        async function loadData() {
+            try {
+                const response = await fetch(`${API_BASE}/api/state`, {
+                    timeout: 5000
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // P0 FIX: 成功后重置错误计数
+                errorCount = 0;
+                lastSuccessTime = Date.now();
+                
+                updateUI(data);
+                updateStatus(true);
+                
+                return true;
+            } catch (err) {
+                // P0 FIX: 错误计数和重试逻辑
+                errorCount++;
+                console.error(`[Dashboard] 加载失败 (${errorCount}/${MAX_ERRORS}):`, err);
+                
+                updateStatus(false, `加载失败 (${errorCount}/${MAX_ERRORS})`);
+                
+                if (errorCount >= MAX_ERRORS) {
+                    showErrorUI(`连续 ${MAX_ERRORS} 次加载失败，请检查 API 服务器`);
+                    showRetryButton();
+                } else {
+                    // 自动重试
+                    setTimeout(() => {
+                        console.log('[Dashboard] 自动重试...');
+                        loadData();
+                    }, RETRY_DELAY);
+                }
+                
+                return false;
+            }
+        }
+
+        function updateStatus(isConnected, message = null) {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            
+            if (statusDot && statusText) {
+                if (isConnected) {
+                    statusDot.classList.remove('error');
+                    statusText.textContent = message || '连接正常';
+                } else {
+                    statusDot.classList.add('error');
+                    statusText.textContent = message || '连接断开';
+                }
+            }
+        }
+
+        function showErrorUI(message) {
+            const errorEl = document.getElementById('errorMessage');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.add('show');
+            }
+        }
+
+        function showRetryButton() {
+            const retryBtn = document.getElementById('retryBtn');
+            if (retryBtn) {
+                retryBtn.style.display = 'inline-block';
+            }
+        }
+
+        function retryConnection() {
+            console.log('[Dashboard] 手动重试连接...');
+            errorCount = 0;
+            document.getElementById('retryBtn').style.display = 'none';
+            document.getElementById('errorMessage').classList.remove('show');
+            loadData();
+        }
+
+        function updateUI(data) {
+            // 更新指标
+            if (data.activeUsers !== undefined) {
+                document.getElementById('activeUsers').textContent = data.activeUsers.toLocaleString();
+            }
+            if (data.todayRevenue !== undefined) {
+                document.getElementById('todayRevenue').textContent = '¥' + data.todayRevenue.toLocaleString();
+            }
+            if (data.gameSessions !== undefined) {
+                document.getElementById('gameSessions').textContent = data.gameSessions.toLocaleString();
+            }
+            if (data.systemLoad !== undefined) {
+                document.getElementById('systemLoad').textContent = data.systemLoad.toFixed(1) + '%';
+            }
+
+            // 更新时间
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString('zh-CN');
+
+            // 更新图表
+            updateCharts(data);
+        }
+
+        function initCharts() {
+            const userCtx = document.getElementById('userChart');
+            const revenueCtx = document.getElementById('revenueChart');
+
+            if (userCtx) {
+                charts.user = new Chart(userCtx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: '活跃用户',
+                            data: [],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (revenueCtx) {
+                charts.revenue = new Chart(revenueCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: '收入',
+                            data: [],
+                            backgroundColor: 'rgba(118, 75, 162, 0.8)',
+                            borderColor: '#764ba2',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function updateCharts(data) {
+            if (!data.history) return;
+
+            if (charts.user && data.history.users) {
+                charts.user.data.labels = data.history.users.map((_, i) => {
+                    const date = new Date();
+                    date.setDate(date.getDate() - (6 - i));
+                    return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
+                });
+                charts.user.data.datasets[0].data = data.history.users;
+                charts.user.update();
+            }
+
+            if (charts.revenue && data.history.revenue) {
+                charts.revenue.data.labels = data.history.revenue.map((_, i) => {
+                    const date = new Date();
+                    date.setDate(date.getDate() - (6 - i));
+                    return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
+                });
+                charts.revenue.data.datasets[0].data = data.history.revenue;
+                charts.revenue.update();
+            }
+        }
+
+        // ==================== P0 FIX #3: 内存泄漏清理 ====================
+        // 问题：定时器没有清理，Chart.js 实例没有销毁
+        // 修复：页面卸载时清理所有资源
+
+        // P0 FIX: 页面卸载时清理
+        window.addEventListener('beforeunload', () => {
+            console.log('[Dashboard] Cleaning up resources...');
+            
+            // 清理定时器
+            if (mainInterval) {
+                clearInterval(mainInterval);
+                mainInterval = null;
+                console.log('[Dashboard] Interval cleared');
+            }
+            
+            // 销毁所有 Chart.js 实例
+            Object.values(charts).forEach(chart => {
+                if (chart && typeof chart.destroy === 'function') {
+                    chart.destroy();
+                    console.log('[Dashboard] Chart instance destroyed');
+                }
+            });
+            charts = {};
+        });
+
+        // 页面可见性变化时暂停/恢复更新
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                console.log('[Dashboard] Page hidden, pausing updates');
+                if (mainInterval) {
+                    clearInterval(mainInterval);
+                    mainInterval = null;
+                }
+            } else {
+                console.log('[Dashboard] Page visible, resuming updates');
+                loadData();
+                mainInterval = setInterval(loadData, 30000);
+            }
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('[Dashboard] Initializing...');
+            initCharts();
+            loadData();
+            
+            // 每 30 秒更新一次
+            mainInterval = setInterval(loadData, 30000);
+        });
+    </script>
+</body>
+</html>

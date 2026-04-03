@@ -3,10 +3,24 @@
 /**
  * Agent 指挥官 Orchestra - 配置管理
  * 
- * 管理所有 27 个 AI 岗位的配置和路由规则
+ * 管理所有约 90 个 AI 岗位的配置和路由规则
+ * 包含：53 个基础 Agent + 37 个美术部门 Agent
  */
 
-// 所有 AI 岗位定义（约 56 人）
+const path = require('path');
+const fs = require('fs');
+
+// 加载美术部门 Agent 配置
+var ART_AGENTS = [];
+try {
+  var artConfig = require('./art-agents-config');
+  ART_AGENTS = artConfig.ART_AGENTS;
+  console.log('美术部门 Agent 配置加载成功：' + ART_AGENTS.length + '个 Agent');
+} catch (e) {
+  console.log('美术部门 Agent 配置加载失败:', e.message);
+}
+
+// 所有 AI 岗位定义（90 人）
 var AI_AGENTS = [
   // 管理层（2 人）
   { id: 'ceo', name: 'AI CEO', role: '管理层', skills: ['战略决策', '商业敏感度', '资源整合'] },
@@ -99,11 +113,38 @@ var ROUTING_RULES = {
   '活动': ['event'],
   '需求': ['lead-designer', 'system', 'product'],
   
-  // 美术岗任务
-  '美术': ['art-lead', 'art-director'],
+  // 美术岗任务（37 个美术 Agent）
+  '美术': ['art-director'],
   '视觉': ['art-director'],
-  '角色': ['character-artist', 'art-lead'],
+  '角色': ['art-char-concept', 'art-char-model'],
   '风格': ['art-director', 'art-lead'],
+  '场景': ['art-scene-concept', 'art-scene-model', 'art-scene-level'],
+  '地编': ['art-scene-level'],
+  '灯光': ['art-scene-light'],
+  '模型': ['art-scene-model', 'art-char-model'],
+  '绑定': ['art-char-rig'],
+  '动画': ['art-char-anim', 'art-2d-anim'],
+  '特效': ['art-vfx-concept', 'art-vfx-artist'],
+  'UI': ['art-ui-concept', 'art-ui-artist', 'art-ui-ux'],
+  '界面': ['art-ui-concept', 'art-ui-artist'],
+  '图标': ['art-ui-concept', 'art-ui-artist'],
+  '世界观': ['art-world-concept'],
+  '怪物': ['art-creature-concept'],
+  '载具': ['art-vehicle-concept'],
+  '材质': ['art-texture'],
+  '贴图': ['art-texture'],
+  '渲染': ['art-chief-ta', 'art-render-prog'],
+  '插画': ['art-illustration'],
+  '2D': ['art-illustration', 'art-2d-anim'],
+  '宣传': ['art-marketing'],
+  '视频': ['art-motion'],
+  '动态': ['art-motion'],
+  '管理': ['art-director', 'art-lead', 'art-producer'],
+  '程序化': ['art-pcg'],
+  '扫描': ['art-photogrammetry'],
+  '重建': ['art-photogrammetry'],
+  'AI 美术': ['art-ai-specialist'],
+  '外包': ['art-outsource']
   
   // 程序岗任务
   '代码': ['tech-lead', 'client'],
@@ -197,7 +238,8 @@ module.exports = {
    * 获取所有 Agent
    */
   getAllAgents: function() {
-    return AI_AGENTS;
+    // 合并基础 Agent 和美术部门 Agent
+    return AI_AGENTS.concat(ART_AGENTS);
   },
   
   /**

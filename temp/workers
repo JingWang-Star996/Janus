@@ -1,0 +1,14 @@
+{
+  "workers": [
+    {"id": "worker-1", "name": "Worker-1", "status": "active", "cpu": 45, "memory": 62, "tasks": 12},
+    {"id": "worker-2", "name": "Worker-2", "status": "active", "cpu": 38, "memory": 55, "tasks": 8},
+    {"id": "worker-3", "name": "Worker-3", "status": "offline", "cpu": 0, "memory": 0, "tasks": 0},
+    {"id": "worker-4", "name": "Worker-4", "status": "active", "cpu": 72, "memory": 81, "tasks": 15}
+  ],
+  "stats": {
+    "totalTasks": 35,
+    "completedTasks": 128,
+    "failedTasks": 3,
+    "avgResponseTime": 245
+  }
+}

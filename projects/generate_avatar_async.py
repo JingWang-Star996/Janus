@@ -6,8 +6,14 @@
 import requests
 import json
 import time
+import os
 
-API_KEY = "sk-6e5325a331b145049ead02ffbf1bd27d"
+API_KEY = os.environ.get("DASHSCOPE_API_KEY", "")
+if not API_KEY:
+    print("❌ 错误：请设置环境变量 DASHSCOPE_API_KEY")
+    print("   运行：export DASHSCOPE_API_KEY=your_api_key")
+    exit(1)
+
 # 异步提交 URL
 SUBMIT_URL = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis"
 

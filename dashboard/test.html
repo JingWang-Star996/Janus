@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard 测试页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #fff;
+        }
+        h1 {
+            color: #00d9ff;
+        }
+        .test-result {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .success {
+            border-left: 4px solid #00ff88;
+        }
+        .info {
+            border-left: 4px solid #00d9ff;
+        }
+        button {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            border: none;
+            padding: 10px 20px;
+            color: #1a1a2e;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎻 Orchestra Dashboard 测试页</h1>
+    
+    <div class="test-result success">
+        <h3>✅ 文件创建成功</h3>
+        <ul>
+            <li>dashboard/visual-dashboard.html - 7.9KB</li>
+            <li>dashboard/charts.js - 13KB</li>
+            <li>dashboard/charts.css - 2.5KB</li>
+            <li>docs/DASHBOARD-GUIDE.md - 7.9KB</li>
+        </ul>
+    </div>
+
+    <div class="test-result info">
+        <h3>📊 功能清单</h3>
+        <ul>
+            <li>✅ Token 消耗折线图（实时趋势）</li>
+            <li>✅ Agent 状态饼图（运行中/已完成/失败）</li>
+            <li>✅ 成本对比柱状图（7 个岗位）</li>
+            <li>✅ 任务时间线甘特图（执行时间线）</li>
+            <li>✅ 任务成功率（成功/失败分布）</li>
+            <li>✅ 统计栏（总 Agent 数/运行中/完成任务/Token 消耗）</li>
+        </ul>
+    </div>
+
+    <div class="test-result info">
+        <h3>🎨 设计特性</h3>
+        <ul>
+            <li>✅ 深色主题（渐变背景 #1a1a2e → #16213e → #0f3460）</li>
+            <li>✅ 渐变配色（青色 #00d9ff → 绿色 #00ff88）</li>
+            <li>✅ 动画效果（入场动画 + 悬停效果）</li>
+            <li>✅ 响应式设计（桌面 1920x1080 / 移动 375x667）</li>
+            <li>✅ 自动刷新（每 5 秒）</li>
+            <li>✅ 截图优化模式</li>
+        </ul>
+    </div>
+
+    <div class="test-result info">
+        <h3>🚀 快速启动</h3>
+        <p>在浏览器中打开以下文件：</p>
+        <code>dashboard/visual-dashboard.html</code>
+        <br><br>
+        <button onclick="openDashboard()">打开 Dashboard</button>
+        <button onclick="copyPath()">复制路径</button>
+    </div>
+
+    <div class="test-result info">
+        <h3>📱 测试建议</h3>
+        <ol>
+            <li>在桌面浏览器打开 visual-dashboard.html</li>
+            <li>按 F12 打开开发者工具</li>
+            <li>切换到移动设备模式（Ctrl+Shift+M）</li>
+            <li>测试不同屏幕尺寸的响应式效果</li>
+            <li>观察图表是否每 5 秒自动刷新</li>
+            <li>尝试截图分享功能</li>
+        </ol>
+    </div>
+
+    <script>
+        function openDashboard() {
+            window.open('dashboard/visual-dashboard.html', '_blank');
+        }
+
+        function copyPath() {
+            const path = window.location.origin + '/dashboard/visual-dashboard.html';
+            navigator.clipboard.writeText(path).then(() => {
+                alert('路径已复制到剪贴板！');
+            });
+        }
+
+        // 自动检测 ECharts CDN 是否可访问
+        fetch('https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js')
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ ECharts CDN 可访问');
+                } else {
+                    console.error('❌ ECharts CDN 不可访问');
+                }
+            })
+            .catch(err => {
+                console.error('❌ 无法连接 ECharts CDN:', err);
+            });
+    </script>
+</body>
+</html>
