@@ -1,0 +1,30 @@
+# 数据目录
+data/
+.history.jsonl
+.pastes/
+
+# 测试生成的临时文件
+.test/
+*.test.jsonl
+
+# 日志
+logs/
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node modules (如果需要 npm install)
+node_modules/
+
+# 临时文件
+tmp/
+temp/
+*.tmp
