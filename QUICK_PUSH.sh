@@ -6,7 +6,7 @@
 set -e
 
 REPO_OWNER="${1:-openclaw}"
-REPO_NAME="${2:-yixia}"
+REPO_NAME="${2:-janus}"
 REMOTE_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
 
 echo "🚀 准备推送忆匣 (YiXia) 到 GitHub"
