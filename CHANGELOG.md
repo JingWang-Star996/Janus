@@ -1,4 +1,4 @@
-# 忆匣 (YiXia) 更新日志
+# Janus (Janus) 更新日志
 
 ## [2.0.0] - 2026-04-07
 
@@ -22,7 +22,7 @@
 
 **API 示例**:
 ```javascript
-const { FileLock } = require('./yixia');
+const { FileLock } = require('./janus');
 
 const lock = new FileLock();
 
@@ -57,7 +57,7 @@ await lock.withLock('resource-id', async () => {
 
 **API 示例**:
 ```javascript
-const { LazyLoader } = require('./yixia');
+const { LazyLoader } = require('./janus');
 
 const loader = new LazyLoader();
 
@@ -101,7 +101,7 @@ const content = await loader.loadClipContent(clipId);
 
 **API 示例**:
 ```javascript
-const { Clipboard } = require('./yixia');
+const { Clipboard } = require('./janus');
 
 const clipboard = new Clipboard();
 
@@ -142,7 +142,7 @@ const { compressed, references } = await clipboard.compressToReferences(longText
 
 **API 示例**:
 ```javascript
-const { Session } = require('./yixia');
+const { Session } = require('./janus');
 
 const session = new Session();
 
@@ -200,7 +200,7 @@ await session.addMessageWithLock(sessionId, message);
 
 **API 示例**:
 ```javascript
-const { ModelAdapter } = require('./yixia');
+const { ModelAdapter } = require('./janus');
 
 const model = new ModelAdapter();
 
@@ -250,7 +250,7 @@ model.registerModel('my-model', {
 **新增导出**:
 ```javascript
 module.exports = {
-  YiXia,
+  Janus,
   Session,
   Clipboard,
   ContextWindow,
@@ -264,24 +264,24 @@ module.exports = {
 
 **新增快捷方法**:
 ```javascript
-const yixia = new YiXia();
+const janus = new Janus();
 
 // 懒加载
-await yixia.getLatestMessages(sessionId, 20);
+await janus.getLatestMessages(sessionId, 20);
 
 // 引用展开
-await yixia.expandReferences(content);
+await janus.expandReferences(content);
 
 // 模型适配
-yixia.setModel('qwen3.5-plus');
-yixia.checkContextLimit(messages);
+janus.setModel('qwen3.5-plus');
+janus.checkContextLimit(messages);
 
 // 会话隔离
-await yixia.createProject('项目名');
-yixia.setCurrentSession(sessionId);
+await janus.createProject('项目名');
+janus.setCurrentSession(sessionId);
 
 // 文件锁
-await yixia.addMessageWithLock(sessionId, message);
+await janus.addMessageWithLock(sessionId, message);
 ```
 
 #### `src/session.js` - 会话管理
@@ -425,18 +425,18 @@ node tests/test-modelAdapter.js
 
 1. **备份数据**:
 ```bash
-cp -r ~/.openclaw/workspace/yixia/data ~/.openclaw/workspace/yixia/data.backup
+cp -r ~/.openclaw/workspace/janus/data ~/.openclaw/workspace/janus/data.backup
 ```
 
 2. **更新代码**:
 ```bash
-cd ~/.openclaw/workspace/yixia
+cd ~/.openclaw/workspace/janus
 # 拉取最新代码或手动替换文件
 ```
 
 3. **迁移项目** (可选):
 ```javascript
-const { Session } = require('./yixia');
+const { Session } = require('./janus');
 const session = new Session();
 
 // 为现有会话创建项目
@@ -470,5 +470,5 @@ npm test
 
 ---
 
-**忆匣 (YiXia) v2.0.0**  
+**Janus (Janus) v2.0.0**  
 *记忆太多？装匣子！*

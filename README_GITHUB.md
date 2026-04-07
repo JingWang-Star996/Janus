@@ -22,8 +22,8 @@
 ### 方法 1: 一键推送 (推荐)
 
 ```bash
-cd /home/z3129119/.openclaw/workspace/yixia
-./QUICK_PUSH.sh openclaw yixia
+cd /home/z3129119/.openclaw/workspace/janus
+./QUICK_PUSH.sh openclaw janus
 ```
 
 ### 方法 2: 手动推送
@@ -31,21 +31,21 @@ cd /home/z3129119/.openclaw/workspace/yixia
 ```bash
 # 1. 在 GitHub 创建仓库
 # 访问 https://github.com/new
-# 仓库名：yixia
+# 仓库名：janus
 # 组织：openclaw
 # 可见性：Public
 # 不要勾选"Initialize with README"
 
 # 2. 推送代码
-cd /home/z3129119/.openclaw/workspace/yixia
-git remote add origin https://github.com/openclaw/yixia.git
+cd /home/z3129119/.openclaw/workspace/janus
+git remote add origin https://github.com/openclaw/janus.git
 git push -u origin main
 git push origin v2.0.0
 
 # 3. 创建 Release
-# 访问 https://github.com/openclaw/yixia/releases/new
+# 访问 https://github.com/openclaw/janus/releases/new
 # Tag: v2.0.0
-# Title: 忆匣 (YiXia) v2.0.0 - 完整第二记忆系统
+# Title: Janus (Janus) v2.0.0 - 完整第二记忆系统
 # Description: 复制 GITHUB_RELEASE.md 内容
 ```
 
@@ -54,7 +54,7 @@ git push origin v2.0.0
 ## 📁 项目结构
 
 ```
-yixia/
+janus/
 ├── src/                    # 源代码
 │   ├── index.js           # 主入口
 │   ├── session.js         # 会话管理 (溯)
@@ -85,7 +85,7 @@ yixia/
 - **发布日期**: 2026-04-07
 - **测试覆盖**: 78 用例 100% 通过
 - **许可证**: MIT
-- **仓库**: https://github.com/openclaw/yixia (待推送)
+- **仓库**: https://github.com/openclaw/janus (待推送)
 
 ---
 

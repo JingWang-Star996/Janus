@@ -18,12 +18,12 @@
 
 **选项 A: 使用 GitHub CLI**
 ```bash
-gh repo create openclaw/yixia --public --source=. --remote=origin --push
+gh repo create openclaw/janus --public --source=. --remote=origin --push
 ```
 
 **选项 B: 手动创建**
 1. 访问 https://github.com/new
-2. 仓库名：`yixia`
+2. 仓库名：`janus`
 3. 组织：`openclaw` (或个人账号)
 4. 可见性：**Public**
 5. **不要** 勾选 "Initialize this repository with a README"
@@ -35,7 +35,7 @@ gh repo create openclaw/yixia --public --source=. --remote=origin --push
 
 ```bash
 # 添加远程仓库
-git remote add origin https://github.com/openclaw/yixia.git
+git remote add origin https://github.com/openclaw/janus.git
 
 # 推送代码和标签
 git push -u origin main
@@ -52,15 +52,15 @@ git push -u origin main --tags
 **选项 A: 使用 GitHub CLI**
 ```bash
 gh release create v2.0.0 \
-  --title "忆匣 (YiXia) v2.0.0 - 完整第二记忆系统" \
+  --title "Janus (Janus) v2.0.0 - 完整第二记忆系统" \
   --notes-file GITHUB_RELEASE.md \
   --generate-notes
 ```
 
 **选项 B: 手动创建**
-1. 访问 https://github.com/openclaw/yixia/releases/new
+1. 访问 https://github.com/openclaw/janus/releases/new
 2. Tag version: `v2.0.0`
-3. Release title: `忆匣 (YiXia) v2.0.0 - 完整第二记忆系统`
+3. Release title: `Janus (Janus) v2.0.0 - 完整第二记忆系统`
 4. 描述：复制 `GITHUB_RELEASE.md` 内容
 5. 点击 "Publish release"
 
@@ -79,7 +79,7 @@ git tag -l
 git log --oneline
 ```
 
-访问 https://github.com/openclaw/yixia 确认代码已推送。
+访问 https://github.com/openclaw/janus 确认代码已推送。
 
 ---
 
@@ -107,7 +107,7 @@ jobs:
 ### 2. 添加 README 徽章
 
 ```markdown
-![Tests](https://github.com/openclaw/yixia/workflows/Tests/badge.svg)
+![Tests](https://github.com/openclaw/janus/workflows/Tests/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![npm](https://img.shields.io/badge/npm-v2.0.0-red)
 ```
@@ -136,7 +136,7 @@ npm publish --access public
 
 发布前确认：
 
-- [ ] 仓库已创建 (https://github.com/openclaw/yixia)
+- [ ] 仓库已创建 (https://github.com/openclaw/janus)
 - [ ] 代码已推送 (`git push origin main`)
 - [ ] 标签已推送 (`git push origin v2.0.0`)
 - [ ] Release 已创建 (包含完整发布说明)

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * 忆匣 (YiXia) CLI 工具
+ * Janus (Janus) CLI 工具
  * 
  * 命令行接口，用于管理第二记忆系统
  * 
  * 用法:
- *   node yixia-cli.js <command> [options]
+ *   node janus-cli.js <command> [options]
  * 
  * 命令:
  *   record     - 追加记录
@@ -21,10 +21,10 @@
 
 const path = require('path');
 const fs = require('fs');
-const { YiXia } = require('./yixia.js');
+const { Janus } = require('./janus.js');
 
 // 创建默认实例
-const yixia = new YiXia();
+const janus = new Janus();
 
 // 颜色输出
 const colors = {
@@ -56,13 +56,13 @@ function success(message) {
 function showHelp() {
   console.log(`
 ${colors.cyan}╔══════════════════════════════════════════════════════════╗
-║          忆匣 (YiXia) - 第二记忆系统 CLI              ║
+║          Janus (Janus) - 第二记忆系统 CLI              ║
 ║                                                      ║
 ║   Slogan: "记忆太多？装匣子！"                        ║
 ╚══════════════════════════════════════════════════════════╝${colors.reset}
 
 ${colors.yellow}用法:${colors.reset}
-  node yixia-cli.js <command> [options]
+  node janus-cli.js <command> [options]
 
 ${colors.yellow}命令:${colors.reset}
   ${colors.green}record${colors.reset}     追加记录到历史
@@ -104,22 +104,22 @@ ${colors.yellow}命令:${colors.reset}
 
 ${colors.yellow}示例:${colors.reset}
   # 追加记录
-  node yixia-cli.js record --session abc123 --role user --content "你好"
+  node janus-cli.js record --session abc123 --role user --content "你好"
   
   # 搜索历史
-  node yixia-cli.js search --keyword "设计"
+  node janus-cli.js search --keyword "设计"
   
   # 列出会话
-  node yixia-cli.js session list
+  node janus-cli.js session list
   
   # 存储大内容
-  node yixia-cli.js paste store "这是一段很长的内容..."
+  node janus-cli.js paste store "这是一段很长的内容..."
   
   # 查看统计
-  node yixia-cli.js stats
+  node janus-cli.js stats
   
   # 导出会话
-  node yixia-cli.js export --session abc123 --output ./backup.json --format json
+  node janus-cli.js export --session abc123 --output ./backup.json --format json
 `);
 }
 
@@ -176,7 +176,7 @@ async function cmdRecord(options) {
     return;
   }
   
-  const result = yixia.record({
+  const result = janus.record({
     sessionId: session,
     role: role || 'user',
     content: text
@@ -200,7 +200,7 @@ async function cmdSearch(options) {
     return;
   }
   
-  const results = await yixia.search(keyword, session || null, parseInt(limit) || 100);
+  const results = await janus.search(keyword, session || null, parseInt(limit) || 100);
   
   if (results.length === 0) {
     log('未找到匹配结果', 'yellow');
@@ -223,7 +223,7 @@ async function cmdSearch(options) {
 async function cmdSession(command, options) {
   switch (command) {
     case 'list': {
-      const sessions = await yixia.listSessions();
+      const sessions = await janus.listSessions();
       if (sessions.length === 0) {
         log('暂无会话记录', 'yellow');
       } else {
@@ -240,7 +240,7 @@ async function cmdSession(command, options) {
         return;
       }
       
-      const records = await yixia.getSession(sessionId);
+      const records = await janus.getSession(sessionId);
       if (records.length === 0) {
         log('会话为空或不存在', 'yellow');
       } else {
@@ -260,13 +260,13 @@ async function cmdSession(command, options) {
         return;
       }
       
-      const count = await yixia.deleteSession(sessionId);
+      const count = await janus.deleteSession(sessionId);
       success(`已删除 ${count} 条记录`);
       break;
     }
     
     case 'clear': {
-      const count = await yixia.clearHistory();
+      const count = await janus.clearHistory();
       success(`已清空 ${count} 条记录`);
       break;
     }
@@ -288,7 +288,7 @@ async function cmdPaste(command, options) {
         return;
       }
       
-      const ref = yixia.store(content);
+      const ref = janus.store(content);
       log(`存储成功:`, 'cyan');
       log(`  类型：${ref.type}`);
       log(`  Hash: ${ref.hash}`);
@@ -306,7 +306,7 @@ async function cmdPaste(command, options) {
         return;
       }
       
-      const content = yixia.retrieve({ type: 'hash', value: hash });
+      const content = janus.retrieve({ type: 'hash', value: hash });
       if (content === null) {
         error('内容不存在');
       } else {
@@ -317,7 +317,7 @@ async function cmdPaste(command, options) {
     }
     
     case 'stats': {
-      const stats = yixia.getPastesStats();
+      const stats = janus.getPastesStats();
       log('粘贴存储统计:', 'cyan');
       log(`  文件数：${stats.fileCount}`);
       log(`  总大小：${(stats.totalSizeBytes / 1024).toFixed(2)} KB`);
@@ -326,11 +326,11 @@ async function cmdPaste(command, options) {
     
     case 'cleanup': {
       // 获取所有历史中的 hash
-      const allSessions = await yixia.listSessions();
+      const allSessions = await janus.listSessions();
       const usedHashes = new Set();
       
       for (const sessionId of allSessions) {
-        const records = await yixia.getSession(sessionId);
+        const records = await janus.getSession(sessionId);
         for (const r of records) {
           if (r.contentRef && r.contentRef.hash) {
             usedHashes.add(r.contentRef.hash);
@@ -338,7 +338,7 @@ async function cmdPaste(command, options) {
         }
       }
       
-      const result = yixia.cleanupPastes(Array.from(usedHashes));
+      const result = janus.cleanupPastes(Array.from(usedHashes));
       log('清理完成:', 'cyan');
       log(`  删除文件：${result.deleted}`);
       log(`  释放空间：${(result.freedBytes / 1024).toFixed(2)} KB`);
@@ -356,7 +356,7 @@ async function cmdPaste(command, options) {
 async function cmdWindow(command, options) {
   switch (command) {
     case 'check': {
-      const config = yixia.getConfig();
+      const config = janus.getConfig();
       log('窗口配置:', 'cyan');
       log(`  最大 Token: ${config.window.maxTokens}`);
       log(`  最大消息数：${config.window.maxMessages}`);
@@ -376,7 +376,7 @@ async function cmdWindow(command, options) {
       
       const newConfig = {};
       newConfig[key] = isNaN(value) ? value : Number(value);
-      yixia.updateWindowConfig(newConfig);
+      janus.updateWindowConfig(newConfig);
       success(`配置已更新：${key} = ${value}`);
       break;
     }
@@ -389,7 +389,7 @@ async function cmdWindow(command, options) {
         { role: 'user', content: '重要消息', priority: 2, timestamp: 3 }
       ];
       
-      const result = yixia.truncateMessages(testMessages, { maxTokens: 500 });
+      const result = janus.truncateMessages(testMessages, { maxTokens: 500 });
       log('截断测试结果:', 'cyan');
       log(`  原始消息：${testMessages.length} 条`);
       log(`  截断后：${result.messages.length} 条`);
@@ -407,10 +407,10 @@ async function cmdWindow(command, options) {
  * 处理 stats 命令
  */
 async function cmdStats() {
-  const status = await yixia.getStatus();
+  const status = await janus.getStatus();
   
   log('\n╔══════════════════════════════════════════════════════════╗', 'cyan');
-  log('║              忆匣 (YiXia) 系统状态                       ║', 'cyan');
+  log('║              Janus (Janus) 系统状态                       ║', 'cyan');
   log('╚══════════════════════════════════════════════════════════╝\n', 'cyan');
   
   log('📦 历史记录', 'yellow');
@@ -449,7 +449,7 @@ async function cmdExport(options) {
   }
   
   const fmt = format || 'jsonl';
-  const success = await yixia.exportSession(session, output, fmt);
+  const success = await janus.exportSession(session, output, fmt);
   
   if (success) {
     success(`会话已导出：${output} (格式：${fmt})`);
@@ -510,7 +510,7 @@ async function main() {
         
       default:
         error(`未知命令：${command}`);
-        console.log('使用 "node yixia-cli.js help" 查看帮助');
+        console.log('使用 "node janus-cli.js help" 查看帮助');
     }
   } catch (err) {
     error(err.message);

@@ -1,9 +1,9 @@
-# 忆匣 (YiXia) - 第二记忆系统
+# Janus (Janus) - 第二记忆系统
 
 > **Slogan**: "记忆太多？装匣子！"  
 > **灰色幽默**: "别人忘，你不忘，因为有匣子"
 
-忆匣是 OpenClaw 的完整第二记忆系统，参考 Claude Code 的会话管理 + 粘贴管理 + 上下文管理，三大功能合并为一个统一系统。
+Janus是 OpenClaw 的完整第二记忆系统，参考 Claude Code 的会话管理 + 粘贴管理 + 上下文管理，三大功能合并为一个统一系统。
 
 ## 📦 核心功能
 
@@ -68,19 +68,19 @@ JSONL 格式存储会话历史，支持完整的 CRUD 操作。
 
 ### 安装
 
-忆匣是纯 JavaScript 模块，无需安装，直接使用：
+Janus是纯 JavaScript 模块，无需安装，直接使用：
 
 ```bash
-cd ~/.openclaw/workspace/yixia
+cd ~/.openclaw/workspace/janus
 ```
 
 ### 基础用法
 
 ```javascript
-const { YiXia } = require('./yixia.js');
+const { Janus } = require('./janus.js');
 
 // 创建实例
-const yixia = new YiXia({
+const janus = new Janus({
   historyPath: '~/.openclaw/history.jsonl',
   pastesDir: '~/.openclaw/pastes/',
   windowConfig: {
@@ -90,50 +90,50 @@ const yixia = new YiXia({
 });
 
 // 1. 记录对话
-yixia.record({
+janus.record({
   sessionId: 'session-001',
   role: 'user',
-  content: '你好，忆匣！'
+  content: '你好，Janus！'
 });
 
 // 2. 存储内容（自动选择内联或外部）
-const ref = yixia.store('这是一段内容');
+const ref = janus.store('这是一段内容');
 console.log(ref); // { type: 'inline' | 'hash', value: '...', hash: '...' }
 
 // 3. 获取会话历史
-const history = await yixia.getSession('session-001');
+const history = await janus.getSession('session-001');
 
 // 4. 压缩上下文
-const compressed = yixia.compressContext(messages);
+const compressed = janus.compressContext(messages);
 
 // 5. 获取系统状态
-const status = await yixia.getStatus();
+const status = await janus.getStatus();
 ```
 
 ### 高级用法
 
 ```javascript
 // 完整记录对话（自动处理存储和窗口）
-const result = await yixia.recordConversation('session-001', [
+const result = await janus.recordConversation('session-001', [
   { role: 'user', content: '你好' },
   { role: 'assistant', content: '你好！有什么可以帮你？' }
 ]);
 // result: { recorded, compressed, messages, summary }
 
 // 恢复会话（从历史 + 匣子）
-const restored = await yixia.restoreSession('session-001');
+const restored = await janus.restoreSession('session-001');
 
 // 搜索历史
-const results = await yixia.search('关键词', 'session-001', 100);
+const results = await janus.search('关键词', 'session-001', 100);
 
 // 标记消息优先级
-const importantMsg = yixia.markPriority(
+const importantMsg = janus.markPriority(
   { role: 'user', content: '这是重要信息' },
   2  // 优先级：0=普通，1=重要，2=关键
 );
 
 // 检查是否超限
-const check = yixia.checkLimit(messages);
+const check = janus.checkLimit(messages);
 if (check.exceeds) {
   console.log('建议:', check.suggestions);
 }
@@ -141,12 +141,12 @@ if (check.exceeds) {
 
 ## 💻 CLI 工具
 
-忆匣提供完整的命令行工具。
+Janus提供完整的命令行工具。
 
 ### 用法
 
 ```bash
-node yixia-cli.js <command> [options]
+node janus-cli.js <command> [options]
 ```
 
 ### 命令列表
@@ -155,90 +155,90 @@ node yixia-cli.js <command> [options]
 
 ```bash
 # 追加记录
-node yixia-cli.js record --session abc123 --role user --content "你好"
+node janus-cli.js record --session abc123 --role user --content "你好"
 
 # 从文件读取内容
-node yixia-cli.js record --session abc123 --role user --file ./message.txt
+node janus-cli.js record --session abc123 --role user --file ./message.txt
 ```
 
 #### search - 搜索历史
 
 ```bash
 # 搜索关键词
-node yixia-cli.js search --keyword "设计"
+node janus-cli.js search --keyword "设计"
 
 # 限定会话搜索
-node yixia-cli.js search --keyword "设计" --session abc123 --limit 50
+node janus-cli.js search --keyword "设计" --session abc123 --limit 50
 ```
 
 #### session - 会话管理
 
 ```bash
 # 列出所有会话
-node yixia-cli.js session list
+node janus-cli.js session list
 
 # 获取会话详情
-node yixia-cli.js session get abc123
+node janus-cli.js session get abc123
 
 # 删除会话
-node yixia-cli.js session delete abc123
+node janus-cli.js session delete abc123
 
 # 清空所有历史
-node yixia-cli.js session clear
+node janus-cli.js session clear
 ```
 
 #### paste - 粘贴内容管理
 
 ```bash
 # 存储内容
-node yixia-cli.js paste store "这是一段内容"
+node janus-cli.js paste store "这是一段内容"
 
 # 获取内容
-node yixia-cli.js paste get <hash>
+node janus-cli.js paste get <hash>
 
 # 存储统计
-node yixia-cli.js paste stats
+node janus-cli.js paste stats
 
 # 清理未使用内容
-node yixia-cli.js paste cleanup
+node janus-cli.js paste cleanup
 ```
 
 #### window - 窗口管理
 
 ```bash
 # 检查配置
-node yixia-cli.js window check
+node janus-cli.js window check
 
 # 更新配置
-node yixia-cli.js window set maxTokens 10000
+node janus-cli.js window set maxTokens 10000
 
 # 测试截断
-node yixia-cli.js window test
+node janus-cli.js window test
 ```
 
 #### stats - 系统统计
 
 ```bash
-node yixia-cli.js stats
+node janus-cli.js stats
 ```
 
 #### export - 导出会话
 
 ```bash
 # 导出为 JSONL
-node yixia-cli.js export --session abc123 --output ./backup.jsonl
+node janus-cli.js export --session abc123 --output ./backup.jsonl
 
 # 导出为 JSON
-node yixia-cli.js export --session abc123 --output ./backup.json --format json
+node janus-cli.js export --session abc123 --output ./backup.json --format json
 
 # 导出为文本
-node yixia-cli.js export --session abc123 --output ./backup.txt --format txt
+node janus-cli.js export --session abc123 --output ./backup.txt --format txt
 ```
 
 #### help - 显示帮助
 
 ```bash
-node yixia-cli.js help
+node janus-cli.js help
 ```
 
 ## 🧪 测试
@@ -258,9 +258,9 @@ node test.js
 ## 📁 项目结构
 
 ```
-yixia/
-├── yixia.js              # 主入口，统一 API
-├── yixia-cli.js          # CLI 工具
+janus/
+├── janus.js              # 主入口，统一 API
+├── janus-cli.js          # CLI 工具
 ├── test.js               # 测试脚本
 ├── README.md             # 使用文档
 └── modules/
@@ -271,12 +271,12 @@ yixia/
 
 ## 🔧 API 参考
 
-### YiXia 类
+### Janus 类
 
 #### 构造函数
 
 ```javascript
-new YiXia(options?: {
+new Janus(options?: {
   historyPath?: string,
   pastesDir?: string,
   windowConfig?: {
@@ -387,17 +387,17 @@ new YiXia(options?: {
 
 ```javascript
 // 每次对话自动记录
-const yixia = new YiXia();
+const janus = new Janus();
 
 async function handleUserMessage(sessionId, content) {
   // 记录用户消息
-  yixia.record({ sessionId, role: 'user', content });
+  janus.record({ sessionId, role: 'user', content });
   
   // 生成回复
   const reply = await generateReply(content);
   
   // 记录回复
-  yixia.record({ sessionId, role: 'assistant', content: reply });
+  janus.record({ sessionId, role: 'assistant', content: reply });
   
   return reply;
 }
@@ -408,7 +408,7 @@ async function handleUserMessage(sessionId, content) {
 ```javascript
 // 自动将大内容存储到外部
 const longCode = `...很长的代码...`;
-const ref = yixia.store(longCode);
+const ref = janus.store(longCode);
 
 // 在上下文中只传递 hash
 const contextMessage = {
@@ -421,10 +421,10 @@ const contextMessage = {
 
 ```javascript
 // 对话前检查窗口
-const check = yixia.checkLimit(currentMessages);
+const check = janus.checkLimit(currentMessages);
 if (check.exceeds) {
   console.log('需要压缩:', check.suggestions);
-  const compressed = yixia.compressContext(currentMessages);
+  const compressed = janus.compressContext(currentMessages);
   currentMessages = compressed.messages;
 }
 ```
@@ -445,9 +445,9 @@ if (check.exceeds) {
 
 ## 🤝 贡献
 
-忆匣是 OpenClaw 的内置系统，欢迎提交问题和改进建议。
+Janus是 OpenClaw 的内置系统，欢迎提交问题和改进建议。
 
 ---
 
-**忆匣 (YiXia) v1.0.0**  
+**Janus (Janus) v1.0.0**  
 *记忆太多？装匣子！*

@@ -1,5 +1,5 @@
 /**
- * 忆匣 (YiXia) - OpenClaw 第二记忆系统
+ * Janus (Janus) - OpenClaw 第二记忆系统
  * 
  * Slogan: "记忆太多？装匣子！"
  * 灰色幽默："别人忘，你不忘，因为有匣子"
@@ -21,10 +21,10 @@ const xia = require('./modules/xia');    // 匣 - 粘贴管理
 const chuang = require('./modules/chuang'); // 窗 - 上下文窗口
 
 /**
- * 忆匣统一入口
+ * Janus统一入口
  * 提供高层 API，整合三个模块的功能
  */
-class YiXia {
+class Janus {
   constructor(options = {}) {
     this.options = {
       historyPath: options.historyPath || su.DEFAULT_HISTORY_PATH,
@@ -330,7 +330,7 @@ class YiXia {
 // 导出模块和类
 module.exports = {
   // 主类
-  YiXia,
+  Janus,
   
   // 直接导出模块（供高级用户直接使用）
   su,      // 溯
@@ -339,9 +339,9 @@ module.exports = {
   
   // 便捷创建
   create(options) {
-    return new YiXia(options);
+    return new Janus(options);
   }
 };
 
 // 默认导出
-module.exports.default = YiXia;
+module.exports.default = Janus;

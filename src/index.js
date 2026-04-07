@@ -1,5 +1,5 @@
 /**
- * 忆匣 (YiXia) - 第二记忆系统
+ * Janus (Janus) - 第二记忆系统
  * 
  * 主入口文件
  * 集成：溯（会话）+ 匣（粘贴）+ 窗（上下文）
@@ -13,7 +13,7 @@ const { LazyLoader } = require('./lazyLoader');
 const { ModelAdapter } = require('./modelAdapter');
 const utils = require('./utils');
 
-class YiXia {
+class Janus {
   constructor(options = {}) {
     const dataDir = options.dataDir || '../data';
     
@@ -27,7 +27,7 @@ class YiXia {
     this.modelAdapter = new ModelAdapter(options.model || {});
     this.fileLock = defaultLock;
     
-    console.log('📦 忆匣已初始化');
+    console.log('📦 Janus已初始化');
     console.log('  溯 - 会话管理就绪');
     console.log('  匣 - 粘贴管理就绪');
     console.log('  窗 - 上下文管理就绪');
@@ -227,7 +227,7 @@ class YiXia {
 
 // 导出所有模块
 module.exports = {
-  YiXia,
+  Janus,
   Session,
   Clipboard,
   ContextWindow,
@@ -240,7 +240,7 @@ module.exports = {
 
 // CLI 模式
 if (require.main === module) {
-  console.log('📦 忆匣 (YiXia) - 第二记忆系统');
+  console.log('📦 Janus (Janus) - 第二记忆系统');
   console.log('');
   console.log('用法：');
   console.log('  node src/index.js              # 显示帮助');
@@ -251,8 +251,8 @@ if (require.main === module) {
   const command = process.argv[2];
   
   if (command === 'stats') {
-    const yixia = new YiXia();
-    yixia.getStats().then(stats => {
+    const janus = new Janus();
+    janus.getStats().then(stats => {
       console.log('\n📊 系统统计:');
       console.log(JSON.stringify(stats, null, 2));
     });
@@ -267,19 +267,19 @@ if (require.main === module) {
 async function runDemo() {
   console.log('🎬 运行演示...\n');
   
-  const yixia = new YiXia();
+  const janus = new Janus();
   
   // 1. 创建会话
   console.log('\n--- 步骤 1: 创建会话 ---');
-  const sessionId = await yixia.session.create('演示会话', { tags: ['demo', 'test'] });
+  const sessionId = await janus.session.create('演示会话', { tags: ['demo', 'test'] });
   
   // 2. 添加消息
   console.log('\n--- 步骤 2: 添加消息 ---');
-  await yixia.session.addMessage(sessionId, {
+  await janus.session.addMessage(sessionId, {
     role: 'user',
     content: '你好，这是一个测试消息'
   });
-  await yixia.session.addMessage(sessionId, {
+  await janus.session.addMessage(sessionId, {
     role: 'assistant',
     content: '你好！有什么可以帮助你的？'
   });
@@ -287,7 +287,7 @@ async function runDemo() {
   // 3. 存储大内容到匣子
   console.log('\n--- 步骤 3: 存储大内容 ---');
   const largeContent = '这是一段很长的文本内容...\n'.repeat(50);
-  const clipId = await yixia.clipboard.store({
+  const clipId = await janus.clipboard.store({
     content: largeContent,
     type: 'text',
     tags: ['重要', '参考'],
@@ -296,7 +296,7 @@ async function runDemo() {
   
   // 4. 添加到上下文窗口
   console.log('\n--- 步骤 4: 管理上下文 ---');
-  await yixia.context.add({
+  await janus.context.add({
     id: 'ctx_1',
     type: 'note',
     content: '这是重要的上下文信息',
@@ -305,7 +305,7 @@ async function runDemo() {
   
   // 5. 查看统计
   console.log('\n--- 步骤 5: 查看统计 ---');
-  const stats = await yixia.getStats();
+  const stats = await janus.getStats();
   console.log(`会话数：${stats.sessions.total}`);
   console.log(`粘贴内容：${stats.clipboard.total}`);
   console.log(`上下文使用：${stats.context.usage}`);

@@ -1,10 +1,10 @@
-# 🎉 忆匣 (YiXia) v2.0.0 - GitHub Release
+# 🎉 Janus (Janus) v2.0.0 - GitHub Release
 
 ## 📦 发布信息
 
 - **版本号**: v2.0.0
 - **发布日期**: 2026-04-07
-- **仓库**: https://github.com/openclaw/yixia
+- **仓库**: https://github.com/openclaw/janus
 - **许可证**: MIT
 
 ---
@@ -113,8 +113,8 @@ node tests/test-modelAdapter.js
 
 ```bash
 # 克隆仓库
-git clone https://github.com/openclaw/yixia.git
-cd yixia
+git clone https://github.com/openclaw/janus.git
+cd janus
 
 # 安装依赖（可选，纯 JS 无需依赖）
 npm install
@@ -123,10 +123,10 @@ npm install
 ### 基础用法
 
 ```javascript
-const { YiXia } = require('./yixia.js');
+const { Janus } = require('./janus.js');
 
 // 创建实例
-const yixia = new YiXia({
+const janus = new Janus({
   historyPath: '~/.openclaw/history.jsonl',
   pastesDir: '~/.openclaw/pastes/',
   windowConfig: {
@@ -136,39 +136,39 @@ const yixia = new YiXia({
 });
 
 // 记录对话
-yixia.record({
+janus.record({
   sessionId: 'session-001',
   role: 'user',
-  content: '你好，忆匣！'
+  content: '你好，Janus！'
 });
 
 // 存储内容（自动选择内联或外部）
-const ref = yixia.store('这是一段内容');
+const ref = janus.store('这是一段内容');
 
 // 获取会话历史
-const history = yixia.getHistory('session-001');
+const history = janus.getHistory('session-001');
 
 // 管理上下文窗口
-yixia.addToContext('重要信息', { priority: 10 });
+janus.addToContext('重要信息', { priority: 10 });
 ```
 
 ### CLI 使用
 
 ```bash
 # 查看帮助
-./yixia-cli.js --help
+./janus-cli.js --help
 
 # 创建会话
-./yixia-cli.js session create "我的会话"
+./janus-cli.js session create "我的会话"
 
 # 记录消息
-./yixia-cli.js message add "session-001" "user" "你好"
+./janus-cli.js message add "session-001" "user" "你好"
 
 # 存储内容
-./yixia-cli.js clipboard store "这是一段内容"
+./janus-cli.js clipboard store "这是一段内容"
 
 # 查看统计
-./yixia-cli.js stats
+./janus-cli.js stats
 ```
 
 ---
@@ -260,11 +260,11 @@ MIT License - 详见 LICENSE 文件
 
 ## 🔗 链接
 
-- **仓库**: https://github.com/openclaw/yixia
-- **问题反馈**: https://github.com/openclaw/yixia/issues
+- **仓库**: https://github.com/openclaw/janus
+- **问题反馈**: https://github.com/openclaw/janus/issues
 - **OpenClaw**: https://github.com/openclaw/openclaw
 
 ---
 
-**忆匣 (YiXia) v2.0.0**  
+**Janus (Janus) v2.0.0**  
 *记忆太多？装匣子！*

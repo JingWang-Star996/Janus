@@ -1,14 +1,14 @@
-# 忆匣 (YiXia) 使用文档
+# Janus (Janus) 使用文档
 
 ## 快速开始
 
 ### 1. 初始化
 
 ```javascript
-const { YiXia } = require('./yixia/src');
+const { Janus } = require('./janus/src');
 
-// 创建忆匣实例
-const yixia = new YiXia({
+// 创建Janus实例
+const janus = new Janus({
   dataDir: './data',  // 数据存储目录
   context: {
     maxSize: 4000  // 上下文窗口最大 token 数
@@ -20,41 +20,41 @@ const yixia = new YiXia({
 
 ```javascript
 // 创建新会话
-const sessionId = await yixia.session.create('项目讨论', {
+const sessionId = await janus.session.create('项目讨论', {
   tags: ['项目', '重要']
 });
 
 // 添加消息
-await yixia.session.addMessage(sessionId, {
+await janus.session.addMessage(sessionId, {
   role: 'user',
   content: '今天讨论了什么？'
 });
 
-await yixia.session.addMessage(sessionId, {
+await janus.session.addMessage(sessionId, {
   role: 'assistant',
-  content: '讨论了忆匣系统的设计方案。'
+  content: '讨论了Janus系统的设计方案。'
 });
 
 // 检索消息
-const messages = await yixia.session.search(sessionId, {
-  keyword: '忆匣'
+const messages = await janus.session.search(sessionId, {
+  keyword: 'Janus'
 });
 
 // 获取会话列表
-const sessions = await yixia.session.list();
+const sessions = await janus.session.list();
 
 // 导出会话
-const exported = await yixia.session.export(sessionId);
+const exported = await janus.session.export(sessionId);
 
 // 删除会话
-await yixia.session.delete(sessionId);
+await janus.session.delete(sessionId);
 ```
 
 ### 3. 粘贴管理（匣）
 
 ```javascript
 // 存储内容
-const clipId = await yixia.clipboard.store({
+const clipId = await janus.clipboard.store({
   content: '大段文本内容...',
   type: 'text',  // text|code|image|file
   tags: ['重要', '参考'],
@@ -62,20 +62,20 @@ const clipId = await yixia.clipboard.store({
 });
 
 // 获取内容
-const content = await yixia.clipboard.get(clipId);
+const content = await janus.clipboard.get(clipId);
 
 // 检索内容（按标签）
-const clips = await yixia.clipboard.search({
+const clips = await janus.clipboard.search({
   tag: '重要'
 });
 
 // 检索内容（按关键词）
-const clips = await yixia.clipboard.search({
+const clips = await janus.clipboard.search({
   keyword: '会议'
 });
 
 // 智能存储（自动去重）
-const result = await yixia.clipboard.smartStore({
+const result = await janus.clipboard.smartStore({
   content: '内容...',
   type: 'text'
 });
@@ -83,20 +83,20 @@ const result = await yixia.clipboard.smartStore({
 // result.id 返回内容 ID（新的或已有的）
 
 // 获取统计
-const stats = await yixia.clipboard.getStats();
+const stats = await janus.clipboard.getStats();
 console.log(stats.total);      // 总内容数
 console.log(stats.totalSize);  // 总大小
 console.log(stats.totalTokens); // 估算 token 数
 
 // 删除内容
-await yixia.clipboard.delete(clipId);
+await janus.clipboard.delete(clipId);
 ```
 
 ### 4. 上下文管理（窗）
 
 ```javascript
 // 添加上下文
-await yixia.context.add({
+await janus.context.add({
   id: 'ctx_1',
   type: 'note',  // note|message|file|reference
   content: '重要的背景信息',
@@ -104,23 +104,23 @@ await yixia.context.add({
 });
 
 // 获取优化后的上下文
-const context = await yixia.context.getContext();
+const context = await janus.context.getContext();
 
 // 查看窗口状态
-const status = yixia.context.getStatus();
+const status = janus.context.getStatus();
 console.log(status.usage);  // 使用率，如 "75%"
 
 // 提升优先级
-await yixia.context.prioritize('ctx_1', 10);
+await janus.context.prioritize('ctx_1', 10);
 
 // 标记为已访问（防止被优化掉）
-await yixia.context.touch('ctx_1');
+await janus.context.touch('ctx_1');
 
 // 删除上下文
-await yixia.context.remove('ctx_1');
+await janus.context.remove('ctx_1');
 
 // 清空窗口
-await yixia.context.clear();
+await janus.context.clear();
 ```
 
 ### 5. 高级功能
@@ -129,7 +129,7 @@ await yixia.context.clear();
 
 ```javascript
 // 自动将大内容存储到匣子，并在会话中记录引用
-await yixia.quickStore(sessionId, {
+await janus.quickStore(sessionId, {
   role: 'user',
   content: '非常长的内容...'  // 超过 500 字符自动存匣
 }, true);
@@ -139,16 +139,16 @@ await yixia.quickStore(sessionId, {
 
 ```javascript
 // 导出完整备份
-await yixia.exportBackup('./backup-2026-04-06.json');
+await janus.exportBackup('./backup-2026-04-06.json');
 
 // 从备份导入
-await yixia.importBackup('./backup-2026-04-06.json');
+await janus.importBackup('./backup-2026-04-06.json');
 ```
 
 #### 系统统计
 
 ```javascript
-const stats = await yixia.getStats();
+const stats = await janus.getStats();
 console.log(stats.sessions.total);     // 会话总数
 console.log(stats.clipboard.total);    // 粘贴内容总数
 console.log(stats.context.itemCount);  // 上下文项数
@@ -289,7 +289,7 @@ A: 使用匣子存储大内容，会话中只存引用 ID。
 A: 定期使用 `exportBackup()` 创建备份。
 
 ### Q: 如何集成到现有项目？
-A: 直接 `require('./yixia/src')` 即可使用所有功能。
+A: 直接 `require('./janus/src')` 即可使用所有功能。
 
 ## 许可证
 

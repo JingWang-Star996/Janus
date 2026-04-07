@@ -1,4 +1,4 @@
-# 📋 忆匣 (YiXia) v2.0.0 发布检查清单
+# 📋 Janus (Janus) v2.0.0 发布检查清单
 
 ## ✅ 本地准备工作 (已完成)
 
@@ -19,7 +19,7 @@
 
 **URL**: https://github.com/new
 
-- **Repository name**: `yixia`
+- **Repository name**: `janus`
 - **Owner**: `openclaw` (或个人账号)
 - **Visibility**: Public ✅
 - **Initialize**: ❌ 不要勾选
@@ -30,16 +30,16 @@
 
 **方法 A: 使用快速脚本**
 ```bash
-cd /home/z3129119/.openclaw/workspace/yixia
-./QUICK_PUSH.sh openclaw yixia
+cd /home/z3129119/.openclaw/workspace/janus
+./QUICK_PUSH.sh openclaw janus
 ```
 
 **方法 B: 手动推送**
 ```bash
-cd /home/z3129119/.openclaw/workspace/yixia
+cd /home/z3129119/.openclaw/workspace/janus
 
 # 添加远程仓库
-git remote add origin https://github.com/openclaw/yixia.git
+git remote add origin https://github.com/openclaw/janus.git
 
 # 推送代码和标签
 git push -u origin main
@@ -50,11 +50,11 @@ git push origin v2.0.0
 
 ### 3️⃣ 创建 GitHub Release
 
-**URL**: https://github.com/openclaw/yixia/releases/new
+**URL**: https://github.com/openclaw/janus/releases/new
 
 - **Tag version**: `v2.0.0`
 - **Target**: `main`
-- **Release title**: `忆匣 (YiXia) v2.0.0 - 完整第二记忆系统`
+- **Release title**: `Janus (Janus) v2.0.0 - 完整第二记忆系统`
 - **Description**: 复制 `GITHUB_RELEASE.md` 内容
 - **Publish**: 点击 "Publish release"
 
@@ -62,8 +62,8 @@ git push origin v2.0.0
 
 ### 4️⃣ 验证发布
 
-- [ ] 访问 https://github.com/openclaw/yixia 确认代码显示正常
-- [ ] 访问 https://github.com/openclaw/yixia/releases 确认 Release 已创建
+- [ ] 访问 https://github.com/openclaw/janus 确认代码显示正常
+- [ ] 访问 https://github.com/openclaw/janus/releases 确认 Release 已创建
 - [ ] 检查 README.md 渲染是否正确
 - [ ] 检查 LICENSE 文件是否存在
 
@@ -100,7 +100,7 @@ npm publish --access public
 ### 添加徽章到 README
 
 ```markdown
-![Tests](https://github.com/openclaw/yixia/workflows/Tests/badge.svg)
+![Tests](https://github.com/openclaw/janus/workflows/Tests/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Version](https://img.shields.io/badge/version-2.0.0-red.svg)
 ```
@@ -116,7 +116,7 @@ git remote -v
 
 # 如果有误，删除后重新添加
 git remote remove origin
-git remote add origin https://github.com/openclaw/yixia.git
+git remote add origin https://github.com/openclaw/janus.git
 ```
 
 ### 标签冲突
@@ -125,7 +125,7 @@ git remote add origin https://github.com/openclaw/yixia.git
 git tag -d v2.0.0
 
 # 重新创建
-git tag -a v2.0.0 -m "忆匣 (YiXia) v2.0.0"
+git tag -a v2.0.0 -m "Janus (Janus) v2.0.0"
 ```
 
 ### 权限错误

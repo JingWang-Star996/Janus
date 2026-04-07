@@ -1,9 +1,9 @@
-# 忆匣 (YiXia) 开发文档
+# Janus (Janus) 开发文档
 
 ## 项目结构
 
 ```
-yixia/
+janus/
 ├── src/                      # 源代码
 │   ├── index.js             # 主入口 (5.5KB)
 │   ├── session.js           # 会话管理 - 溯 (6KB)
@@ -44,7 +44,7 @@ yixia/
 
 ```
 ┌─────────────────────────────────────┐
-│           YiXia (主入口)             │
+│           Janus (主入口)             │
 ├─────────┬───────────┬───────────────┤
 │ Session │ Clipboard │ ContextWindow │
 │  (溯)   │   (匣)    │     (窗)      │
@@ -160,7 +160,7 @@ console.log(`[窗] 添加上下文：${id} (${tokens} tokens)`);
 4. **远程同步**
    ```javascript
    // 同步到云存储
-   await yixia.sync.to('s3://bucket/yixia');
+   await janus.sync.to('s3://bucket/janus');
    ```
 
 ## 测试指南
