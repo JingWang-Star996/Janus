@@ -1,86 +1,92 @@
-# Janus (杰纳斯) - 第二记忆系统
+# Janus (杰纳斯) - Second Memory System
 
-> **Slogan**: "Two Faces, One Memory" (双面一心，记忆如新)
+> **Slogan**: "Two Faces, One Memory"
 >
-> **命名来源**: 罗马神话双面神 Janus - 一面看向过去 (会话历史)，一面看向未来 (上下文管理)
+> **Named After**: Janus, the Roman god of beginnings and transitions - one face looks to the past (session history), the other to the future (context management)
 
-Janus是 OpenClaw 的完整第二记忆系统，参考 Claude Code 的会话管理 + 粘贴管理 + 上下文管理，三大功能合并为一个统一系统。
+**🌍 Languages**: [English](README.md) | [中文](README.zh.md)
 
-## 📦 核心功能
+Janus is a complete second memory system for OpenClaw, inspired by Claude Code's session management + paste management + context management, unified into one system.
 
-### 1️⃣ 溯 (Su) - 会话历史记录
+---
 
-JSONL 格式存储会话历史，支持完整的 CRUD 操作。
+## 📦 Core Features
 
-**功能清单**：
-- ✅ 追加/批量追加记录
-- ✅ 按会话 ID 检索
-- ✅ 时间范围过滤
-- ✅ 关键词搜索
-- ✅ 删除会话/清空
-- ✅ 统计信息
-- ✅ 导出会话（JSONL/JSON/TXT）
+### 1️⃣ Su (溯) - Session History
 
-**存储位置**：`~/.openclaw/history.jsonl`
+JSONL format storage for session history with full CRUD operations.
 
-### 2️⃣ 匣 (Xia) - 粘贴内容管理
+**Features**:
+- ✅ Append/batch append records
+- ✅ Retrieve by session ID
+- ✅ Time range filtering
+- ✅ Keyword search
+- ✅ Delete session/clear all
+- ✅ Statistics
+- ✅ Export sessions (JSONL/JSON/TXT)
 
-智能存储策略，小内容内联、大内容外部存储，支持内容复用。
+**Storage**: `~/.openclaw/history.jsonl`
 
-**功能清单**：
-- ✅ 小内容内联（<1024 字符）
-- ✅ 大内容外部存储（`~/.openclaw/pastes/`）
-- ✅ Hash 引用（MD5）
-- ✅ 内容复用（相同内容只存一份）
-- ✅ 减少 Token 消耗
-- ✅ 批量存储/检索
-- ✅ 清理未使用内容
+### 2️⃣ Xia (匣) - Paste Content Management
 
-**存储策略**：
+Smart storage strategy: inline for small content, external for large content, with content reuse.
+
+**Features**:
+- ✅ Inline storage (<1024 chars)
+- ✅ External storage (`~/.openclaw/pastes/`)
+- ✅ Hash reference (MD5)
+- ✅ Content reuse (same content stored once)
+- ✅ Reduce token consumption
+- ✅ Batch store/retrieve
+- ✅ Cleanup unused content
+
+**Storage Strategy**:
 ```
-内容长度 < 1024 字符 → 内联存储
-内容长度 >= 1024 字符 → 外部存储 (按 MD5 hash 命名)
+Content < 1024 chars → Inline storage
+Content >= 1024 chars → External storage (MD5 hash naming)
 ```
 
-### 3️⃣ 窗 (Chuang) - 上下文窗口管理
+### 3️⃣ Chuang (窗) - Context Window Management
 
-智能控制上下文窗口大小，自动截断超长内容，保护重要信息。
+Intelligently control context window size, auto-truncate oversized content, protect important information.
 
-**功能清单**：
-- ✅ 控制上下文窗口大小
-- ✅ 自动截断超长内容
-- ✅ 优先级管理（重要内容保留）
-- ✅ 可配置窗口大小
-- ✅ Token 使用统计
-- ✅ 滑动窗口
-- ✅ 智能压缩
+**Features**:
+- ✅ Control context window size
+- ✅ Auto-truncate oversized content
+- ✅ Priority management (keep important content)
+- ✅ Configurable window size
+- ✅ Token usage statistics
+- ✅ Sliding window
+- ✅ Smart compression
 
-**默认配置**：
+**Default Config**:
 ```javascript
 {
-  maxTokens: 8000,      // 最大 token 数
-  maxMessages: 50,      // 最大消息数
-  reserveImportant: true, // 保留重要内容
-  tokenEstimateRatio: 4  // 字符到 token 估算比例
+  maxTokens: 8000,      // Max tokens
+  maxMessages: 50,      // Max messages
+  reserveImportant: true, // Keep important content
+  tokenEstimateRatio: 4  // Char to token ratio
 }
 ```
 
-## 🚀 快速开始
+---
 
-### 安装
+## 🚀 Quick Start
 
-Janus是纯 JavaScript 模块，无需安装，直接使用：
+### Installation
+
+Janus is a pure JavaScript module, no installation needed:
 
 ```bash
 cd ~/.openclaw/workspace/janus
 ```
 
-### 基础用法
+### Basic Usage
 
 ```javascript
 const { Janus } = require('./janus.js');
 
-// 创建实例
+// Create instance
 const janus = new Janus({
   historyPath: '~/.openclaw/history.jsonl',
   pastesDir: '~/.openclaw/pastes/',
@@ -90,191 +96,171 @@ const janus = new Janus({
   }
 });
 
-// 1. 记录对话
+// 1. Record conversation
 janus.record({
   sessionId: 'session-001',
   role: 'user',
-  content: '你好，Janus！'
+  content: 'Hello, Janus!'
 });
 
-// 2. 存储内容（自动选择内联或外部）
-const ref = janus.store('这是一段内容');
+// 2. Store content (auto select inline or external)
+const ref = janus.store('This is some content');
 console.log(ref); // { type: 'inline' | 'hash', value: '...', hash: '...' }
 
-// 3. 获取会话历史
+// 3. Get session history
 const history = await janus.getSession('session-001');
 
-// 4. 压缩上下文
+// 4. Compress context
 const compressed = janus.compressContext(messages);
 
-// 5. 获取系统状态
+// 5. Get system status
 const status = await janus.getStatus();
 ```
 
-### 高级用法
+---
 
-```javascript
-// 完整记录对话（自动处理存储和窗口）
-const result = await janus.recordConversation('session-001', [
-  { role: 'user', content: '你好' },
-  { role: 'assistant', content: '你好！有什么可以帮你？' }
-]);
-// result: { recorded, compressed, messages, summary }
+## 💻 CLI Tools
 
-// 恢复会话（从历史 + 匣子）
-const restored = await janus.restoreSession('session-001');
+Janus provides complete command-line tools.
 
-// 搜索历史
-const results = await janus.search('关键词', 'session-001', 100);
-
-// 标记消息优先级
-const importantMsg = janus.markPriority(
-  { role: 'user', content: '这是重要信息' },
-  2  // 优先级：0=普通，1=重要，2=关键
-);
-
-// 检查是否超限
-const check = janus.checkLimit(messages);
-if (check.exceeds) {
-  console.log('建议:', check.suggestions);
-}
-```
-
-## 💻 CLI 工具
-
-Janus提供完整的命令行工具。
-
-### 用法
+### Usage
 
 ```bash
 node janus-cli.js <command> [options]
 ```
 
-### 命令列表
+### Commands
 
-#### record - 追加记录
+#### record - Append Record
 
 ```bash
-# 追加记录
-node janus-cli.js record --session abc123 --role user --content "你好"
+# Append record
+node janus-cli.js record --session abc123 --role user --content "Hello"
 
-# 从文件读取内容
+# Read from file
 node janus-cli.js record --session abc123 --role user --file ./message.txt
 ```
 
-#### search - 搜索历史
+#### search - Search History
 
 ```bash
-# 搜索关键词
-node janus-cli.js search --keyword "设计"
+# Search keyword
+node janus-cli.js search --keyword "design"
 
-# 限定会话搜索
-node janus-cli.js search --keyword "设计" --session abc123 --limit 50
+# Limit to session
+node janus-cli.js search --keyword "design" --session abc123 --limit 50
 ```
 
-#### session - 会话管理
+#### session - Session Management
 
 ```bash
-# 列出所有会话
+# List all sessions
 node janus-cli.js session list
 
-# 获取会话详情
+# Get session details
 node janus-cli.js session get abc123
 
-# 删除会话
+# Delete session
 node janus-cli.js session delete abc123
 
-# 清空所有历史
+# Clear all history
 node janus-cli.js session clear
 ```
 
-#### paste - 粘贴内容管理
+#### paste - Paste Content Management
 
 ```bash
-# 存储内容
-node janus-cli.js paste store "这是一段内容"
+# Store content
+node janus-cli.js paste store "This is content"
 
-# 获取内容
+# Get content
 node janus-cli.js paste get <hash>
 
-# 存储统计
+# Storage statistics
 node janus-cli.js paste stats
 
-# 清理未使用内容
+# Cleanup unused
 node janus-cli.js paste cleanup
 ```
 
-#### window - 窗口管理
+#### window - Window Management
 
 ```bash
-# 检查配置
+# Check config
 node janus-cli.js window check
 
-# 更新配置
+# Update config
 node janus-cli.js window set maxTokens 10000
 
-# 测试截断
+# Test truncation
 node janus-cli.js window test
 ```
 
-#### stats - 系统统计
+#### stats - System Statistics
 
 ```bash
 node janus-cli.js stats
 ```
 
-#### export - 导出会话
+#### export - Export Session
 
 ```bash
-# 导出为 JSONL
+# Export as JSONL
 node janus-cli.js export --session abc123 --output ./backup.jsonl
 
-# 导出为 JSON
+# Export as JSON
 node janus-cli.js export --session abc123 --output ./backup.json --format json
 
-# 导出为文本
+# Export as text
 node janus-cli.js export --session abc123 --output ./backup.txt --format txt
 ```
 
-#### help - 显示帮助
+#### help - Show Help
 
 ```bash
 node janus-cli.js help
 ```
 
-## 🧪 测试
+---
 
-运行自动化测试：
+## 🧪 Testing
+
+Run automated tests:
 
 ```bash
 node test.js
 ```
 
-测试覆盖：
-- ✅ 溯模块（8 项测试）
-- ✅ 匣模块（9 项测试）
-- ✅ 窗模块（10 项测试）
-- ✅ 高层 API（3 项测试）
+Test coverage:
+- ✅ Su module (8 tests)
+- ✅ Xia module (9 tests)
+- ✅ Chuang module (10 tests)
+- ✅ High-level API (3 tests)
 
-## 📁 项目结构
+---
+
+## 📁 Project Structure
 
 ```
 janus/
-├── janus.js              # 主入口，统一 API
-├── janus-cli.js          # CLI 工具
-├── test.js               # 测试脚本
-├── README.md             # 使用文档
+├── janus.js              # Main entry, unified API
+├── janus-cli.js          # CLI tool
+├── test.js               # Test script
+├── README.md             # Documentation (English)
+├── README.zh.md          # Documentation (Chinese)
 └── modules/
-    ├── su.js             # 溯 - 会话历史管理
-    ├── xia.js            # 匣 - 粘贴内容管理
-    └── chuang.js         # 窗 - 上下文窗口管理
+    ├── su.js             # Su - Session history
+    ├── xia.js            # Xia - Paste content
+    └── chuang.js         # Chuang - Context window
 ```
 
-## 🔧 API 参考
+---
 
-### Janus 类
+## 🔧 API Reference
 
-#### 构造函数
+### Janus Class
+
+#### Constructor
 
 ```javascript
 new Janus(options?: {
@@ -289,78 +275,80 @@ new Janus(options?: {
 })
 ```
 
-#### 溯 (Su) 方法
+#### Su Methods
 
-| 方法 | 参数 | 返回 | 说明 |
-|------|------|------|------|
-| `record` | `{sessionId, role, content, timestamp?, metadata?}` | `boolean` | 追加记录 |
-| `batchRecord` | `records: Array` | `number` | 批量追加 |
-| `getSession` | `sessionId: string` | `Promise<Array>` | 获取会话 |
-| `search` | `keyword, sessionId?, limit?` | `Promise<Array>` | 搜索 |
-| `getByTimeRange` | `startTime, endTime` | `Promise<Array>` | 时间范围查询 |
-| `deleteSession` | `sessionId` | `Promise<number>` | 删除会话 |
-| `clearHistory` | - | `Promise<number>` | 清空历史 |
-| `getHistoryStats` | - | `Promise<Object>` | 统计信息 |
-| `exportSession` | `sessionId, outputPath, format` | `Promise<boolean>` | 导出 |
-| `listSessions` | - | `Promise<Array>` | 列出会话 |
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `record` | `{sessionId, role, content, timestamp?, metadata?}` | `boolean` | Append record |
+| `batchRecord` | `records: Array` | `number` | Batch append |
+| `getSession` | `sessionId: string` | `Promise<Array>` | Get session |
+| `search` | `keyword, sessionId?, limit?` | `Promise<Array>` | Search |
+| `getByTimeRange` | `startTime, endTime` | `Promise<Array>` | Time range query |
+| `deleteSession` | `sessionId` | `Promise<number>` | Delete session |
+| `clearHistory` | - | `Promise<number>` | Clear history |
+| `getHistoryStats` | - | `Promise<Object>` | Statistics |
+| `exportSession` | `sessionId, outputPath, format` | `Promise<boolean>` | Export |
+| `listSessions` | - | `Promise<Array>` | List sessions |
 
-#### 匣 (Xia) 方法
+#### Xia Methods
 
-| 方法 | 参数 | 返回 | 说明 |
-|------|------|------|------|
-| `store` | `content: string` | `Object` | 存储内容 |
-| `retrieve` | `ref: Object` | `string|null` | 获取内容 |
-| `batchStore` | `contents: Array` | `Array` | 批量存储 |
-| `batchRetrieve` | `refs: Array` | `Array` | 批量获取 |
-| `contentExists` | `hash: string` | `boolean` | 检查存在 |
-| `deleteContent` | `hash: string` | `boolean` | 删除内容 |
-| `getPastesStats` | - | `Object` | 存储统计 |
-| `cleanupPastes` | `usedHashes: Array` | `Object` | 清理 |
-| `toTransport` | `content: string` | `Object` | 传输格式 |
-| `fromTransport` | `obj: Object` | `string|null` | 恢复内容 |
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `store` | `content: string` | `Object` | Store content |
+| `retrieve` | `ref: Object` | `string|null` | Retrieve content |
+| `batchStore` | `contents: Array` | `Array` | Batch store |
+| `batchRetrieve` | `refs: Array` | `Array` | Batch retrieve |
+| `contentExists` | `hash: string` | `boolean` | Check exists |
+| `deleteContent` | `hash: string` | `boolean` | Delete content |
+| `getPastesStats` | - | `Object` | Storage stats |
+| `cleanupPastes` | `usedHashes: Array` | `Object` | Cleanup |
+| `toTransport` | `content: string` | `Object` | Transport format |
+| `fromTransport` | `obj: Object` | `string|null` | Restore content |
 
-#### 窗 (Chuang) 方法
+#### Chuang Methods
 
-| 方法 | 参数 | 返回 | 说明 |
-|------|------|------|------|
-| `truncateMessages` | `messages, config` | `Object` | 截断消息 |
-| `compressContext` | `messages, config` | `Object` | 智能压缩 |
-| `slidingWindow` | `messages, windowSize, options` | `Array` | 滑动窗口 |
-| `markPriority` | `message, priority` | `Object` | 标记优先级 |
-| `getTokenUsage` | `messages` | `Object` | Token 统计 |
-| `checkLimit` | `messages, config` | `Object` | 限制检查 |
-| `updateWindowConfig` | `newConfig` | `Object` | 更新配置 |
-| `getConfig` | - | `Object` | 获取配置 |
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `truncateMessages` | `messages, config` | `Object` | Truncate messages |
+| `compressContext` | `messages, config` | `Object` | Smart compress |
+| `slidingWindow` | `messages, windowSize, options` | `Array` | Sliding window |
+| `markPriority` | `message, priority` | `Object` | Mark priority |
+| `getTokenUsage` | `messages` | `Object` | Token stats |
+| `checkLimit` | `messages, config` | `Object` | Limit check |
+| `updateWindowConfig` | `newConfig` | `Object` | Update config |
+| `getConfig` | - | `Object` | Get config |
 
-#### 高层 API
+#### High-Level API
 
-| 方法 | 参数 | 返回 | 说明 |
-|------|------|------|------|
-| `recordConversation` | `sessionId, messages` | `Promise<Object>` | 完整记录对话 |
-| `restoreSession` | `sessionId` | `Promise<Array>` | 恢复会话 |
-| `getStatus` | - | `Promise<Object>` | 系统状态 |
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `recordConversation` | `sessionId, messages` | `Promise<Object>` | Full record |
+| `restoreSession` | `sessionId` | `Promise<Array>` | Restore session |
+| `getStatus` | - | `Promise<Object>` | System status |
 
-## 📝 数据格式
+---
 
-### 历史记录格式 (JSONL)
+## 📝 Data Formats
+
+### History Record Format (JSONL)
 
 ```jsonl
-{"sessionId":"abc123","role":"user","content":"你好","timestamp":1712400000000}
-{"sessionId":"abc123","role":"assistant","content":"你好！有什么可以帮你？","timestamp":1712400001000}
+{"sessionId":"abc123","role":"user","content":"Hello","timestamp":1712400000000}
+{"sessionId":"abc123","role":"assistant","content":"Hello! How can I help?","timestamp":1712400001000}
 ```
 
-### 内容引用格式
+### Content Reference Format
 
 ```javascript
-// 内联引用（小内容）
+// Inline reference (small content)
 {
   type: 'inline',
-  value: '原始内容',
+  value: 'Original content',
   hash: 'md5...',
   length: 100
 }
 
-// Hash 引用（大内容）
+// Hash reference (large content)
 {
   type: 'hash',
   value: 'md5...',
@@ -370,85 +358,143 @@ new Janus(options?: {
 }
 ```
 
-### 消息格式
+### Message Format
 
 ```javascript
 {
   role: 'user' | 'assistant' | 'system',
   content: string,
   timestamp?: number,
-  priority?: number,  // 0=普通，1=重要，2=关键
+  priority?: number,  // 0=normal, 1=important, 2=critical
   metadata?: Object
 }
 ```
 
-## 🎯 使用场景
+---
 
-### 场景 1: OpenClaw 会话管理
+## 🎯 Use Cases
+
+### Case 1: OpenClaw Session Management
 
 ```javascript
-// 每次对话自动记录
+// Auto-record every conversation
 const janus = new Janus();
 
 async function handleUserMessage(sessionId, content) {
-  // 记录用户消息
+  // Record user message
   janus.record({ sessionId, role: 'user', content });
   
-  // 生成回复
+  // Generate reply
   const reply = await generateReply(content);
   
-  // 记录回复
+  // Record reply
   janus.record({ sessionId, role: 'assistant', content: reply });
   
   return reply;
 }
 ```
 
-### 场景 2: 大内容优化
+### Case 2: Large Content Optimization
 
 ```javascript
-// 自动将大内容存储到外部
-const longCode = `...很长的代码...`;
+// Auto-store large content externally
+const longCode = `...very long code...`;
 const ref = janus.store(longCode);
 
-// 在上下文中只传递 hash
+// Only pass hash in context
 const contextMessage = {
   role: 'user',
   content: ref.type === 'inline' ? longCode : `[code:${ref.hash}]`
 };
 ```
 
-### 场景 3: 上下文窗口控制
+### Case 3: Context Window Control
 
 ```javascript
-// 对话前检查窗口
+// Check window before conversation
 const check = janus.checkLimit(currentMessages);
 if (check.exceeds) {
-  console.log('需要压缩:', check.suggestions);
+  console.log('Need compression:', check.suggestions);
   const compressed = janus.compressContext(currentMessages);
   currentMessages = compressed.messages;
 }
 ```
 
-## 🔐 安全与隐私
+---
 
-- 所有数据存储在本地（`~/.openclaw/`）
-- 不上传任何内容到外部
-- 支持内容删除和清理
-- Hash 引用避免重复存储
+## 🔐 Security & Privacy
 
-## 📊 性能优化
-
-1. **JSONL 流式读取** - 大文件不一次性加载
-2. **内容复用** - 相同内容只存一份
-3. **智能截断** - 优先保留重要内容
-4. **批量操作** - 减少 IO 次数
-
-## 🤝 贡献
-
-Janus是 OpenClaw 的内置系统，欢迎提交问题和改进建议。
+- All data stored locally (`~/.openclaw/`)
+- No content uploaded externally
+- Support content deletion and cleanup
+- Hash reference avoids duplicate storage
 
 ---
 
-**Janus (Janus) v1.0.0**  
-*记忆太多？装匣子！*
+## 📊 Performance Optimization
+
+1. **JSONL Streaming Read** - Don't load large files at once
+2. **Content Reuse** - Same content stored once
+3. **Smart Truncation** - Keep important content first
+4. **Batch Operations** - Reduce IO calls
+
+---
+
+## 🌟 Recommended: Install with Dream & Lao
+
+For a complete memory experience, install Janus with Dream and Lao:
+
+### 🌙 Dream - Long-term Memory Integration
+
+Dream automatically integrates short-term memories into long-term memory:
+- Daily memory consolidation at 5 AM
+- Smart analysis and rule-based pruning
+- Automatic backup before changes
+- 50% memory optimization
+
+**Install**: `~/.openclaw/workspace/skills/dream-system/`
+
+### 🪝 Lao (捞) - Memory Retrieval System
+
+Lao provides semantic search across all memory sources:
+- Search MEMORY.md + memory/*.md
+- Session transcript search
+- Score-based relevance ranking
+- Context-aware retrieval
+
+**Install**: `~/.openclaw/workspace/skills/lao-retrieval/`
+
+### 🎯 Complete Memory Stack
+
+```
+┌─────────────────────────────────────┐
+│          Janus (Session)            │
+│     Short-term conversation history │
+├─────────────────────────────────────┤
+│          Dream (Long-term)          │
+│   Curated memories & insights       │
+├─────────────────────────────────────┤
+│           Lao (Retrieval)           │
+│   Semantic search across all        │
+└─────────────────────────────────────┘
+```
+
+**Together they provide**:
+- ✅ Complete conversation history (Janus)
+- ✅ Curated long-term memory (Dream)
+- ✅ Fast semantic search (Lao)
+- ✅ 70% token reduction
+- ✅ Automatic memory management
+
+---
+
+## 🤝 Contributing
+
+Janus is a built-in system for OpenClaw. Issues and improvements are welcome.
+
+---
+
+**Janus v1.0.0**  
+*Too many memories? Put them in a box!*
+
+**GitHub**: https://github.com/JingWang-Star996/Janus
