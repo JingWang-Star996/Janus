@@ -1,0 +1,40 @@
+{
+  "name": "janus",
+  "version": "2.0.0",
+  "description": "Janus (雅努斯) - OpenClaw 的完整第二记忆系统，参考 Claude Code 的会话管理 + 粘贴管理 + 上下文管理",
+  "main": "src/index.js",
+  "bin": {
+    "janus": "./janus-cli.js"
+  },
+  "scripts": {
+    "test": "node tests/test-all.js",
+    "demo": "node src/index.js demo",
+    "stats": "node src/index.js stats",
+    "start": "node src/index.js",
+    "cli": "node janus-cli.js"
+  },
+  "keywords": [
+    "memory",
+    "session",
+    "clipboard",
+    "context",
+    "context-window",
+    "openclaw",
+    "claude-code",
+    "ai-tools",
+    "janus"
+  ],
+  "author": "AI 主程",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openclaw/janus.git"
+  },
+  "bugs": {
+    "url": "https://github.com/openclaw/janus/issues"
+  },
+  "homepage": "https://github.com/openclaw/janus#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
