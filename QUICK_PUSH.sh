@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 忆匣 (YiXia) 快速推送到 GitHub 脚本
+# 杰纳斯 (Janus) 快速推送到 GitHub 脚本
 # 使用方法：./QUICK_PUSH.sh <github-username> <repo-name>
 
 set -e
@@ -9,7 +9,7 @@ REPO_OWNER="${1:-openclaw}"
 REPO_NAME="${2:-janus}"
 REMOTE_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
 
-echo "🚀 准备推送忆匣 (YiXia) 到 GitHub"
+echo "🚀 准备推送杰纳斯 (Janus) 到 GitHub"
 echo "======================================"
 echo "仓库：${REPO_OWNER}/${REPO_NAME}"
 echo "URL: ${REMOTE_URL}"
@@ -62,7 +62,7 @@ echo "📋 下一步:"
 echo "1. 访问 https://github.com/${REPO_OWNER}/${REPO_NAME}"
 echo "2. 创建 Release: https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/new"
 echo "   - Tag: v2.0.0"
-echo "   - Title: 忆匣 (YiXia) v2.0.0 - 完整第二记忆系统"
+echo "   - Title: 杰纳斯 (Janus) v2.0.0 - 完整第二记忆系统"
 echo "   - 描述：复制 GITHUB_RELEASE.md 内容"
 echo ""
 echo "🎉 祝发布顺利！"

@@ -86,7 +86,7 @@
 ```
 janus/
 ├── src/                    # 源代码
-│   ├── janus.js           # 主入口 (原 yixia.js)
+│   ├── janus.js           # 主入口 (原 janus.js)
 │   ├── session.js         # 会话管理
 │   ├── clipboard.js       # 粘贴管理
 │   ├── context.js         # 上下文管理
@@ -94,7 +94,7 @@ janus/
 │   ├── lazyLoader.js      # 懒加载优化
 │   ├── modelAdapter.js    # 模型适配
 │   └── utils.js           # 工具函数
-├── janus-cli.js            # CLI 工具 (原 yixia-cli.js)
+├── janus-cli.js            # CLI 工具 (原 janus-cli.js)
 ├── tests/                  # 测试文件 (78 用例)
 └── docs/                   # 文档
 ```

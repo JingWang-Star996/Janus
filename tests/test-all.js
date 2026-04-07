@@ -1,5 +1,5 @@
 /**
- * 忆匣 - 完整测试套件
+ * 杰纳斯 - 完整测试套件
  */
 
 const { testSession } = require('./test-session');
@@ -12,7 +12,7 @@ const { testSessionIsolation } = require('./test-session-isolation');
 const { testModelAdapter } = require('./test-modelAdapter');
 
 async function runAllTests() {
-  console.log('🧪 忆匣 (YiXia) - 完整测试套件\n');
+  console.log('🧪 杰纳斯 (Janus) - 完整测试套件\n');
   console.log('='.repeat(60) + '\n');
   
   const results = {

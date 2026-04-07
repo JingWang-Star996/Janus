@@ -1,10 +1,10 @@
-# 忆匣 (YiXia) 项目结构
+# 杰纳斯 (Janus) 项目结构
 
 ```
-yixia/                          # 忆匣项目根目录
+janus/                          # 杰纳斯项目根目录
 │
 ├── src/                        # 源代码目录
-│   ├── index.js               # 主入口文件（YiXia 类）
+│   ├── index.js               # 主入口文件（Janus 类）
 │   ├── session.js             # 会话管理模块（溯）
 │   ├── clipboard.js           # 粘贴管理模块（匣）
 │   ├── context.js             # 上下文管理模块（窗）
@@ -35,7 +35,7 @@ yixia/                          # 忆匣项目根目录
 
 | 文件 | 大小 | 行数 | 说明 |
 |------|------|------|------|
-| index.js | 5.5KB | ~180 | YiXia 主类，集成三大模块 |
+| index.js | 5.5KB | ~180 | Janus 主类，集成三大模块 |
 | session.js | 6.0KB | ~200 | 会话管理（溯）- JSONL 存储 |
 | clipboard.js | 6.8KB | ~230 | 粘贴管理（匣）- 外部存储 + 去重 |
 | context.js | 4.2KB | ~150 | 上下文管理（窗）- 智能优化 |
@@ -70,7 +70,7 @@ yixia/                          # 忆匣项目根目录
 
 ```
 ┌─────────────────────────────────────────┐
-│           index.js (YiXia)              │
+│           index.js (Janus)              │
 │                                         │
 │  ┌──────────┐  ┌──────────┐  ┌───────┐ │
 │  │ Session  │  │Clipboard │  │Context│ │

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * 忆匣 (YiXia) 测试脚本
+ * 杰纳斯 (Janus) 测试脚本
  * 
  * 测试三大核心功能：
  * - 溯 (Su): 会话历史管理
@@ -11,7 +11,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const YiXia = require('./yixia.js');
+const Janus = require('./janus.js');
 
 // 测试配置（使用临时路径）
 const TEST_DIR = path.join(__dirname, '.test');
@@ -76,8 +76,8 @@ function setup() {
 async function testSu() {
   log('=== 测试"溯"模块 - 会话历史管理 ===\n');
   
-  const yixia = require('./yixia.js');
-  const su = yixia.su;
+  const janus = require('./janus.js');
+  const su = janus.su;
   
   // 测试 1: 追加单条记录
   try {
@@ -98,7 +98,7 @@ async function testSu() {
   try {
     const records = [
       { sessionId: 'test-001', role: 'assistant', content: '你好！有什么可以帮你？', timestamp: Date.now() },
-      { sessionId: 'test-001', role: 'user', content: '我想了解一下忆匣系统', timestamp: Date.now() },
+      { sessionId: 'test-001', role: 'user', content: '我想了解一下杰纳斯系统', timestamp: Date.now() },
       { sessionId: 'test-002', role: 'user', content: '另一个会话的消息', timestamp: Date.now() }
     ];
     
@@ -120,7 +120,7 @@ async function testSu() {
   
   // 测试 4: 关键词搜索
   try {
-    const results = await su.search('忆匣', TEST_HISTORY_PATH);
+    const results = await su.search('杰纳斯', TEST_HISTORY_PATH);
     if (results.length >= 1) pass('关键词搜索');
     else fail('关键词搜索', '未找到匹配结果');
   } catch (e) {
@@ -180,15 +180,15 @@ async function testSu() {
 async function testXia() {
   log('=== 测试"匣"模块 - 粘贴内容管理 ===\n');
   
-  const yixiaModule = require('./yixia.js');
-  const xia = yixiaModule.xia;
-  const YiXia = yixiaModule.YiXia;
-  const yixia = new YiXia({ pastesDir: TEST_PASTES_DIR });
+  const janusModule = require('./janus.js');
+  const xia = janusModule.xia;
+  const Janus = janusModule.Janus;
+  const janus = new Janus({ pastesDir: TEST_PASTES_DIR });
   
   // 测试 1: 小内容内联存储
   try {
     const shortContent = '这是一段短内容';
-    const ref = yixia.store(shortContent);
+    const ref = janus.store(shortContent);
     if (ref.type === 'inline' && ref.value === shortContent) {
       pass('小内容内联存储');
     } else {
@@ -201,7 +201,7 @@ async function testXia() {
   // 测试 2: 大内容外部存储
   try {
     const longContent = 'x'.repeat(1100); // 确保超过 1024 字符
-    const ref = yixia.store(longContent);
+    const ref = janus.store(longContent);
     if (ref.type === 'hash' && ref.hash) {
       pass('大内容外部存储');
     } else {
@@ -214,8 +214,8 @@ async function testXia() {
   // 测试 3: 内容检索
   try {
     const content = '测试检索内容';
-    const ref = yixia.store(content);
-    const retrieved = yixia.retrieve(ref);
+    const ref = janus.store(content);
+    const retrieved = janus.retrieve(ref);
     if (retrieved === content) {
       pass('内容检索');
     } else {
@@ -228,8 +228,8 @@ async function testXia() {
   // 测试 4: 内容复用（相同 hash）
   try {
     const content = '重复内容测试';
-    const ref1 = yixia.store(content);
-    const ref2 = yixia.store(content);
+    const ref1 = janus.store(content);
+    const ref2 = janus.store(content);
     if (ref1.hash === ref2.hash && ref2.reused !== false) {
       pass('内容复用');
     } else {
@@ -257,7 +257,7 @@ async function testXia() {
   // 测试 6: 批量存储
   try {
     const contents = ['内容 1', '内容 2', '内容 3'];
-    const refs = yixia.batchStore(contents);
+    const refs = janus.batchStore(contents);
     if (refs.length === 3) {
       pass('批量存储');
     } else {
@@ -270,8 +270,8 @@ async function testXia() {
   // 测试 7: 批量检索
   try {
     const contents = ['检索 1', '检索 2'];
-    const refs = yixia.batchStore(contents);
-    const retrieved = yixia.batchRetrieve(refs);
+    const refs = janus.batchStore(contents);
+    const retrieved = janus.batchRetrieve(refs);
     if (retrieved[0] === contents[0] && retrieved[1] === contents[1]) {
       pass('批量检索');
     } else {
@@ -283,7 +283,7 @@ async function testXia() {
   
   // 测试 8: 获取存储统计
   try {
-    const stats = yixia.getPastesStats();
+    const stats = janus.getPastesStats();
     if (stats.fileCount >= 0 && stats.totalSizeBytes >= 0) {
       pass('获取存储统计');
     } else {
@@ -298,11 +298,11 @@ async function testXia() {
     const shortContent = '短内容';
     const longContent = '长内容'.repeat(200);
     
-    const shortRef = yixia.toTransport(shortContent);
-    const longRef = yixia.toTransport(longContent);
+    const shortRef = janus.toTransport(shortContent);
+    const longRef = janus.toTransport(longContent);
     
-    const shortBack = yixia.fromTransport(shortRef);
-    const longBack = yixia.fromTransport(longRef);
+    const shortBack = janus.fromTransport(shortRef);
+    const longBack = janus.fromTransport(longRef);
     
     if (shortBack === shortContent && longBack === longContent) {
       pass('传输格式转换');
@@ -322,10 +322,10 @@ async function testXia() {
 async function testChuang() {
   log('=== 测试"窗"模块 - 上下文窗口管理 ===\n');
   
-  const yixiaModule = require('./yixia.js');
-  const chuang = yixiaModule.chuang;
-  const YiXia = yixiaModule.YiXia;
-  const yixia = new YiXia();
+  const janusModule = require('./janus.js');
+  const chuang = janusModule.chuang;
+  const Janus = janusModule.Janus;
+  const janus = new Janus();
   
   // 测试 1: Token 估算
   try {
@@ -361,7 +361,7 @@ async function testChuang() {
       timestamp: i
     }));
     
-    const result = yixia.truncateMessages(messages, { maxMessages: 50 });
+    const result = janus.truncateMessages(messages, { maxMessages: 50 });
     if (result.messages.length <= 50) {
       pass('消息列表截断');
     } else {
@@ -392,7 +392,7 @@ async function testChuang() {
       { role: 'user', content: '普通消息 2', timestamp: 3 }
     ];
     
-    const result = yixia.truncateMessages(messages, { maxMessages: 2 });
+    const result = janus.truncateMessages(messages, { maxMessages: 2 });
     const hasImportant = result.messages.some(m => m.priority === 2);
     if (hasImportant) {
       pass('重要消息保护');
@@ -427,7 +427,7 @@ async function testChuang() {
       timestamp: i
     }));
     
-    const result = yixia.compressContext(messages, { maxMessages: 50 });
+    const result = janus.compressContext(messages, { maxMessages: 50 });
     if (result.compressed && result.messages.length <= 50) {
       pass('智能压缩');
     } else {
@@ -463,7 +463,7 @@ async function testChuang() {
       timestamp: i
     }));
     
-    const check = yixia.checkLimit(messages, { maxTokens: 500, maxMessages: 5 });
+    const check = janus.checkLimit(messages, { maxTokens: 500, maxMessages: 5 });
     if (check.exceeds && check.suggestions.length > 0) {
       pass('限制检查');
     } else {
@@ -496,8 +496,8 @@ async function testChuang() {
 async function testHighLevelAPI() {
   log('=== 测试高层 API - 组合功能 ===\n');
   
-  const { YiXia } = require('./yixia.js');
-  const yixia = new YiXia({
+  const { Janus } = require('./janus.js');
+  const janus = new Janus({
     historyPath: TEST_HISTORY_PATH,
     pastesDir: TEST_PASTES_DIR
   });
@@ -510,7 +510,7 @@ async function testHighLevelAPI() {
       { role: 'user', content: '长内容'.repeat(200) }
     ];
     
-    const result = await yixia.recordConversation('test-high-level', messages);
+    const result = await janus.recordConversation('test-high-level', messages);
     if (result.recorded === 3) {
       pass('完整记录对话');
     } else {
@@ -522,7 +522,7 @@ async function testHighLevelAPI() {
   
   // 测试 2: 恢复会话
   try {
-    const restored = await yixia.restoreSession('test-high-level');
+    const restored = await janus.restoreSession('test-high-level');
     if (restored.length >= 1) {
       pass('恢复会话');
     } else {
@@ -534,7 +534,7 @@ async function testHighLevelAPI() {
   
   // 测试 3: 获取系统状态
   try {
-    const status = await yixia.getStatus();
+    const status = await janus.getStatus();
     if (status.version && status.history && status.pastes && status.window) {
       pass('获取系统状态');
     } else {
@@ -552,7 +552,7 @@ async function testHighLevelAPI() {
  */
 async function main() {
   console.log('\n╔══════════════════════════════════════════════════════════╗');
-  console.log('║           忆匣 (YiXia) 自动化测试                        ║');
+  console.log('║           杰纳斯 (Janus) 自动化测试                        ║');
   console.log('╚══════════════════════════════════════════════════════════╝\n');
   
   setup();

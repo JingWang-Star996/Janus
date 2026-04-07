@@ -1,4 +1,4 @@
-# 忆匣 (YiXia) 项目总结
+# 杰纳斯 (Janus) 项目总结
 
 > **记忆太多？装匣子！**
 > 
@@ -6,7 +6,7 @@
 
 ## 📦 项目概览
 
-**忆匣** 是 OpenClaw 的第二记忆系统，参考 Claude Code 的会话管理 + 粘贴管理 + 上下文管理，打包成一个完整的记忆管理系统。
+**杰纳斯** 是 OpenClaw 的第二记忆系统，参考 Claude Code 的会话管理 + 粘贴管理 + 上下文管理，打包成一个完整的记忆管理系统。
 
 ### 核心功能
 
@@ -128,7 +128,7 @@ while (currentUsage > maxSize) {
 ### 安装
 
 ```bash
-cd yixia
+cd janus
 npm install  # 无需额外依赖，使用 Node.js 原生模块
 ```
 
@@ -161,21 +161,21 @@ node src/index.js stats
 ### 场景 1：保存会话历史
 
 ```javascript
-const { YiXia } = require('./yixia/src');
-const yixia = new YiXia();
+const { Janus } = require('./janus/src');
+const janus = new Janus();
 
 // 创建会话
-const sessionId = await yixia.session.create('项目讨论');
+const sessionId = await janus.session.create('项目讨论');
 
 // 添加消息
-await yixia.session.addMessage(sessionId, {
+await janus.session.addMessage(sessionId, {
   role: 'user',
-  content: '今天讨论了忆匣系统'
+  content: '今天讨论了杰纳斯系统'
 });
 
 // 检索
-const messages = await yixia.session.search(sessionId, {
-  keyword: '忆匣'
+const messages = await janus.session.search(sessionId, {
+  keyword: '杰纳斯'
 });
 ```
 
@@ -183,7 +183,7 @@ const messages = await yixia.session.search(sessionId, {
 
 ```javascript
 // 存储长文本
-const clipId = await yixia.clipboard.store({
+const clipId = await janus.clipboard.store({
   content: '很长的会议记录...',
   type: 'text',
   tags: ['会议', '重要'],
@@ -191,14 +191,14 @@ const clipId = await yixia.clipboard.store({
 });
 
 // 后续检索
-const content = await yixia.clipboard.get(clipId);
+const content = await janus.clipboard.get(clipId);
 ```
 
 ### 场景 3：管理上下文
 
 ```javascript
 // 添加高优先级上下文
-await yixia.context.add({
+await janus.context.add({
   id: 'project_info',
   type: 'note',
   content: '项目核心信息',
@@ -206,17 +206,17 @@ await yixia.context.add({
 });
 
 // 获取优化后的上下文
-const context = await yixia.context.getContext();
+const context = await janus.context.getContext();
 ```
 
 ### 场景 4：备份恢复
 
 ```javascript
 // 导出备份
-await yixia.exportBackup('./backup-2026-04-06.json');
+await janus.exportBackup('./backup-2026-04-06.json');
 
 // 导入备份
-await yixia.importBackup('./backup-2026-04-06.json');
+await janus.importBackup('./backup-2026-04-06.json');
 ```
 
 ## 📊 测试结果
@@ -224,7 +224,7 @@ await yixia.importBackup('./backup-2026-04-06.json');
 预期测试结果（运行 `npm test`）：
 
 ```
-🧪 忆匣 (YiXia) - 完整测试套件
+🧪 杰纳斯 (Janus) - 完整测试套件
 
 🧪 测试会话管理（溯）
   ✅ 通过 - 会话 ID: sess_xxx
@@ -291,7 +291,7 @@ await yixia.importBackup('./backup-2026-04-06.json');
 ## 📝 文件清单
 
 ```
-yixia/
+janus/
 ├── src/
 │   ├── index.js          ✅ 5.5KB
 │   ├── session.js        ✅ 6.0KB
@@ -327,7 +327,7 @@ yixia/
 ## 🙏 致谢
 
 - 灵感来源：Claude Code 的会话/粘贴/上下文管理
-- 命名创意：忆匣 = 记忆 + 匣子
+- 命名创意：杰纳斯 = 记忆 + 匣子
 - Slogan：记忆太多？装匣子！
 - 灰色幽默：别人忘，你不忘，因为有匣子 😄
 
